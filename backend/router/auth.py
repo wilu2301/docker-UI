@@ -1,28 +1,28 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter,Response, Cookie
+from fastapi import APIRouter,Response
 from starlette.responses import JSONResponse
 
-import backend.db.engine as db
-from backend.db.engine import engine
+import backend.functions.auth
+from backend import config
 from backend.db.models import User
+from backend.functions.auth import get_user_by_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.get("/")
 async def index():
-    return
-
+    return {"message": "Welcome to FastAPI!"}
 
 
 @router.post("/login")
 async def login(username: str, password: str):
-    user: User = db.login(username, password)
+    user: User = backend.functions.auth.login(username, password)
 
     if user is None:
         return Response(status_code=401)
 
-    data = db.get_cookie(user)
+    data = backend.functions.auth.get_cookie(user)
 
     token = data["token"]
     ttl = data["ttl"]
@@ -32,7 +32,7 @@ async def login(username: str, password: str):
         "token": token,
         "ttl": ttl,
     })
-    response.set_cookie(key = "session", value = token, expires= ttl)
+    response.set_cookie(key = "session", value = token, expires= config.COOKIE_LIFETIME)
     response.status_code = HTTPStatus.OK
     return response
 
@@ -40,7 +40,7 @@ async def login(username: str, password: str):
 
 @router.post("/create_user")
 async def create_user(username: str, password: str):
-    success = db.create_user(username, password)
+    success = backend.functions.auth.create_user(username, password)
     if not success:
         return Response(status_code=400)
     return Response(status_code=200)
