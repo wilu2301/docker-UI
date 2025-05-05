@@ -1,0 +1,25 @@
+/*  https://coolors.co/273043-9197ae-eff6ee-f02d3a-dd0426 */
+
+/* SCSS HEX */
+$prussian-blue: #273043ff !default;
+$cool-gray: #9197aeff !default;
+$mint-cream: #eff6eeff !default;
+$imperial-red: #f02d3aff !default;
+$rojo: #dd0426ff !default;
+
+$background: $mint-cream !default;
+$white: $mint-cream !default;
+$primary: $prussian-blue !default;
+$secondary: $cool-gray !default;
+
+
+/* SCSS Gradient */
+$gradient-top: linear-gradient(0deg, #273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);
+$gradient-right: linear-gradient(90deg, #273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);
+$gradient-bottom: linear-gradient(180deg, #273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);
+$gradient-left: linear-gradient(270deg, #273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);
+$gradient-top-right: linear-gradient(45deg, #273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);
+$gradient-bottom-right: linear-gradient(135deg, #273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);
+$gradient-top-left: linear-gradient(225deg, #273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);
+$gradient-bottom-left: linear-gradient(315deg, #273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);
+$gradient-radial: radial-gradient(#273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);
