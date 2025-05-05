@@ -1,5 +1,5 @@
 <script>
-	import Navbar from '../components/Navbar.svelte';
+	import Navbar from '../../components/Navbar.svelte';
 </script>
 
 <div class="layout">
@@ -10,15 +10,14 @@
 </div>
 
 <style>
-	@import '../default.css';
+	@import '../../default.css';
 
 	.layout {
 		display: flex;
-		flex-direction: row;
 	}
 
 	.content {
-		flex: 1;
-		padding: 1rem;
+		margin-left: 20%;
+		width: 80%;
 	}
 </style>

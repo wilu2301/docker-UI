@@ -1,9 +1,8 @@
 <script>
-	import { House, Box, FileSliders, Settings2, LogOut } from '@lucide/svelte';
+	import { House, Box, FileSliders, Settings2, LogOut, User } from '@lucide/svelte';
 </script>
 
-<main></main>
-<div class="navbar">
+<main class="navbar">
 	<div class="logo">
 		<a href="/">
 			<img src="https://picsum.photos/200" alt="Logo" />
@@ -22,6 +21,10 @@
 			</li>
 		</ul>
 		<ul id="lower">
+			<p>
+				<User /> wilu
+			</p>
+			<hr />
 			<li>
 				<a href="/"><Settings2 /> Settings</a>
 			</li>
@@ -30,7 +33,7 @@
 			</li>
 		</ul>
 	</div>
-</div>
+</main>
 
 <style lang="scss">
 	@use '../style/pallet.scss';
@@ -45,13 +48,15 @@
 		flex-direction: column;
 		justify-content: center;
 
+		position: fixed;
+
 		background-color: pallet.$primary;
-		color: pallet.$white;
 
 		border-radius: 0 20px 20px 0;
 
 		font-size: 1.2rem;
 
+		box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
 
 		.logo {
 			height: 20%;
@@ -77,6 +82,7 @@
 					display: flex;
 					align-items: center;
 
+
 					list-style: none;
 
 					transition: 0.5s;
@@ -85,12 +91,29 @@
 						text-decoration: none;
 					}
 
+					:global(svg){
+						vertical-align: top;
+					}
+
 					&:hover {
+						padding: 2rem;
+
 						background-color: pallet.$secondary;
 						border-radius: 5px;
-						padding: 2rem;
+						box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
 						transition: 0.5s;
 					}
+				}
+				p{
+          color: pallet.$white;
+					margin: 1rem;
+					text-align: center;
+				}
+
+				hr{
+					border: 1px solid pallet.$white;
+					margin: 0 1rem;
 				}
 			}
 		}
