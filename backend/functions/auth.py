@@ -13,6 +13,22 @@ from backend.db.models import User, Token
 
 hasher = bcrypt.using(rounds=13)
 
+def validate_scope(user_scope: int, required_scope: int) -> bool:
+    """
+    Validates scope
+    :param user_scope:
+    :param required_scope:
+    :return: Permission
+    """
+
+    if user_scope & required_scope == required_scope:
+        return True
+    else:
+        return False
+
+
+
+
 
 def create_user(username: str, password: str) -> bool:
     """
@@ -159,5 +175,26 @@ def get_user_by_token(token: str) -> User | None:
         return user
     else:
         return None
+
+
+def has_permission(token, scope: int) -> bool:
+    """
+    Checks if a token is authenticated and the scope is valid
+    :param token: session token
+    :param scope: user scope
+    :return: authenticated or not
+    """
+
+    # Get the user
+    selected_user = get_user_by_token(token)
+
+
+    if selected_user is None:
+        return False
+
+    if not validate_scope(scope, selected_user.scope):
+        return False
+
+    return True
 
 
