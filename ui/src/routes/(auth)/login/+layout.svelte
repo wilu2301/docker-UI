@@ -1,5 +1,5 @@
 <slot />
 
 <style>
-	@import "$root/default.css";
+	@import '$root/default.css';
 </style>

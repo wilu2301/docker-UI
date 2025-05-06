@@ -9,10 +9,10 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter(),
 		alias: {
-			"$root": "./src",
+			$root: './src'
 		}
 	},
-	preprocess: [vitePreprocess()],
+	preprocess: [vitePreprocess()]
 };
 
 export default config;

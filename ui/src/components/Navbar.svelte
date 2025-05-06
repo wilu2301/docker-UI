@@ -1,5 +1,6 @@
 <script>
 	import { House, Box, FileSliders, Settings2, LogOut, User } from '@lucide/svelte';
+	import { userState } from '$lib/state/user.svelte.js';
 </script>
 
 <main class="navbar">
@@ -22,7 +23,8 @@
 		</ul>
 		<ul id="lower">
 			<p>
-				<User /> wilu
+				<User />
+				{userState.username}
 			</p>
 			<hr />
 			<li>
@@ -82,7 +84,6 @@
 					display: flex;
 					align-items: center;
 
-
 					list-style: none;
 
 					transition: 0.5s;
@@ -91,7 +92,7 @@
 						text-decoration: none;
 					}
 
-					:global(svg){
+					:global(svg) {
 						vertical-align: top;
 					}
 
@@ -100,18 +101,18 @@
 
 						background-color: pallet.$secondary;
 						border-radius: 5px;
-						box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+						box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
 						transition: 0.5s;
 					}
 				}
-				p{
-          color: pallet.$white;
+				p {
+					color: pallet.$white;
 					margin: 1rem;
 					text-align: center;
 				}
 
-				hr{
+				hr {
 					border: 1px solid pallet.$white;
 					margin: 0 1rem;
 				}
