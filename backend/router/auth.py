@@ -22,7 +22,7 @@ async def login(username: str, password: str):
     if user is None:
         return Response(status_code=401)
 
-    data = backend.functions.auth.get_cookie(user)
+    data = backend.functions.auth.get_token(user)
 
     token = data["token"]
     ttl = data["ttl"]
@@ -30,9 +30,8 @@ async def login(username: str, password: str):
     response = JSONResponse({
         "login": user.username,
         "token": token,
-        "ttl": ttl,
+        "invalid_at": ttl,
     })
-    response.set_cookie(key = "session", value = token, expires= config.COOKIE_LIFETIME)
     response.status_code = HTTPStatus.OK
     return response
 
@@ -44,4 +43,8 @@ async def create_user(username: str, password: str):
     if not success:
         return Response(status_code=400)
     return Response(status_code=200)
+
+@router.get("/has_permission")
+async def has_permission(token: str,scope: int):
+    return {"permission": backend.functions.auth.has_permission(token, scope)}
 

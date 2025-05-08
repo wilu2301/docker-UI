@@ -67,14 +67,18 @@ def login(username, password) -> User | None:
     with Session(engine) as session:
         statement_get_user: Select = select(User).where(User.username == username)
 
-        selected_user = session.exec(statement_get_user).one()
+        selected_user = session.exec(statement_get_user).one_or_none()
 
-        if hasher.verify(password, selected_user.password):
-            logging.info(f"User {username} logged in")
-            success = True
-        else:
-            logging.warning(f"User {username} password incorrect")
+        if selected_user is None:
             success = False
+        else:
+
+            if hasher.verify(password, selected_user.password):
+                logging.info(f"User {username} logged in")
+                success = True
+            else:
+                logging.warning(f"User {username} password incorrect")
+                success = False
 
 
         if success:
@@ -83,7 +87,7 @@ def login(username, password) -> User | None:
             return None
 
 
-def generate_cookie(associate_user: User) -> dict[str, str | int]:
+def generate_token(associate_user: User) -> dict[str, str | int]:
     """
     Generates a new session token
     :param associate_user:
@@ -112,14 +116,14 @@ def generate_cookie(associate_user: User) -> dict[str, str | int]:
     return {"token": token_str, "ttl": time_to_live}
 
 
-def get_cookie(associated_user: User) -> dict[str, str | int] | Any:
+def get_token(associated_user: User) -> dict[str, str | int] | Any:
     """
-    Gets a session cookie
+    Gets a session token
     :param associated_user:
     :return: Session string
     """
 
-    # Check if the user already has a cookie
+    # Check if the user already has a token
 
     with Session(engine) as session:
         statement: Select = select(Token).where(Token.user_id == associated_user.id)
@@ -129,7 +133,7 @@ def get_cookie(associated_user: User) -> dict[str, str | int] | Any:
              return {"token": result.token, "ttl": result.ttl}
 
         else:
-            return generate_cookie(associated_user)
+            return generate_token(associated_user)
 
 
 def get_user_by_token(token: str) -> User | None:
