@@ -26,7 +26,7 @@
 		<h1>Welcome Back!</h1>
 		<input type="text" id="username" placeholder="Username" bind:value={credentials.username} />
 		<input type="password" id="password" placeholder="Password" bind:value={credentials.password} />
-		<button type="submit" onclick={handleLogin}> Login</button>
+		<button type="submit" onclick= {handleLogin}> Login</button>
 		{#if error}
 			<p class="error">Wrong Username || passoword</p>
 		{/if}

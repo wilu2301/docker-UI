@@ -47,10 +47,6 @@ class UserState {
 		}
 	}
 
-	setUsername(username) {
-		this.username = username;
-	}
-
 	async hasPermission(scope) {
 		try {
 			const res = await axios.get(
@@ -58,6 +54,7 @@ class UserState {
 			);
 
 			if (res.status === 200) {
+				console.log(res.data);
 				return res.data.permission;
 			}
 		} catch {
@@ -67,6 +64,9 @@ class UserState {
 	}
 
 	async hasToken() {
+		if (this.token === '') {
+			this.load();
+		}
 		return this.token !== '';
 	}
 }

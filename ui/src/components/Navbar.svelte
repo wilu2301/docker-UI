@@ -1,6 +1,12 @@
 <script>
 	import { House, Box, FileSliders, Settings2, LogOut, User } from '@lucide/svelte';
 	import { userState } from '$lib/state/user.svelte.js';
+	import { goto } from '$app/navigation';
+
+	function logout() {
+		userState.clear();
+		goto("/login");
+	}
 </script>
 
 <main class="navbar">
@@ -31,7 +37,7 @@
 				<a href="/"><Settings2 /> Settings</a>
 			</li>
 			<li>
-				<a href="/"><LogOut /> Logout</a>
+				<a href="#logout" onclick={logout}><LogOut /> Logout</a>
 			</li>
 		</ul>
 	</div>
