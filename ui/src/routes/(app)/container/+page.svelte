@@ -4,9 +4,9 @@
 
 <main>
 	<div class="apps">
-		<App class="app" />
-		<App class="app" />
-		<App class="app" />
+		<App class="app" name="Test App 1" />
+		<App class="app" name="Test App 2" />
+		<App class="app" name="Test App 3" />
 	</div>
 </main>
 

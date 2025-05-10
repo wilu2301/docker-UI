@@ -1,10 +1,12 @@
 <script>
 	import Container from './Container.svelte';
+
+	const { name, id } = $props();
 </script>
 
 <main class="app">
 	<div class="name">
-		<h1>App</h1>
+		<span>{name}</span>
 	</div>
 	<div class="containers">
 		<Container isFirst={true} />
@@ -19,16 +21,37 @@
 		width: 90%;
 
 		display: grid;
-		grid-template-columns: 1fr 4fr;
-
+		grid-template-columns: minmax(150px, 1fr) 4fr;
+		grid-auto-flow: row;
+		grid-gap: 0;
 
 		background-color: pallet.$secondary;
+
 		border-radius: 10px;
 
 		.name {
+			min-width: 0;
+
 			display: flex;
 			justify-content: center;
 			align-items: center;
+
+			padding: 0.5rem;
+      text-overflow: ellipsis;
+
+      overflow: hidden;
+
+			span {
+        max-width: 100%;
+
+        font-size: clamp(0.75rem, 4vw, 1.5rem);
+
+				text-align: center;
+				word-wrap: break-word;
+				overflow-wrap: break-word;
+				word-break: break-word;
+
+			}
 		}
 	}
 </style>
