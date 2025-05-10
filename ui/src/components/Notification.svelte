@@ -92,6 +92,7 @@
 			background: pallet.$primary;
 			border-radius: 20px 0 0 20px;
 			z-index: 2;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
 			.header {
 				width: 100%;
@@ -99,7 +100,7 @@
 
 				padding: 1rem;
 
-				background: pallet.$secondary;
+				background: pallet.$rojo;
 				border-radius: 20px 20px 0 0;
 				display: flex;
 				flex-direction: row;
@@ -249,7 +250,7 @@
 			}
 
 			button:hover {
-				background-color: pallet.$secondary;
+				background-color: pallet.$rojo;
 			}
 
 			button {
