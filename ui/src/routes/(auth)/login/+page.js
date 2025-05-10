@@ -4,7 +4,8 @@ export const load = async (event) => {
 	const reason = event.url.searchParams.get('reason');
 
 	return {
-		test:"Hallo",
+		redirectTo: redirectTo,
+		reason: reason
 	};
 }
 

@@ -21,7 +21,7 @@
 				<a href="/"><House /> Dashboard</a>
 			</li>
 			<li>
-				<a href="/"><Box /> Container</a>
+				<a href="/container"><Box /> Container</a>
 			</li>
 			<li>
 				<a href="/"><FileSliders /> Compose</a>

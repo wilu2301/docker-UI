@@ -7,29 +7,55 @@
 		password: ''
 	});
 
-	let error = $state(false);
+	let { data } = $props();
+	let redirectUri = data.redirectTo;
+
+	let error = $state({
+		error: false,
+		msg: ''
+	});
+
+	$effect(() => {
+		if (data.reason) {
+			error.error = true;
+			error.msg = data.reason.replaceAll('"', '');
+		}
+	});
+
+	function userRedirect() {
+		if (redirectUri && redirectUri !== '/login') {
+			goto(redirectUri);
+		} else {
+			goto('/');
+		}
+	}
 
 	async function handleLogin() {
-		error = false;
+		error.error = false;
 
 		const result = await userState.login(credentials.username, credentials.password);
+
 		if (result) {
-			await goto('/');
+			userRedirect();
 		} else {
-			error = true;
+			error.error = true;
+			error.msg = 'Invalid username or password';
 		}
 	}
 </script>
 
 <main>
+	{#if error.error}
+		<div class="toast">
+			<h2 class="left">!</h2>
+			<p>{error.msg}</p>
+		</div>
+	{/if}
 	<div class="login">
 		<h1>Welcome Back!</h1>
 		<input type="text" id="username" placeholder="Username" bind:value={credentials.username} />
 		<input type="password" id="password" placeholder="Password" bind:value={credentials.password} />
-		<button type="submit" onclick= {handleLogin}> Login</button>
-		{#if error}
-			<p class="error">Wrong Username || passoword</p>
-		{/if}
+		<button type="submit" onclick={handleLogin}> Login</button>
 	</div>
 </main>
 
@@ -41,6 +67,29 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+
+		.toast {
+			width: 100%;
+			height: 5rem;
+
+			position: fixed;
+			top: 0;
+			right: 0;
+
+			background: pallet.$error;
+			color: pallet.$white;
+
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			font-size: 2rem;
+
+			.left {
+				margin-right: 2rem;
+				font-size: 3rem;
+			}
+		}
 
 		.login {
 			padding: 4rem;
@@ -86,12 +135,6 @@
 				&:hover {
 					background: pallet.$accent;
 				}
-			}
-			.error {
-				color: pallet.$error;
-				font-size: 1.2rem;
-				font-size: 1.2rem;
-				margin-top: 1rem;
 			}
 		}
 		background-image: url('https://picsum.photos/1920/1080?blur');
