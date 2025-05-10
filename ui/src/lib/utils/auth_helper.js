@@ -1,7 +1,7 @@
 import { userState } from '$lib/state/user.svelte.js';
 import { goto } from '$app/navigation';
 
-export async function canAccess(event,permission) {
+export async function canAccess(event, permission) {
 	setTimeout(async () => {
 		if (!(await userState.hasToken())) {
 			const redirectTo = event.url.pathname;
@@ -11,7 +11,6 @@ export async function canAccess(event,permission) {
 		}
 
 		if (!(await userState.hasPermission(permission))) {
-
 			if (event.url.pathname === '/') {
 				await goto(`/login?reason=Every Permission denied`);
 				return;

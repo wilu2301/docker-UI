@@ -12,8 +12,19 @@ $white: $mint-cream !default;
 $primary: $prussian-blue !default;
 $secondary: $cool-gray !default;
 $accent: $imperial-red !default;
-$error: $rojo !default;
 $text: black !default;
+
+$error: $rojo !default;
+$success: #4caf50 !default;
+$warning: #ff9800 !default;
+$info: #2196f3 !default;
+
+:root {
+	--info: #{$info};
+	--warning: #{$warning};
+	--error: #{$error};
+	--success: #{$success};
+}
 
 /* SCSS Gradient */
 $gradient-top: linear-gradient(0deg, #273043ff, #9197aeff, #eff6eeff, #f02d3aff, #dd0426ff);

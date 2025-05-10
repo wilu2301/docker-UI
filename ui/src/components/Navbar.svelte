@@ -5,7 +5,7 @@
 
 	function logout() {
 		userState.clear();
-		goto("/login");
+		goto('/login');
 	}
 </script>
 
