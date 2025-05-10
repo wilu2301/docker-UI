@@ -1,5 +1,6 @@
 import { userState } from '$lib/state/user.svelte.js';
 import { goto } from '$app/navigation';
+import { notificationState, NotificationType } from '$lib/state/notification.svelte.js';
 
 export async function canAccess(event, permission) {
 	setTimeout(async () => {
@@ -15,7 +16,8 @@ export async function canAccess(event, permission) {
 				await goto(`/login?reason=Every Permission denied`);
 				return;
 			}
-			await goto(`/?permission_error=true`);
+			await notificationState.addMessage("Permission denied", NotificationType.WARNING);
+			await goto(`/`);
 		}
 	}, 0);
 }

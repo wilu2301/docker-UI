@@ -10,39 +10,13 @@
 	} from '@lucide/svelte';
 
 	import { slide, blur } from 'svelte/transition';
-
-	const MessageType = {
-		INFO: 'info',
-		WARNING: 'warning',
-		ERROR: 'error',
-		SUCCESS: 'success'
-	};
+	import { notificationState, NotificationType } from '$lib/state/notification.svelte.js';
 
 	let open = $state(false);
-	let messages = $state([]);
-
-	function addMessage(message, type = MessageType.INFO) {
-		messages.push({
-			id: messages.length + 1,
-			createdAt: new Date(),
-			message: message,
-			type: type
-		});
-	}
-
-	function deleteMessage(id) {
-		messages = messages.filter((message) => message.id !== id);
-	}
 
 	function clearAll() {
-		messages = [];
-	}
-
-	addMessage('No Permission', MessageType.WARNING);
-	for (let i = 0; i < 10; i++) {
-		addMessage(
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus, congue vel laoreet ac, dictum vitae odio. Fusce at massa nec sapien auctor gravida in in tellus.'
-		);
+		notificationState.clearAll();
+		open = false;
 	}
 </script>
 
@@ -50,8 +24,8 @@
 	<div class="icon">
 		<button onclick={() => (open = !open)}>
 			<Bell size={32} />
-			{#if messages.length > 0}
-				<span class="notification-count">{messages.length}</span>
+			{#if notificationState.messages.length > 0}
+				<span class="notification-count">{notificationState.messages.length}</span>
 			{/if}
 		</button>
 	</div>
@@ -64,23 +38,23 @@
 				</button>
 			</div>
 			<div class="messages">
-				{#each messages as message (message.id)}
+				{#each [...notificationState.messages].reverse() as message (message.id)}
 					<div class="message" transition:blur>
 						<p id="createdAt">{message.createdAt.toLocaleString()}</p>
 
 						<div class="message-type">
-							{#if message.type === MessageType.INFO}
+							{#if message.type === NotificationType.INFO}
 								<Info size={32} color="var(--info)" />
-							{:else if message.type === MessageType.WARNING}
+							{:else if message.type === NotificationType.WARNING}
 								<TriangleAlert size={32} color="var(--warning)" />
-							{:else if message.type === MessageType.ERROR}
+							{:else if message.type === NotificationType.ERROR}
 								<CircleX size={32} color="var(--error)" />
-							{:else if message.type === MessageType.SUCCESS}
+							{:else if message.type === NotificationType.SUCCESS}
 								<CircleCheck size={32} color="var(--success)" />
 							{/if}
 						</div>
 						<p>{message.message}</p>
-						<button class="close" onclick={() => deleteMessage(message.id)}>
+						<button class="close" onclick={() => notificationState.deleteMessage(message.id)}>
 							<X size={32} />
 						</button>
 					</div>
