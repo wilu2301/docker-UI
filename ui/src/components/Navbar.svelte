@@ -24,7 +24,7 @@
 				<a href="/container"><Box /> Container</a>
 			</li>
 			<li>
-				<a href="/"><FileSliders /> Compose</a>
+				<a href="/compose"><FileSliders /> Compose</a>
 			</li>
 		</ul>
 		<ul id="lower">

@@ -2,6 +2,21 @@
 	import Container from './Container.svelte';
 
 	const { name, id } = $props();
+
+	const container = $state([
+		{
+			id: 1
+		},
+		{
+			id: 2
+		},
+		{
+			id: 3
+		},
+		{
+			id: 4
+		}
+	]);
 </script>
 
 <main class="app">
@@ -9,9 +24,16 @@
 		<span>{name}</span>
 	</div>
 	<div class="containers">
-		<Container isFirst={true} />
-		<Container />
-		<Container isLast={true} />
+		{#each container as id, index  (id)}
+			{#if index === 0}
+			<Container class="container" {id} isFirst={true} />
+			{:else if index === container.length - 1}
+			<Container class="container" {id} isLast={true} />
+			{:else}
+			<Container class="container" {id} />
+			{/if}
+
+		{/each}
 	</div>
 </main>
 
@@ -37,20 +59,19 @@
 			align-items: center;
 
 			padding: 0.5rem;
-      text-overflow: ellipsis;
+			text-overflow: ellipsis;
 
-      overflow: hidden;
+			overflow: hidden;
 
 			span {
-        max-width: 100%;
+				max-width: 100%;
 
-        font-size: clamp(0.75rem, 4vw, 1.5rem);
+				font-size: clamp(0.75rem, 4vw, 1.5rem);
 
 				text-align: center;
 				word-wrap: break-word;
 				overflow-wrap: break-word;
 				word-break: break-word;
-
 			}
 		}
 	}
