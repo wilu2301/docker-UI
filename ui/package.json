@@ -34,6 +34,7 @@
 	},
 	"dependencies": {
 		"@lucide/svelte": "^0.507.0",
+		"@svelte-plugins/tooltips": "^3.0.3",
 		"axios": "^1.9.0"
 	}
 }

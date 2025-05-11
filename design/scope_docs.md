@@ -1,10 +1,13 @@
 # Scopes of permissions:
 
 ```
-1: Login
-2: View Dashboard
-3: ... 
-4: ...
+1: Login | 1
+2: View Dashboard | 2
+3: View Container | 4
+4: Get Container | 8
+5: See all Containers | 16
+6: View Apps / Compose | 32
+7: Create Apps / Compose | 64
 
 ```
 Representation in binary. For every allowed scope a 1 is placed

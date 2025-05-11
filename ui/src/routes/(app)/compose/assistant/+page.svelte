@@ -5,6 +5,8 @@
 	import Validator from '$root/routes/(app)/compose/assistant/Validatior.svelte';
 
 	import { fade } from 'svelte/transition';
+	import axios from 'axios';
+	import { API_URL } from '$lib';
 
 	let fName = $state({
 		field: {
@@ -90,12 +92,27 @@
 		}
 	});
 
+	function nameAvailable(name) {
+		axios.post(API_URL + `apps/name_available?name=${name}`).then((res) => {
+			if (res.status === 200) {
+				if (res.data.available === true) {
+					fName.validator.conditions[1].met = true
+
+				} else {
+					fName.validator.conditions[1].met = false
+				}
+			}
+		});
+		return false
+	}
+
 	function validateName(NewValue) {
 		fName.field.value = NewValue;
 
 		fName.validator.conditions[0].met = fName.field.value.length > 0;
-		fName.validator.conditions[1].met = fName.field.value !== 'Lol';
+		 nameAvailable(NewValue);
 		fName.validator.conditions[2].met = fName.field.value.length < 20;
+
 	}
 	function changeStorage(NewValue) {
 		fStorage.selection.value = NewValue;
@@ -111,8 +128,9 @@
 <main>
 	<div class="top-bar">
 		<ChevronLeft size={48} />
+		<h1>Assistant:</h1>
 		<div class="stage">
-			<h1 class="number">1</h1>
+			<h1 class="number">Step 1 / 5</h1>
 			<h1>Create</h1>
 		</div>
 	</div>
@@ -124,30 +142,30 @@
 		<div class="line">
 			<Selection selection={fStorage.selection} onchange={changeStorage} />
 		</div>
-		{#if fStorage.selection.value === "Git"}
-		<div class="line" in:fade>
-			<Field field={fGitUrl.field} />
-		</div>
-		<div class="line" in:fade>
-			<Field field={fGitBranch.field} onchange={validateGitUrl} />
-		</div>
-		<div class="line" in:fade>
-			<Field field={fGitFolder.field} onchange={validateGitUrl} />
-		</div>
-		<div class="line" in:fade>
-			<Field field={fGitUsername.field} onchange={validateGitUrl} />
-		</div>
-		<div class="line" in:fade>
-			<Field field={fGitToken.field} onchange={validateGitUrl} />
-		</div>
-		<div class="line" in:fade>
-			<div class="center">
-				<Validator validator={fGitUrl.validator} />
+		{#if fStorage.selection.value === 'Git'}
+			<div class="line" in:fade>
+				<Field field={fGitUrl.field} />
 			</div>
-		</div>
-			{:else }
+			<div class="line" in:fade>
+				<Field field={fGitBranch.field} onchange={validateGitUrl} />
+			</div>
+			<div class="line" in:fade>
+				<Field field={fGitFolder.field} onchange={validateGitUrl} />
+			</div>
+			<div class="line" in:fade>
+				<Field field={fGitUsername.field} onchange={validateGitUrl} />
+			</div>
+			<div class="line" in:fade>
+				<Field field={fGitToken.field} onchange={validateGitUrl} />
+			</div>
+			<div class="line" in:fade>
+				<div class="center">
+					<Validator validator={fGitUrl.validator} />
+				</div>
+			</div>
+		{:else}
 			<p in:fade>Config will be stored locally.</p>
-			{/if}
+		{/if}
 	</div>
 	<div class="controls">
 		<div class="buttons">
@@ -168,14 +186,18 @@
 			display: flex;
 			flex-direction: row;
 			justify-content: left;
+			gap: 1rem;
 			align-items: center;
 
-			background: red;
+			background: pallet.$secondary;
+			border-radius: 1rem;
 
 			.stage {
 				display: flex;
+				gap: 1rem;
 
 				.number {
+					background-color: pallet.$accent;
 					padding: 0 1rem;
 					border-radius: 8rem;
 				}
