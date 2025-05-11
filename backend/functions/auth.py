@@ -118,7 +118,8 @@ def generate_token(associate_user: User) -> dict[str, str | int]:
         session.close()
     return {"token": token_str, "ttl": time_to_live}
 
-def clear_token(token:str) -> None:
+def clear_token(token:str):
+
     with Session(engine) as session:
         statement: Select = select(Token).where(Token.token == token)
         selected_token = session.exec(statement).one_or_none()
@@ -213,8 +214,8 @@ def has_permission(token, scope: int) -> bool:
     selected_user = get_user_by_token(token)
 
 
-    if selected_user is None:
-        logging.warning(f"User {token} not authenticated")
+
+    if selected_user is None or selected_user.scope is None:
         return False
 
     if not validate_scope(required_scope=scope, user_scope=selected_user.scope):

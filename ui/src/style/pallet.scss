@@ -19,6 +19,9 @@ $success: #4caf50 !default;
 $warning: #ff9800 !default;
 $info: #2196f3 !default;
 
+$black: #000000 !default;
+$selected: $info !default;
+
 :root {
 	--info: #{$info};
 	--warning: #{$warning};

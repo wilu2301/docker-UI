@@ -16,7 +16,7 @@ export async function canAccess(event, permission) {
 				await goto(`/login?reason=Every Permission denied`);
 				return;
 			}
-			await notificationState.addMessage("Permission denied", NotificationType.WARNING);
+			await notificationState.addMessage('Permission denied', NotificationType.WARNING);
 			await goto(`/`);
 		}
 	}, 0);

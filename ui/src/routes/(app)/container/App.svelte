@@ -24,15 +24,14 @@
 		<span>{name}</span>
 	</div>
 	<div class="containers">
-		{#each container as id, index  (id)}
+		{#each container as id, index (id)}
 			{#if index === 0}
-			<Container class="container" {id} isFirst={true} />
+				<Container class="container" {id} isFirst={true} />
 			{:else if index === container.length - 1}
-			<Container class="container" {id} isLast={true} />
+				<Container class="container" {id} isLast={true} />
 			{:else}
-			<Container class="container" {id} />
+				<Container class="container" {id} />
 			{/if}
-
 		{/each}
 	</div>
 </main>
