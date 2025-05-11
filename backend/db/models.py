@@ -14,3 +14,14 @@ class Token(SQLModel, table=True):
     token: str = Field(nullable=False, unique=True)
     user_id: int | None = Field(nullable=False,unique=True)
     ttl: int = Field(nullable=False)
+
+class Apps(SQLModel, table=True):
+    id: int | None = Field(primary_key=True)
+    name: str = Field(nullable=False, unique=True)
+    git: bool = Field(nullable=False, default=False)
+    # Git repository url
+    git_url: str | None = Field(nullable=True)
+    git_branch: str | None = Field(nullable=True)
+    git_username: str | None = Field(nullable=True)
+    git_token: str | None = Field(nullable=True)
+    # state

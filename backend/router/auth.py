@@ -36,7 +36,6 @@ async def login(username: str, password: str):
     return response
 
 
-
 @router.post("/create_user")
 async def create_user(username: str, password: str):
     success = backend.functions.auth.create_user(username, password)

@@ -1,7 +1,7 @@
-from dns.dnssec import allow_all_policy
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import  CORSMiddleware
-from backend.router import auth
+from backend.router import auth, container, apps
 from backend.db import engine
 app = FastAPI()
 
@@ -17,3 +17,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(auth.router)
+app.include_router(container.router)
+app.include_router(apps.router)
