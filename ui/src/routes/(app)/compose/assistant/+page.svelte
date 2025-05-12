@@ -7,6 +7,9 @@
 	import { fade } from 'svelte/transition';
 	import axios from 'axios';
 	import { API_URL } from '$lib';
+	import { userState } from '$lib/state/user.svelte.js';
+	import { notificationState, NotificationType } from '$lib/state/notification.svelte.js';
+	import { canAccess } from '$lib/utils/auth_helper.js';
 
 	let fName = $state({
 		field: {
@@ -92,27 +95,43 @@
 		}
 	});
 
-	function nameAvailable(name) {
-		axios.post(API_URL + `apps/name_available?name=${name}`).then((res) => {
-			if (res.status === 200) {
-				if (res.data.available === true) {
-					fName.validator.conditions[1].met = true
+	async function apiCall(url, responseField, currentResult) {
+		let result = currentResult;
+		try {
+			const response = await axios.post(url);
 
-				} else {
-					fName.validator.conditions[1].met = false
-				}
+			console.log(response.data);
+			if (response.status === 200) {
+				result = !!response.data[responseField];
+				console.log(result)
 			}
-		});
-		return false
+		} catch (error) {
+			if (error.status === 403) {
+				notificationState.addMessage('Permission denied', NotificationType.WARNING);
+			} else {
+				notificationState.addMessage('Connection issues with the server', NotificationType.ERROR);
+				throw Error;
+			}
+		}
+		return result;
+	}
+
+	async function nameAvailable(name) {
+		const url = `${API_URL}apps/name_available?name=${name}&token=${userState.token}`;
+
+		fName.validator.conditions[1].met = await apiCall(
+			url,
+			'available',
+			fName.validator.conditions[1].met
+		);
 	}
 
 	function validateName(NewValue) {
 		fName.field.value = NewValue;
 
 		fName.validator.conditions[0].met = fName.field.value.length > 0;
-		 nameAvailable(NewValue);
+		nameAvailable(NewValue);
 		fName.validator.conditions[2].met = fName.field.value.length < 20;
-
 	}
 	function changeStorage(NewValue) {
 		fStorage.selection.value = NewValue;
@@ -121,7 +140,13 @@
 	function validateGitUrl(NewValue) {
 		fGitUrl.field.value = NewValue;
 
-		// TODO: validate
+		// Validate Git Url
+
+		if (fGitUrl.field.value === '') return;
+		if (!fGitUrl.field.value.startsWith('https://')) return;
+		if (!fGitUrl.field.value.endsWith('.git')) return;
+
+		const url = "/"
 	}
 </script>
 

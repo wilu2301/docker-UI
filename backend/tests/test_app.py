@@ -1,17 +1,98 @@
+import shutil
+
+import pytest
+
 from backend.functions.apps import git_connection
+import pathlib
+import dotenv
 
 
-def test_test_connection():
+@pytest.fixture
+def cleanup():
+    """
+    Cleanup function to remove the test folder.
+    """
+
+    yield
+    if pathlib.Path("storage").exists():
+        shutil.rmtree("storage")
+
+
+def test_connection_clone_wrong_url(cleanup):
+    """
+    Test the test_connection with wrong URL.
+    """
+
+    git_url = "https://notAGitUrltest.git"
+
+    result = git_connection("test",git_url)
+    assert result["status"] == False
+    assert result["type"] == "url"
+
+
+def test_connection_clone_wrong_url_1(cleanup):
+    """
+    Test the test_connection with wrong URL.
+    """
+
+    git_url = "https://github.com/gitpython-developers/GitPythona.git"
+
+    result = git_connection("test",git_url)
+    assert result["status"] == False
+    assert result["type"] == "url"
+
+
+def test_test_connection_wrong_branch(cleanup):
     """
     Test the test_connection function.
     """
 
     git_url = "https://github.com/gitpython-developers/QuickStartTutorialFiles.git"
-    git_folder = "test_folder"
-    git_branch = "main"
-    git_username = "test_user"
-    git_token = "test_token"
+    branch = "wrong_branch"
     # Test the test_connection function
 
-    git_connection("test",git_url, git_folder, git_branch, git_username, git_token)
-    assert True
+    dotenv.load_dotenv()
+    git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
+    git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
+
+    result = git_connection("test",git_url, git_branch=branch,git_username=git_username,git_token=git_token)
+    assert result["status"] == False
+    assert result["type"] == "branch"
+
+
+
+def test_connection_auth_fail(cleanup):
+    """
+    Test the test_connection with wrong URL.
+    """
+
+    git_url = "https://github.com/wilu2301/test-auth.git"
+
+    result = git_connection("test",git_url, git_username="1", git_token="1")
+    assert result["status"] == False
+    assert result["type"] == "auth"
+
+
+
+
+
+def test_connection_auth(cleanup):
+    """
+    Test the test_connection with wrong URL.
+    """
+
+    git_url = "https://github.com/wilu2301/test-auth.git"
+
+    dotenv.load_dotenv()
+    git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
+    git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
+
+
+
+    result = git_connection("test",git_url, git_username=git_username, git_token=git_token)
+    assert result["status"] == True
+
+
+
+
+

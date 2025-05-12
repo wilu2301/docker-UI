@@ -6,7 +6,6 @@ export async function canAccess(event, permission) {
 	setTimeout(async () => {
 		if (!(await userState.hasToken())) {
 			const redirectTo = event.url.pathname;
-			console.log(event);
 			await goto(`/login?redirectTo=${redirectTo}&reason="Not logged in"`);
 			return;
 		}
