@@ -42,9 +42,9 @@ def test_connection_clone_wrong_url_1(cleanup):
     assert result["type"] == "url"
 
 
-def test_test_connection_wrong_branch(cleanup):
+def test_connection_wrong_branch(cleanup):
     """
-    Test the test_connection function.
+    Test the connection with a wrong branch.
     """
 
     git_url = "https://github.com/gitpython-developers/QuickStartTutorialFiles.git"
@@ -63,7 +63,7 @@ def test_test_connection_wrong_branch(cleanup):
 
 def test_connection_auth_fail(cleanup):
     """
-    Test the test_connection with wrong URL.
+    Test the connection with wrong credentials.
     """
 
     git_url = "https://github.com/wilu2301/test-auth.git"
@@ -78,7 +78,7 @@ def test_connection_auth_fail(cleanup):
 
 def test_connection_auth(cleanup):
     """
-    Test the test_connection with wrong URL.
+    Test the connection with valid credentials.
     """
 
     git_url = "https://github.com/wilu2301/test-auth.git"
@@ -93,6 +93,19 @@ def test_connection_auth(cleanup):
     assert result["status"] == True
 
 
+def test_connection_valid_folder():
+    """
+    Test the connection with valid folder.
+    """
+
+    git_url = "https://github.com/wilu2301/test-auth.git"
+
+    dotenv.load_dotenv()
+    git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
+    git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
+
+    result = git_connection("test",git_url, git_username=git_username, git_token=git_token, git_folder="/not-existent-folder")
+    assert result["status"] == True
 
 
 

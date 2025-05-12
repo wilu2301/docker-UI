@@ -1,10 +1,12 @@
 from git import Repo, InvalidGitRepositoryError, GitCommandError
 from sqlalchemy import Select
 from sqlmodel import Session, select
+import pathlib
 
 from backend import config
 from backend.db.engine import engine
 from backend.db.models import Apps
+from backend.functions.utils import is_folder_name_allowed
 
 
 def check_name_available(name: str) -> bool:
@@ -14,14 +16,7 @@ def check_name_available(name: str) -> bool:
     :return: True if the name is available, False otherwise.
     """
 
-    if name is None or name == "":
-        return False
-
-    invalid_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
-    if any(char in name for char in invalid_chars):
-        return False
-
-    if len(name) > 20:
+    if not is_folder_name_allowed(name):
         return False
 
 
@@ -37,7 +32,7 @@ def check_name_available(name: str) -> bool:
 
 
 
-def git_connection(name: str,git_url: str, git_folder="/", git_branch="main", git_username=None, git_token=None) -> dict:
+def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main", git_username=None, git_token=None) -> dict:
     """
     Test connection to the git repository.
     :param name:
@@ -86,8 +81,6 @@ def git_connection(name: str,git_url: str, git_folder="/", git_branch="main", gi
     # Check if the user has write access to the repository
     try:
         repo.git.push("origin", git_branch)
-
-
     except GitCommandError as e:
         if "Authentication failed" in e.stderr:
             # User does not have write access
@@ -95,6 +88,16 @@ def git_connection(name: str,git_url: str, git_folder="/", git_branch="main", gi
         else:
             # Other error
             return {"status": False, "type": "other", "message": e.stderr}
+
+    # Check if folder name is allowed
+    if not is_folder_name_allowed(git_folder.replace("/","")):
+        return {"status": False, "type": "name"}
+    try:
+        # Check if folder in git repository exists
+        if not pathlib.Path(config.APP_STORAGE + name + git_folder).exists():
+            pathlib.Path(config.APP_STORAGE + name + git_folder).mkdir(parents=True, exist_ok=True)
+    except OSError as e:
+        return {"status": False, "type": "other", "message": e.strerror}
 
 
     return {"status": True, "message": None}
