@@ -3,7 +3,7 @@ import shutil
 import pytest
 
 from backend.db.models import User
-from backend.functions.apps import git_connection
+from backend.functions.apps import git_connection, write_to_creation_db, get_creation_data
 import pathlib
 import dotenv
 
@@ -110,4 +110,35 @@ def test_connection_valid_folder(cleanup):
     assert result["status"] == True
 
 
+def test_connection_wrong_folder(cleanup):
+    """
+    Test the connection with a wrong folder.
+    """
 
+    git_url = "https://github.com/wilu2301/test-auth.git"
+
+    dotenv.load_dotenv()
+    git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
+    git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
+
+    result = git_connection("test", git_url, git_folder="/<Not allowed>", git_username=git_username,
+                            git_token=git_token)
+    assert result["status"] == False
+
+
+def test_write_to_creation_db():
+    """
+    Test the write_to_creation_db function.
+    """
+
+    user = User(id=-100, username="test")
+    write_to_creation_db(editing_user=user,name="test")
+
+def test_read_from_creation_db():
+    """
+    Test the read_from_creation_db function.
+    """
+
+    user = User(id=-100, username="test")
+    result = get_creation_data(editing_user=user)
+    assert result["name"] == "test"

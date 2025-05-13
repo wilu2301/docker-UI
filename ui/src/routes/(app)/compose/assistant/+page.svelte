@@ -9,7 +9,6 @@
 	import { API_URL } from '$lib';
 	import { userState } from '$lib/state/user.svelte.js';
 	import { notificationState, NotificationType } from '$lib/state/notification.svelte.js';
-	import { onMount } from 'svelte';
 
 	let fName = $state({
 		field: {
@@ -102,6 +101,7 @@
 	});
 	let fGitToken = $state({
 		field: {
+			type: 'password',
 			name: 'Git Token',
 			value: ''
 		}

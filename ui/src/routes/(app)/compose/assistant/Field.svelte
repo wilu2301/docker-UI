@@ -3,12 +3,14 @@
 
 	let name = $derived(field.name);
 	let placeholder = $derived(field.placeholder);
+	let value = $derived(field.value);
+	let type = $derived(field.type)
 </script>
 
 <main>
 	<div class="field">
 		<label for={name}>{name}</label>
-		<input type="text" id={name} {placeholder} oninput={(e) => onchange(e.target.value)} />
+		<input {type} id={name} {placeholder} {value} oninput={(e) => onchange(e.target.value)} />
 	</div>
 </main>
 
