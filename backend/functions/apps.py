@@ -36,8 +36,6 @@ def get_editing_user_id_creation_app(user: User) -> int:
             return result.editing_user_id
 
 
-
-
 def write_to_creation_db(name = None, git = False ,git_url = None,
                          git_branch = None, git_username = None, git_token = None, git_folder = None, editing_user = None):
     """
@@ -75,6 +73,25 @@ def write_to_creation_db(name = None, git = False ,git_url = None,
             session.add(app)
         session.commit()
 
+def get_creation_data(editing_user: User) -> dict:
+    """
+    Get the app creation data from the database.
+    :param editing_user: The user that is creating the app.
+    :return: The app creation data.
+    """
+
+    if editing_user is None:
+        return {}
+
+    with Session(engine) as session:
+        statement: Select = select(AppSetup).where(AppSetup.editing_user_id == editing_user.id)
+        result = session.exec(statement).one_or_none()
+        if result is None:
+            return {}
+        else:
+
+            return result.dict()
+
 
 def check_name_available(name: str) -> bool:
     """
@@ -93,8 +110,6 @@ def check_name_available(name: str) -> bool:
             return True
         else:
             return False
-
-
 
 
 def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main", git_username=None, git_token=None, editing_user=None) -> dict:

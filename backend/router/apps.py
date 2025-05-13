@@ -1,10 +1,25 @@
-from fastapi import routing, APIRouter, HTTPException
+from fastapi import  APIRouter, HTTPException
 from backend.functions import apps
 from backend.functions import auth
-from backend.functions.apps import write_to_creation_db
+from backend.functions.apps import write_to_creation_db, get_creation_data
 from backend.functions.auth import get_user_by_token
 
 router = APIRouter(prefix="/apps", tags=["apps"])
+
+@router.get("/creation")
+async def get_creation(token):
+    """
+    Gets the saved creation data from the database.
+    :param token: The token of the user.
+    :return: The app configuration.
+    """
+    permission_scope = 64
+
+    if not auth.has_permission(token, permission_scope):
+        raise HTTPException(status_code=403, detail="Permission denied")
+
+    return get_creation_data(get_user_by_token(token))
+
 
 @router.post("/test_connection")
 async def test_connection(token: str,name, git_url: str, git_folder= "/main" , git_branch="main", git_username=None, git_token=None):

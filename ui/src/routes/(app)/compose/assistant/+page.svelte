@@ -9,6 +9,7 @@
 	import { API_URL } from '$lib';
 	import { userState } from '$lib/state/user.svelte.js';
 	import { notificationState, NotificationType } from '$lib/state/notification.svelte.js';
+	import { onMount } from 'svelte';
 
 	let fName = $state({
 		field: {
@@ -106,10 +107,21 @@
 		}
 	});
 
-	async function apiCall(url, responseField, currentResult) {
+	$effect(async () => {
+		if (userState && userState.token) {
+			await get_saved_fields();
+		}
+	});
+
+	async function apiCall(url, responseField, currentResult, method = 'POST') {
 		let result = currentResult;
 		try {
-			const response = await axios.post(url);
+			let response;
+			if (method === 'POST') {
+				response = await axios.post(url);
+			} else {
+				response = await axios.get(url);
+			}
 
 			console.log(response.data);
 			if (response.status === 200) {
@@ -128,6 +140,30 @@
 			}
 		}
 		return result;
+	}
+
+	async function get_saved_fields() {
+		const result = await apiCall(
+			`${API_URL}apps/creation?token=${userState.token}`,
+			null,
+			null,
+			'GET'
+		);
+		if (result === null) return;
+
+		validateName(result.name);
+		if (result.git) {
+			changeStorage('Git');
+		} else {
+			changeStorage('Local');
+		}
+		fGitUrl.field.value = result.git_url;
+		fGitBranch.field.value = result.git_branch;
+		fGitFolder.field.value = result.git_folder;
+		fGitUsername.field.value = result.git_username;
+		fGitToken.field.value = result.git_token;
+
+		await validateGitUrl();
 	}
 
 	async function nameAvailable(name) {
@@ -173,12 +209,11 @@
 	}
 
 	async function validateGitUrl() {
-		// Validate Git Url
 		if (fGitUrl.field.value === '') return;
 		if (!fGitUrl.field.value.startsWith('https://')) return;
 		if (!fGitUrl.field.value.endsWith('.git')) return;
 
-		console.log(fGitUsername.field.value)
+		console.log(fGitUsername.field.value);
 
 		const apiURL = `${API_URL}apps/test_connection?token=${userState.token}
 		&name=${fName.field.value}
@@ -195,9 +230,9 @@
 			fGitUrl.validator.conditions.forEach((condition) => (condition.met = false));
 
 			if (!result.status) {
-				console.log(result.valid)
+				console.log(result.valid);
 				if (result.valid && Array.isArray(result.valid)) {
-					console.log("still valid")
+					console.log('still valid');
 					fGitUrl.validator.conditions[0].met = result.valid.includes('url');
 					fGitUrl.validator.conditions[1].met = result.valid.includes('branch');
 					fGitUrl.validator.conditions[2].met = result.valid.includes('auth_clone');
@@ -230,32 +265,34 @@
 			<Field field={fName.field} onchange={validateName} />
 			<Validator validator={fName.validator} />
 		</div>
-		<div class="line">
-			<Selection selection={fStorage.selection} onchange={changeStorage} />
-		</div>
-		{#if fStorage.selection.value === 'Git'}
+		{#if fName.validator.conditions.every((condition) => condition.met)}
 			<div class="line" in:fade>
-				<Field field={fGitUrl.field} onchange={changeGitUrl} />
+				<Selection selection={fStorage.selection} onchange={changeStorage} />
 			</div>
-			<div class="line" in:fade>
-				<Field field={fGitBranch.field} onchange={changeGitBranch} />
-			</div>
-			<div class="line" in:fade>
-				<Field field={fGitFolder.field} onchange={changeGitFolder} />
-			</div>
-			<div class="line" in:fade>
-				<Field field={fGitUsername.field} onchange={changeGitUsername} />
-			</div>
-			<div class="line" in:fade>
-				<Field field={fGitToken.field} onchange={changeGitToken} />
-			</div>
-			<div class="line" in:fade>
-				<div class="center">
-					<Validator validator={fGitUrl.validator} />
+			{#if fStorage.selection.value === 'Git'}
+				<div class="line" in:fade>
+					<Field field={fGitUrl.field} onchange={changeGitUrl} />
 				</div>
-			</div>
-		{:else}
-			<p in:fade>Config will be stored locally.</p>
+				<div class="line" in:fade>
+					<Field field={fGitBranch.field} onchange={changeGitBranch} />
+				</div>
+				<div class="line" in:fade>
+					<Field field={fGitFolder.field} onchange={changeGitFolder} />
+				</div>
+				<div class="line" in:fade>
+					<Field field={fGitUsername.field} onchange={changeGitUsername} />
+				</div>
+				<div class="line" in:fade>
+					<Field field={fGitToken.field} onchange={changeGitToken} />
+				</div>
+				<div class="line" in:fade>
+					<div class="center">
+						<Validator validator={fGitUrl.validator} />
+					</div>
+				</div>
+			{:else}
+				<p in:fade>Config will be stored locally.</p>
+			{/if}
 		{/if}
 	</div>
 	<div class="controls">
