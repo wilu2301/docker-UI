@@ -70,7 +70,7 @@ def test_connection_auth_fail(cleanup):
 
     result = git_connection("test",git_url, git_username="1", git_token="1")
     assert result["status"] == False
-    assert result["type"] == "auth"
+    assert result["type"] == "auth_clone"
 
 
 
@@ -93,7 +93,7 @@ def test_connection_auth(cleanup):
     assert result["status"] == True
 
 
-def test_connection_valid_folder():
+def test_connection_valid_folder(cleanup):
     """
     Test the connection with valid folder.
     """

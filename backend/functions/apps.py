@@ -1,4 +1,4 @@
-from git import Repo, InvalidGitRepositoryError, GitCommandError
+from git import Repo, GitCommandError
 from sqlalchemy import Select
 from sqlmodel import Session, select
 import pathlib
@@ -50,10 +50,17 @@ def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main"
         protocol, rest = git_url.split("://")
         git_url = f"{protocol}://{git_username}:{git_token}@{rest}"
 
+    # Check if a folder of the project already exists
+    skip_clone  = False
+    if pathlib.Path(config.APP_STORAGE + name).exists():
+        skip_clone = True
 
 
     try:
-        repo = Repo.clone_from(git_url, config.APP_STORAGE + name)
+        if  skip_clone:
+            repo = Repo(config.APP_STORAGE + name)
+        else:
+            repo = Repo.clone_from(git_url, config.APP_STORAGE + name)
         repo.git.checkout(git_branch)
 
     except GitCommandError as e:
@@ -62,16 +69,16 @@ def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main"
             pass
         elif "Could not resolve host" in e.stderr:
             # Invalid URL
-            return {"status": False, "type": "url"}
+            return {"status": False, "type": "url", "valid": ["name"]}
         elif "not found" in e.stderr:
             # Repository not found
             return {"status": False, "type": "url"}
         elif "pathspec" in e.stderr:
             # Branch not found
-            return {"status": False, "type": "branch"}
+            return {"status": False, "type": "branch", "valid": ["name", "url"]}
             # Authentication failed
-        if "Authentication failed" in e.stderr or "could not read Username" in e.stderr:
-            return {"status": False, "type": "auth"}
+        if "Authentication failed" in e.stderr or "could not read Username" in e.stderr or "Permission" in e.stderr:
+            return {"status": False, "type": "auth_clone", "valid": ["name", "url","branch"]}
         else:
             # Other error
             return {"status": False, "type": "other", "message": e.stderr}
@@ -82,22 +89,26 @@ def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main"
     try:
         repo.git.push("origin", git_branch)
     except GitCommandError as e:
-        if "Authentication failed" in e.stderr:
+        if "Authentication failed" in e.stderr or "could not read Username" in e.stderr or "Permission" in e.stderr:
             # User does not have write access
-            return {"status": False, "type": "auth"}
+            print(e)
+            return {"status": False, "type": "auth_push","valid": ["name", "url","branch","auth_clone"]}
         else:
             # Other error
             return {"status": False, "type": "other", "message": e.stderr}
 
     # Check if folder name is allowed
     if not is_folder_name_allowed(git_folder.replace("/","")):
-        return {"status": False, "type": "name"}
+        return {"status": False, "type": "folder", "valid": ["name", "url", "branch", "auth_clone", "auth_push"]}
     try:
         # Check if folder in git repository exists
+        if not git_folder.startswith("/"):
+            git_folder = "/" + git_folder
+
         if not pathlib.Path(config.APP_STORAGE + name + git_folder).exists():
             pathlib.Path(config.APP_STORAGE + name + git_folder).mkdir(parents=True, exist_ok=True)
     except OSError as e:
         return {"status": False, "type": "other", "message": e.strerror}
 
 
-    return {"status": True, "message": None}
+    return {"status": True, "message": None, "valid": ["name", "url", "branch", "auth_clone", "auth_push","folder"]}

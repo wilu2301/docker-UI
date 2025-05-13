@@ -9,7 +9,6 @@
 	import { API_URL } from '$lib';
 	import { userState } from '$lib/state/user.svelte.js';
 	import { notificationState, NotificationType } from '$lib/state/notification.svelte.js';
-	import { canAccess } from '$lib/utils/auth_helper.js';
 
 	let fName = $state({
 		field: {
@@ -53,18 +52,26 @@
 			conditions: [
 				{
 					goal: 'Git URL is valid',
-					met: true
+					met: false
 				},
 				{
 					goal: 'Git Branch is valid',
 					met: false
 				},
 				{
-					goal: 'Git Folder is valid',
+					goal: 'Can clone repository',
 					met: false
 				},
 				{
-					goal: 'User has access to the repository',
+					goal: 'Git credentials are valid',
+					met: false
+				},
+				{
+					goal: 'User has write permissions ',
+					met: false
+				},
+				{
+					goal: 'Git folder can be created',
 					met: false
 				}
 			]
@@ -102,8 +109,11 @@
 
 			console.log(response.data);
 			if (response.status === 200) {
-				result = !!response.data[responseField];
-				console.log(result)
+				if (responseField == null) {
+					result = response.data;
+				} else {
+					result = response.data[responseField];
+				}
 			}
 		} catch (error) {
 			if (error.status === 403) {
@@ -126,6 +136,27 @@
 		);
 	}
 
+	function changeGitUrl(NewValue) {
+		fGitUrl.field.value = NewValue;
+		validateGitUrl();
+	}
+	function changeGitBranch(NewValue) {
+		fGitBranch.field.value = NewValue;
+		validateGitUrl();
+	}
+	function changeGitFolder(NewValue) {
+		fGitFolder.field.value = NewValue;
+		validateGitUrl();
+	}
+	function changeGitUsername(NewValue) {
+		fGitUsername.field.value = NewValue;
+		validateGitUrl();
+	}
+	function changeGitToken(NewValue) {
+		fGitToken.field.value = NewValue;
+		validateGitUrl();
+	}
+
 	function validateName(NewValue) {
 		fName.field.value = NewValue;
 
@@ -137,16 +168,46 @@
 		fStorage.selection.value = NewValue;
 	}
 
-	function validateGitUrl(NewValue) {
-		fGitUrl.field.value = NewValue;
-
+	async function validateGitUrl() {
 		// Validate Git Url
-
 		if (fGitUrl.field.value === '') return;
 		if (!fGitUrl.field.value.startsWith('https://')) return;
 		if (!fGitUrl.field.value.endsWith('.git')) return;
 
-		const url = "/"
+		console.log(fGitUsername.field.value)
+
+		const apiURL = `${API_URL}apps/test_connection?token=${userState.token}
+		&name=${fName.field.value}
+		&git_url=${fGitUrl.field.value}
+		&git_folder=${fGitFolder.field.value}
+		&git_branch=${fGitBranch.field.value}
+		&git_username=${fGitUsername.field.value}
+		&git_token=${fGitToken.field.value}`;
+
+		try {
+			const result = await apiCall(apiURL, null);
+
+			// Reset all permissions
+			fGitUrl.validator.conditions.forEach((condition) => (condition.met = false));
+
+			if (!result.status) {
+				console.log(result.valid)
+				if (result.valid && Array.isArray(result.valid)) {
+					console.log("still valid")
+					fGitUrl.validator.conditions[0].met = result.valid.includes('url');
+					fGitUrl.validator.conditions[1].met = result.valid.includes('branch');
+					fGitUrl.validator.conditions[2].met = result.valid.includes('auth_clone');
+					fGitUrl.validator.conditions[3].met = result.valid.includes('auth_push');
+					fGitUrl.validator.conditions[4].met = result.valid.includes('auth_push');
+				}
+			} else {
+				// Success case
+				fGitUrl.validator.conditions.forEach((condition) => (condition.met = true));
+			}
+		} catch (error) {
+			console.error('Error validating Git URL:', error);
+			notificationState.addMessage('Connection failed', NotificationType.ERROR);
+		}
 	}
 </script>
 
@@ -169,19 +230,19 @@
 		</div>
 		{#if fStorage.selection.value === 'Git'}
 			<div class="line" in:fade>
-				<Field field={fGitUrl.field} />
+				<Field field={fGitUrl.field} onchange={changeGitUrl} />
 			</div>
 			<div class="line" in:fade>
-				<Field field={fGitBranch.field} onchange={validateGitUrl} />
+				<Field field={fGitBranch.field} onchange={changeGitBranch} />
 			</div>
 			<div class="line" in:fade>
-				<Field field={fGitFolder.field} onchange={validateGitUrl} />
+				<Field field={fGitFolder.field} onchange={changeGitFolder} />
 			</div>
 			<div class="line" in:fade>
-				<Field field={fGitUsername.field} onchange={validateGitUrl} />
+				<Field field={fGitUsername.field} onchange={changeGitUsername} />
 			</div>
 			<div class="line" in:fade>
-				<Field field={fGitToken.field} onchange={validateGitUrl} />
+				<Field field={fGitToken.field} onchange={changeGitToken} />
 			</div>
 			<div class="line" in:fade>
 				<div class="center">

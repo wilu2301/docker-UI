@@ -4,7 +4,7 @@ from backend.functions import auth
 router = APIRouter(prefix="/apps", tags=["apps"])
 
 @router.post("/test_connection")
-async def test_connection(token: str,name, git_url: str, git_folder= "/" , git_branch="main", git_username=None, git_token=None):
+async def test_connection(token: str,name, git_url: str, git_folder= "/main" , git_branch="main", git_username=None, git_token=None):
     """
     Test connection to the git repository.
     """
@@ -12,7 +12,10 @@ async def test_connection(token: str,name, git_url: str, git_folder= "/" , git_b
     if not auth.has_permission(token, permission_scope):
         raise HTTPException(status_code=403, detail="Permission denied")
 
-    result = apps.git_connection(git_url, git_folder, git_branch, git_username, git_token)
+    result = apps.git_connection(name=name,
+                                 git_url=git_url, git_folder=git_folder,
+                                 git_branch=git_branch, git_username=git_username,
+                                 git_token=git_token)
 
     return result
 
