@@ -1,6 +1,9 @@
 from fastapi import routing, APIRouter, HTTPException
 from backend.functions import apps
 from backend.functions import auth
+from backend.functions.apps import write_to_creation_db
+from backend.functions.auth import get_user_by_token
+
 router = APIRouter(prefix="/apps", tags=["apps"])
 
 @router.post("/test_connection")
@@ -12,10 +15,8 @@ async def test_connection(token: str,name, git_url: str, git_folder= "/main" , g
     if not auth.has_permission(token, permission_scope):
         raise HTTPException(status_code=403, detail="Permission denied")
 
-    result = apps.git_connection(name=name,
-                                 git_url=git_url, git_folder=git_folder,
-                                 git_branch=git_branch, git_username=git_username,
-                                 git_token=git_token)
+    result = apps.git_connection(name=name, git_url=git_url, git_folder=git_folder, git_branch=git_branch,
+                                 git_username=git_username, git_token=git_token, editing_user=get_user_by_token(token))
 
     return result
 
@@ -33,4 +34,8 @@ async def name_available(name: str, token: str):
     if not auth.has_permission(token, permission_scope):
         raise HTTPException(status_code=403, detail="Permission denied")
 
-    return {"available":apps.check_name_available(name)}
+    available = apps.check_name_available(name)
+    if available:
+        write_to_creation_db(editing_user=get_user_by_token(token), name=name)
+
+    return {"available":available}

@@ -2,6 +2,7 @@ import shutil
 
 import pytest
 
+from backend.db.models import User
 from backend.functions.apps import git_connection
 import pathlib
 import dotenv
@@ -25,7 +26,7 @@ def test_connection_clone_wrong_url(cleanup):
 
     git_url = "https://notAGitUrltest.git"
 
-    result = git_connection("test",git_url)
+    result = git_connection("test", git_url)
     assert result["status"] == False
     assert result["type"] == "url"
 
@@ -37,7 +38,7 @@ def test_connection_clone_wrong_url_1(cleanup):
 
     git_url = "https://github.com/gitpython-developers/GitPythona.git"
 
-    result = git_connection("test",git_url)
+    result = git_connection("test", git_url)
     assert result["status"] == False
     assert result["type"] == "url"
 
@@ -55,7 +56,7 @@ def test_connection_wrong_branch(cleanup):
     git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
     git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
 
-    result = git_connection("test",git_url, git_branch=branch,git_username=git_username,git_token=git_token)
+    result = git_connection("test", git_url, git_branch=branch, git_username=git_username, git_token=git_token)
     assert result["status"] == False
     assert result["type"] == "branch"
 
@@ -68,7 +69,7 @@ def test_connection_auth_fail(cleanup):
 
     git_url = "https://github.com/wilu2301/test-auth.git"
 
-    result = git_connection("test",git_url, git_username="1", git_token="1")
+    result = git_connection("test", git_url, git_username="1", git_token="1")
     assert result["status"] == False
     assert result["type"] == "auth_clone"
 
@@ -89,7 +90,7 @@ def test_connection_auth(cleanup):
 
 
 
-    result = git_connection("test",git_url, git_username=git_username, git_token=git_token)
+    result = git_connection("test", git_url, git_username=git_username, git_token=git_token)
     assert result["status"] == True
 
 
@@ -104,7 +105,8 @@ def test_connection_valid_folder(cleanup):
     git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
     git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
 
-    result = git_connection("test",git_url, git_username=git_username, git_token=git_token, git_folder="/not-existent-folder")
+    result = git_connection("test", git_url, git_folder="/not-existent-folder", git_username=git_username,
+                            git_token=git_token)
     assert result["status"] == True
 
 

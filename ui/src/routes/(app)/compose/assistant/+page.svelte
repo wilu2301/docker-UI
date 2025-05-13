@@ -73,6 +73,10 @@
 				{
 					goal: 'Git folder can be created',
 					met: false
+				},
+				{
+					goal: 'Folder is empty',
+					met: false
 				}
 			]
 		}
@@ -199,6 +203,7 @@
 					fGitUrl.validator.conditions[2].met = result.valid.includes('auth_clone');
 					fGitUrl.validator.conditions[3].met = result.valid.includes('auth_push');
 					fGitUrl.validator.conditions[4].met = result.valid.includes('auth_push');
+					fGitUrl.validator.conditions[5].met = result.valid.includes('folder');
 				}
 			} else {
 				// Success case
