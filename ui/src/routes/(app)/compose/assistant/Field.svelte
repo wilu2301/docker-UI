@@ -4,7 +4,7 @@
 	let name = $derived(field.name);
 	let placeholder = $derived(field.placeholder);
 	let value = $derived(field.value);
-	let type = $derived(field.type)
+	let type = $derived(field.type);
 </script>
 
 <main>

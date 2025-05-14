@@ -27,7 +27,7 @@
 
 	.notification {
 		width: 20%;
-		height: 100%;
+		height: auto;
 
 		position: fixed;
 		top: 0;
