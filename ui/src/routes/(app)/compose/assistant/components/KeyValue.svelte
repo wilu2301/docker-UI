@@ -11,18 +11,16 @@
 			value: '',
 			inline: {}
 		});
-		handleChange()
+		handleChange();
 	}
 
 	function removeChild(index) {
 		children = children.filter((_, i) => i !== index);
 	}
 
-
-	function handleChange(){
-		onchange(children)
+	function handleChange() {
+		onchange(children);
 	}
-
 </script>
 
 <main>
@@ -45,15 +43,25 @@
 					{@const Key = settings.key.icon}
 					<Key />
 				{/if}
-				<input type={settings.key.type}  placeholder={settings.key.placeholder} bind:value={child.key} oninput={() => handleChange()} />
+				<input
+					type={settings.key.type}
+					placeholder={settings.key.placeholder}
+					bind:value={child.key}
+					oninput={() => handleChange()}
+				/>
 				{#if true}
 					{@const Value = settings.value.icon}
 					<Value />
 				{/if}
-				<input type={settings.value.type} placeholder={settings.value.placeholder} bind:value={child.value} onchange={() => handleChange()} />
+				<input
+					type={settings.value.type}
+					placeholder={settings.value.placeholder}
+					bind:value={child.value}
+					onchange={() => handleChange()}
+				/>
 				{#if true}
 					{@const Inline = settings.inlineComponent}
-					<Inline inline={child.inline} onchange={handleChange} />
+					<Inline inline={child.inline} onchange={() => handleChange()} />
 				{/if}
 			</div>
 		{/each}

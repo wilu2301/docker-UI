@@ -3,22 +3,22 @@
 	let tcp = $derived(inline.tcp);
 	let udp = $derived(inline.udp);
 
-	function handleChange(){
-		if (onchange) onchange()
+	function handleChange() {
+		if (onchange) onchange();
 	}
 
-function changeTcp(){
-	tcp = !tcp
-	handleChange()
-}
-	function changeUdp(){
-		tcp = !tcp
-		handleChange()
+	function changeTcp() {
+		tcp = !tcp;
+		handleChange();
+	}
+	function changeUdp() {
+		udp = !udp;
+		handleChange();
 	}
 </script>
 
 <main>
-	<button class:selected={tcp} onclick={changeTcp} >TCP</button>
+	<button class:selected={tcp} onclick={changeTcp}>TCP</button>
 	<button class:selected={udp} onclick={changeUdp}>UDP</button>
 	{#if inline.notAvailable}
 		<span id="error">Port not available</span>
