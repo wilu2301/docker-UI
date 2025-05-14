@@ -1,11 +1,11 @@
 <script>
 	import { ChevronLeft, ChevronRight } from '@lucide/svelte';
-	import {fade} from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
 	import Step1 from '$root/routes/(app)/compose/assistant/steps/Step1.svelte';
 	import Step2 from '$root/routes/(app)/compose/assistant/steps/Step2.svelte';
 
-	let stage = $state(1);
+	let stage = $state(2);
 
 	function nextStage() {
 		stage += 1;
@@ -27,7 +27,7 @@
 	</div>
 	<div class="content" in:fade>
 		{#if stage === 1}
-			<Step1/>
+			<Step1 />
 		{:else if stage === 2}
 			<Step2 />
 		{/if}
@@ -103,12 +103,13 @@
 			}
 		}
 		.controls {
-			position: absolute;
+			position: relative;
 			bottom: 1rem;
-			right: 1rem;
+			left: 0rem;
 
 			.buttons {
 				display: flex;
+				justify-content: end;
 				flex-direction: row;
 				gap: 1rem;
 				button {

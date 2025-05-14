@@ -1,7 +1,7 @@
 <script>
-	import Field from '$root/routes/(app)/compose/assistant/Field.svelte';
-	import Selection from '$root/routes/(app)/compose/assistant/Selection.svelte';
-	import Validator from '$root/routes/(app)/compose/assistant/Validatior.svelte';
+	import Field from '$root/routes/(app)/compose/assistant/components/Field.svelte';
+	import Selection from '$root/routes/(app)/compose/assistant/components/Selection.svelte';
+	import Validator from '$root/routes/(app)/compose/assistant/components/Validator.svelte';
 
 	import { fade } from 'svelte/transition';
 	import { API_URL } from '$lib';
@@ -261,7 +261,7 @@
 	main {
 		width: 100%;
 		.content {
-			width: 100%;
+			width: auto;
 			margin: 1rem;
 
 			display: flex;
