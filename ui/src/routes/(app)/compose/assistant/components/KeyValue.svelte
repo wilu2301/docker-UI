@@ -1,19 +1,26 @@
 <script>
 	import { fade } from 'svelte/transition';
 
-	const { list, settings } = $props();
+	const { list, settings, onchange = () => {} } = $props();
 	let name = $derived(list.name);
 	let children = $state(list.children);
 
 	function addChild() {
 		children.push({
 			key: '',
-			value: ''
+			value: '',
+			inline: {}
 		});
+		handleChange()
 	}
 
 	function removeChild(index) {
 		children = children.filter((_, i) => i !== index);
+	}
+
+
+	function handleChange(){
+		onchange(children)
 	}
 
 </script>
@@ -38,12 +45,16 @@
 					{@const Key = settings.key.icon}
 					<Key />
 				{/if}
-				<input type="text" placeholder={settings.key.placeholder} />
+				<input type={settings.key.type}  placeholder={settings.key.placeholder} bind:value={child.key} oninput={() => handleChange()} />
 				{#if true}
 					{@const Value = settings.value.icon}
 					<Value />
 				{/if}
-				<input type="text" placeholder={settings.value.placeholder} />
+				<input type={settings.value.type} placeholder={settings.value.placeholder} bind:value={child.value} onchange={() => handleChange()} />
+				{#if true}
+					{@const Inline = settings.inlineComponent}
+					<Inline inline={child.inline} onchange={handleChange} />
+				{/if}
 			</div>
 		{/each}
 	</div>

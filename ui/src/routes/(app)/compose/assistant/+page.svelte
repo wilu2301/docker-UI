@@ -105,7 +105,7 @@
 		.controls {
 			position: relative;
 			bottom: 1rem;
-			left: 0rem;
+			left: 0;
 
 			.buttons {
 				display: flex;
