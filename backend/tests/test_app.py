@@ -1,3 +1,4 @@
+import os
 import shutil
 
 import pytest
@@ -17,7 +18,6 @@ def cleanup():
     yield
     if pathlib.Path("storage").exists():
         shutil.rmtree("storage")
-
 
 def test_connection_clone_wrong_url(cleanup):
     """

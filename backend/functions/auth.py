@@ -146,8 +146,21 @@ def get_token(associated_user: User) -> dict[str, str | int] | Any:
         statement: Select = select(Token).where(Token.user_id == associated_user.id)
         result = session.exec(statement).one_or_none()
 
+
+
         session.close()
         if result is not None:
+
+            # Check if token is still valid
+
+            time = datetime.datetime.now()
+
+            if time.timestamp() > result.ttl:
+                clear_token(result.token)
+                return generate_token(associated_user)
+
+            else:
+
              return {"token": result.token, "ttl": result.ttl}
 
         else:

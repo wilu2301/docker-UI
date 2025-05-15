@@ -199,13 +199,13 @@
 			fGitUrl.validator.conditions.forEach((condition) => (condition.met = false));
 
 			if (!result.status) {
-				if (result.valid && Array.isArray(result.valid)) {
-					fGitUrl.validator.conditions[0].met = result.valid.includes('url');
-					fGitUrl.validator.conditions[1].met = result.valid.includes('branch');
-					fGitUrl.validator.conditions[2].met = result.valid.includes('auth_clone');
-					fGitUrl.validator.conditions[3].met = result.valid.includes('auth_push');
-					fGitUrl.validator.conditions[4].met = result.valid.includes('auth_push');
-					fGitUrl.validator.conditions[5].met = result.valid.includes('folder');
+				if (result.invalidAt && Array.isArray(result.invalidAt)) {
+					fGitUrl.validator.conditions[0].met = result.invalidAt.includes('url');
+					fGitUrl.validator.conditions[1].met = result.invalidAt.includes('branch');
+					fGitUrl.validator.conditions[2].met = result.invalidAt.includes('auth_clone');
+					fGitUrl.validator.conditions[3].met = result.invalidAt.includes('auth_push');
+					fGitUrl.validator.conditions[4].met = result.invalidAt.includes('auth_push');
+					fGitUrl.validator.conditions[5].met = result.invalidAt.includes('folder');
 				}
 			} else {
 				// Success case

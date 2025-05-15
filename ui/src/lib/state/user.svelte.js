@@ -4,7 +4,7 @@ import { API_URL } from '$lib';
 class UserState {
 	username = $state('');
 	token = $state('');
-
+	invalidAt = $state(0);
 	constructor(username = '', token = '') {
 		this.username = username;
 		this.token = token;
@@ -13,11 +13,13 @@ class UserState {
 	save() {
 		localStorage.setItem('username', this.username);
 		localStorage.setItem('token', this.token);
+		localStorage.setItem('invalidAt', this.invalidAt.toString());
 	}
 
 	load() {
 		this.username = localStorage.getItem('username') || '';
 		this.token = localStorage.getItem('token') || '';
+		this.invalidAt = Number(localStorage.getItem('invalidAt') || '0');
 	}
 
 	clear() {
@@ -25,6 +27,7 @@ class UserState {
 		this.token = '';
 		localStorage.removeItem('username');
 		localStorage.removeItem('token');
+		localStorage.removeItem('invalidAt');
 	}
 
 	async login(username, password) {
@@ -38,6 +41,7 @@ class UserState {
 			if (res.status === 200) {
 				this.token = res.data.token;
 				this.username = username;
+				this.invalidAt = res.data.invalid_at;
 
 				this.save();
 				return true;
@@ -60,6 +64,10 @@ class UserState {
 			return false;
 		}
 		return false;
+	}
+
+	isTokenValid() {
+		return this.invalidAt >= Date.now() / 1000;
 	}
 
 	async hasToken() {

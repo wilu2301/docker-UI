@@ -9,6 +9,11 @@ export async function canAccess(event, permission) {
 			await goto(`/login?redirectTo=${redirectTo}&reason="Not logged in"`);
 			return;
 		}
+		if(!userState.isTokenValid()){
+			const redirectTo = event.url.pathname;
+			await goto(`/login?redirectTo=${redirectTo}&reason="Session expired"`);
+			return;
+		}
 
 		if (!(await userState.hasPermission(permission))) {
 			if (event.url.pathname === '/') {
