@@ -4,7 +4,8 @@ import shutil
 import pytest
 
 from backend.db.models import User
-from backend.functions.apps import git_connection, write_to_creation_db, get_creation_data
+from backend.functions.apps import git_connection, write_to_creation_db, get_creation_data, check_port_available, \
+    add_port, get_app_ports, delete_app_port
 import pathlib
 import dotenv
 
@@ -14,6 +15,11 @@ def cleanup():
     """
     Cleanup function to remove the test folder.
     """
+
+    # Copy the current database to the test folder
+    if pathlib.Path("../database.db").exists():
+        shutil.copyfile("../database.db", "database.db")
+
 
     yield
     if pathlib.Path("storage").exists():
@@ -142,3 +148,69 @@ def test_read_from_creation_db():
     user = User(id=-100, username="test")
     result = get_creation_data(editing_user=user)
     assert result["name"] == "test"
+
+
+def test_check_port_available():
+    """
+    Test the check_port_available function.
+    """
+
+    port = 80
+    result = check_port_available(port)
+    assert result == True
+
+    # Min port number is 1
+    port = 0
+    result = check_port_available(port)
+    assert result == False
+
+    # Max port number is 65535
+    port = 65536
+    result = check_port_available(port)
+    assert result == False
+
+def test_add_port(cleanup):
+    result = add_port(-1, 80, 80, tcp=True, udp=False)
+
+    assert result == True
+
+
+    # Double binding ports
+    result = add_port(-1, 80, 80, tcp=True, udp=False)
+    assert result == False
+
+def test_get_app_ports(cleanup):
+    """
+    Test the get_app_ports function.
+    """
+
+    # Add a port to the app
+    port1 = add_port(-1, 80, 80, tcp=True, udp=False)
+    assert port1 == True
+
+    # Add a second port to the app
+    port2 = add_port(-1, 81, 81, tcp=True, udp=False)
+    assert port2 == True
+
+    # Get the app ports
+    result = get_app_ports(-1)
+    print(result)
+    assert result == [{'host_port': 80, 'app_id': -1, 'udp': False, 'tcp': True, 'id': 1, 'container_port': 80},
+                      {'host_port': 81, 'app_id': -1, 'udp': False, 'tcp': True, 'id': 2, 'container_port': 81}]
+
+def test_delete_app_port(cleanup):
+    """
+    Test the delete_app_port function.
+    """
+
+    # Add a port to the app
+    port1 = add_port(-1, 80, 80, tcp=True, udp=False)
+    assert port1 == True
+
+    # Delete the port
+    result = delete_app_port(-1, 80)
+    assert result == True
+
+    # Check if the port was deleted
+    result = get_app_ports(-1)
+    assert result == []

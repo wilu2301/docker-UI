@@ -8,7 +8,7 @@ import pathlib
 
 from backend import config
 from backend.db.engine import engine
-from backend.db.models import Apps, AppSetup, User
+from backend.db.models import Apps, AppSetup, User, Ports
 from backend.functions.utils import is_folder_name_allowed
 
 
@@ -197,3 +197,78 @@ def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main"
 
 
     return {"status": True, "message": None, "valid": ["name", "url", "branch", "auth_clone", "auth_push","folder"]}
+
+
+def check_port_available(port: int) -> bool:
+    """
+    Check if the port is available.
+    :param port: Host port to check.
+    :return: True if the port is available, False otherwise.
+    """
+
+    # Check if port is in range:
+
+    if port < 1 or port > 65535:
+        return False
+
+    with Session(engine) as session:
+        statement: Select = select(Ports).where(Ports.host_port == port)
+        if len(session.exec(statement).all()) <= 0:
+            return True
+        else:
+            return False
+
+
+def add_port(app_id: int, container_port: int, host_port: int, tcp: bool = False, udp: bool = False) -> bool:
+    """
+    Add a port to the database.
+    :param app_id: App id.
+    :param container_port: Container port.
+    :param host_port: Host port.
+    :param tcp: If the port uses TCP.
+    :param udp: If the port uses UDP.
+    :return: True if the port was added successfully, False otherwise.
+    """
+
+    with Session(engine) as session:
+        # Check if the port is available
+        if not check_port_available(host_port):
+            return False
+
+        # Add the port to the database
+        port = Ports(app_id=app_id, container_port=container_port, host_port=host_port, tcp=tcp, udp=udp)
+        session.add(port)
+        session.commit()
+        return True
+
+def get_app_ports(app_id: int) -> list:
+    """
+    Get the ports of an app.
+    :param app_id: App id.
+    :return: List of ports.
+    """
+
+    with Session(engine) as session:
+        statement: Select = select(Ports).where(Ports.app_id == app_id)
+        result = session.exec(statement).all()
+        print(result)
+        return [port.model_dump() for port in result]
+
+def delete_app_port(app_id: int, host_port) -> bool:
+    """
+    Delete a port from the database.
+    :param host_port: Host port to delete.
+    :return: success
+    """
+
+    with Session(engine) as session:
+        # Check if the port exists
+        statement: Select = select(Ports).where(Ports.host_port == host_port)
+        result = session.exec(statement).one_or_none()
+        if result is None:
+            return False
+
+        # Delete the port from the database
+        session.delete(result)
+        session.commit()
+        return True

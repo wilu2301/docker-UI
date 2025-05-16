@@ -39,3 +39,17 @@ class AppSetup(SQLModel, table=True):
     git_username: str | None = Field(nullable=True)
     git_token: str | None = Field(nullable=True)
     git_folder: str | None = Field(nullable=True)
+    
+class ServicesSetup(SQLModel, table=True):
+    id: int | None = Field(primary_key=True)
+    app_id: int = Field(nullable=False) # n -> 1
+    container_name: str = Field(nullable=False)
+    container_image: str = Field(nullable=False)
+
+class Ports(SQLModel, table=True):
+    id: int | None = Field(primary_key=True)
+    app_id: int = Field(nullable=False) # n -> 1
+    container_port: int = Field(nullable=False)
+    host_port: int = Field(nullable=False)
+    tcp: bool = Field(nullable=False, default=False)
+    udp: bool = Field(nullable=False, default=False)
