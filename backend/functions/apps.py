@@ -9,6 +9,7 @@ import pathlib
 from backend import config
 from backend.db.engine import engine
 from backend.db.models import Apps, AppSetup, User, Ports
+from backend.functions.auth import get_user_by_token
 from backend.functions.utils import is_folder_name_allowed
 
 
@@ -91,6 +92,17 @@ def get_creation_data(editing_user: User) -> dict:
         else:
 
             return result.dict()
+
+
+def get_app_id_by_token(token: str) -> int | None:
+    """
+    Get the app id by token.
+    :param token: The token of the user.
+    :return: The app id.
+    """
+
+    return get_editing_user_id_creation_app(get_user_by_token(token))
+
 
 
 def check_name_available(name: str) -> bool:
@@ -219,7 +231,7 @@ def check_port_available(port: int) -> bool:
             return False
 
 
-def add_port(app_id: int, container_port: int, host_port: int, tcp: bool = False, udp: bool = False) -> bool:
+def add_port(app_id: int, container_port: int, host_port: int, tcp: bool = False, udp: bool = False, is_setup=False) -> bool:
     """
     Add a port to the database.
     :param app_id: App id.
@@ -227,6 +239,7 @@ def add_port(app_id: int, container_port: int, host_port: int, tcp: bool = False
     :param host_port: Host port.
     :param tcp: If the port uses TCP.
     :param udp: If the port uses UDP.
+    :param is_setup: If the app is in setup mode.
     :return: True if the port was added successfully, False otherwise.
     """
 
@@ -236,10 +249,11 @@ def add_port(app_id: int, container_port: int, host_port: int, tcp: bool = False
             return False
 
         # Add the port to the database
-        port = Ports(app_id=app_id, container_port=container_port, host_port=host_port, tcp=tcp, udp=udp)
+        port = Ports(app_id=app_id, container_port=container_port, host_port=host_port, tcp=tcp, udp=udp, is_setup=is_setup)
         session.add(port)
         session.commit()
         return True
+
 
 def get_app_ports(app_id: int) -> list:
     """
@@ -254,16 +268,18 @@ def get_app_ports(app_id: int) -> list:
         print(result)
         return [port.model_dump() for port in result]
 
-def delete_app_port(app_id: int, host_port) -> bool:
+
+def delete_app_port(host_port: int, app_id: int) -> bool:
     """
     Delete a port from the database.
+    :param app_id: The port the app is using.
     :param host_port: Host port to delete.
     :return: success
     """
 
     with Session(engine) as session:
         # Check if the port exists
-        statement: Select = select(Ports).where(Ports.host_port == host_port)
+        statement: Select = select(Ports).where(Ports.host_port == host_port, Ports.app_id == app_id)
         result = session.exec(statement).one_or_none()
         if result is None:
             return False

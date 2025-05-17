@@ -25,6 +25,7 @@ def cleanup():
     if pathlib.Path("storage").exists():
         shutil.rmtree("storage")
 
+
 def test_connection_clone_wrong_url(cleanup):
     """
     Test the test_connection with wrong URL.
@@ -67,7 +68,6 @@ def test_connection_wrong_branch(cleanup):
     assert result["type"] == "branch"
 
 
-
 def test_connection_auth_fail(cleanup):
     """
     Test the connection with wrong credentials.
@@ -78,9 +78,6 @@ def test_connection_auth_fail(cleanup):
     result = git_connection("test", git_url, git_username="1", git_token="1")
     assert result["status"] == False
     assert result["type"] == "auth_clone"
-
-
-
 
 
 def test_connection_auth(cleanup):
@@ -140,6 +137,7 @@ def test_write_to_creation_db():
     user = User(id=-100, username="test")
     write_to_creation_db(editing_user=user,name="test")
 
+
 def test_read_from_creation_db():
     """
     Test the read_from_creation_db function.
@@ -169,6 +167,7 @@ def test_check_port_available():
     result = check_port_available(port)
     assert result == False
 
+
 def test_add_port(cleanup):
     result = add_port(-1, 80, 80, tcp=True, udp=False)
 
@@ -178,6 +177,7 @@ def test_add_port(cleanup):
     # Double binding ports
     result = add_port(-1, 80, 80, tcp=True, udp=False)
     assert result == False
+
 
 def test_get_app_ports(cleanup):
     """
@@ -194,9 +194,10 @@ def test_get_app_ports(cleanup):
 
     # Get the app ports
     result = get_app_ports(-1)
-    print(result)
-    assert result == [{'host_port': 80, 'app_id': -1, 'udp': False, 'tcp': True, 'id': 1, 'container_port': 80},
-                      {'host_port': 81, 'app_id': -1, 'udp': False, 'tcp': True, 'id': 2, 'container_port': 81}]
+
+    assert result == [{'container_port': 80, 'udp': False, 'host_port': 80, 'tcp': True, 'app_id': -1, 'is_setup': False},
+                      {'container_port': 81, 'udp': False, 'host_port': 81, 'tcp': True, 'app_id': -1, 'is_setup': False}]
+
 
 def test_delete_app_port(cleanup):
     """
@@ -208,7 +209,7 @@ def test_delete_app_port(cleanup):
     assert port1 == True
 
     # Delete the port
-    result = delete_app_port(-1, 80)
+    result = delete_app_port(80)
     assert result == True
 
     # Check if the port was deleted

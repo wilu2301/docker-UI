@@ -54,3 +54,53 @@ async def name_available(name: str, token: str):
         write_to_creation_db(editing_user=get_user_by_token(token), name=name)
 
     return {"available":available}
+
+@router.post("/setup/claim_port")
+async def setup_claim_port(token: str, host_port: int, container_port: int, tcp: bool = True, udp: bool = False):
+    """
+    Claim a port for the app in setup.
+    :param udp: if the port is udp
+    :param tcp: if the port is tcp
+    :param container_port: the port in the container
+    :param host_port: the port on the host
+    :param token: The token of the user
+    :return: True if the port is available and claimed, False otherwise
+    """
+    permission_scope = 64
+
+    if not auth.has_permission(token, permission_scope):
+        raise HTTPException(status_code=403, detail="Permission denied")
+
+    # check if the port is available
+    if apps.check_port_available(host_port):
+        # claim port
+        app_id = apps.get_app_id_by_token(token)
+        if app_id is None:
+            raise HTTPException(status_code=400, detail="App does not exist")
+
+        if apps.add_port(host_port=host_port, container_port=container_port, tcp=tcp, udp=udp, app_id=app_id, is_setup=True):
+            return {"claimed": True}
+
+    return {"claimed": False}
+
+@router.delete("/delete_port")
+async def delete_port(token: str, host_port: int):
+    """
+    Delete a port from the app.
+    :param token: The token of the user
+    :param host_port: The port to delete
+    :return: True if the port is deleted, False otherwise
+    """
+    permission_scope = 64
+
+    if not auth.has_permission(token, permission_scope):
+        raise HTTPException(status_code=403, detail="Permission denied")
+
+    app_id = apps.get_app_id_by_token(token)
+    if app_id is None:
+        raise HTTPException(status_code=400, detail="App does not exist")
+
+    if apps.delete_app_port(host_port=host_port, app_id=app_id):
+        return {"deleted": True}
+
+    return {"deleted": False}

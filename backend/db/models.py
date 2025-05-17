@@ -47,9 +47,9 @@ class ServicesSetup(SQLModel, table=True):
     container_image: str = Field(nullable=False)
 
 class Ports(SQLModel, table=True):
-    id: int | None = Field(primary_key=True)
+    host_port: int = Field(nullable=False, primary_key=True)
     app_id: int = Field(nullable=False) # n -> 1
+    is_setup: bool = Field(nullable=False, default=False)
     container_port: int = Field(nullable=False)
-    host_port: int = Field(nullable=False)
     tcp: bool = Field(nullable=False, default=False)
     udp: bool = Field(nullable=False, default=False)

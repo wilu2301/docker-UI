@@ -11,6 +11,8 @@
 			value: '',
 			inline: {}
 		});
+
+
 		handleChange();
 	}
 
@@ -47,7 +49,7 @@
 					type={settings.key.type}
 					placeholder={settings.key.placeholder}
 					bind:value={child.key}
-					oninput={() => handleChange()}
+					onchange={() => handleChange()}
 				/>
 				{#if true}
 					{@const Value = settings.value.icon}

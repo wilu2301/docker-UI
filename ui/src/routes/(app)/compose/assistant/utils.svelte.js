@@ -7,7 +7,11 @@ export async function apiCall(url, responseField, currentResult, method = 'POST'
 		let response;
 		if (method === 'POST') {
 			response = await axios.post(url);
-		} else {
+		}
+		else if (method === 'DELETE') {
+			response = await axios.delete(url);
+		}
+		else {
 			response = await axios.get(url);
 		}
 

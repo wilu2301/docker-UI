@@ -1,25 +1,31 @@
 <script>
-	let { inline } = $props();
-	let tcp = $derived(inline.tcp);
-	let udp = $derived(inline.udp);
+	let { inline, onchange = () => {} } = $props();
+	$effect(() => {
+		if (inline.tcp == null) {
+			inline.tcp = false;
+		}
+		if (inline.udp == null) {
+			inline.udp = false;
+		}
+	});
 
 	function handleChange() {
 		if (onchange) onchange();
 	}
 
 	function changeTcp() {
-		tcp = !tcp;
+		inline.tcp = !inline.tcp;
 		handleChange();
 	}
 	function changeUdp() {
-		udp = !udp;
+		inline.udp = !inline.udp;
 		handleChange();
 	}
 </script>
 
 <main>
-	<button class:selected={tcp} onclick={changeTcp}>TCP</button>
-	<button class:selected={udp} onclick={changeUdp}>UDP</button>
+	<button class:selected={inline.tcp} onclick={changeTcp}>TCP</button>
+	<button class:selected={inline.udp} onclick={changeUdp}>UDP</button>
 	{#if inline.notAvailable}
 		<span id="error">Port not available</span>
 	{/if}
