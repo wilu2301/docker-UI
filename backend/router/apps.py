@@ -21,7 +21,7 @@ async def get_creation(token):
     return get_creation_data(get_user_by_token(token))
 
 
-@router.post("/test_connection")
+@router.post("/setup_git")
 async def test_connection(token: str,name, git_url: str, git_folder= "/main" , git_branch="main", git_username=None, git_token=None):
     """
     Test connection to the git repository.

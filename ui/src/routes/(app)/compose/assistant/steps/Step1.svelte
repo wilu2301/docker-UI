@@ -184,7 +184,7 @@
 		if (!fGitUrl.field.value.startsWith('https://')) return;
 		if (!fGitUrl.field.value.endsWith('.git')) return;
 
-		const apiURL = `${API_URL}apps/test_connection?token=${userState.token}
+		const apiURL = `${API_URL}apps/setup_git?token=${userState.token}
 		&name=${fName.field.value}
 		&git_url=${fGitUrl.field.value}
 		&git_folder=${fGitFolder.field.value}

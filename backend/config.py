@@ -8,7 +8,7 @@ load_dotenv()
 DEBUG = False
 
 DB_CONNECTION_STRING = getenv("DB_CONNECTION_STRING")
-COOKIE_LIFETIME = timedelta(seconds=60).total_seconds()
+COOKIE_LIFETIME = timedelta(days=1).total_seconds()
 
 # Compose
 
