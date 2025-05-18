@@ -104,3 +104,26 @@ async def delete_port(token: str, host_port: int):
         return {"deleted": True}
 
     return {"deleted": False}
+
+@router.get("/setup_service")
+async def setup_service(token: str, container_name: str, container_image: str):
+    """
+    Setup a service for the app.
+    :param token: The token of the user
+    :param container_name: The name of the container
+    :param container_image: The image of the container
+    :return: True if the service is setup, False otherwise
+    """
+    permission_scope = 64
+
+    if not auth.has_permission(token, permission_scope):
+        raise HTTPException(status_code=403, detail="Permission denied")
+
+    app_id = apps.get_app_id_by_token(token)
+    if app_id is None:
+        raise HTTPException(status_code=400, detail="App does not exist")
+
+    if apps.create_service(app_id=app_id, container_name=container_name, container_image=container_image):
+        return {"setup": True}
+
+    return {"setup": False}

@@ -41,16 +41,7 @@
 		},
 		ports: {
 			name: 'Ports',
-			children: [
-				{
-					key: '80',
-					value: '8080',
-					inline: {
-						tcp: true,
-						udp: false
-					}
-				}
-			]
+			children: []
 		}
 	});
 
@@ -122,7 +113,6 @@
 					continue;
 				}
 
-
 				if (previousPort) {
 					const prevPublicPort = parseInt(previousPort.value, 10);
 					await apiCall(
@@ -144,7 +134,6 @@
 				// Update port status
 				if (resultClaim) {
 					port.inline.notAvailable = false;
-
 
 					service.ports.children[index] = {
 						key: port.key,
@@ -174,6 +163,7 @@
 		</div>
 		<div class="line">
 			<Field field={service.image.field}></Field>
+			<button>Pull</button>
 			<Validator validator={service.image.validator} />
 		</div>
 
@@ -226,6 +216,27 @@
 					align-items: center;
 				}
 			}
+
+		}
+	}
+	button {
+		width: 6rem;
+		height: 4rem;
+
+		margin-right: 2rem;
+
+		background: pallet.$primary;
+		color: pallet.$white;
+
+		border: none;
+		border-radius: 1rem;
+
+		font-size: large;
+
+		transition: 0.2s;
+		&:hover{
+			background-color: pallet.$secondary;
+			color: pallet.$text;
 		}
 	}
 </style>

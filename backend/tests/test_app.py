@@ -5,7 +5,7 @@ import pytest
 
 from backend.db.models import User
 from backend.functions.apps import git_connection, write_to_creation_db, get_creation_data, check_port_available, \
-    add_port, get_app_ports, delete_app_port
+    add_port, get_app_ports, delete_app_port, create_service
 import pathlib
 import dotenv
 
@@ -205,13 +205,22 @@ def test_delete_app_port(cleanup):
     """
 
     # Add a port to the app
-    port1 = add_port(-1, 80, 80, tcp=True, udp=False)
+    port1 = add_port(-1,80, 80, tcp=True, udp=False)
     assert port1 == True
 
     # Delete the port
-    result = delete_app_port(80)
+    result = delete_app_port(app_id=-1, host_port=80)
     assert result == True
 
     # Check if the port was deleted
     result = get_app_ports(-1)
     assert result == []
+
+def test_create_service(cleanup):
+    """
+    Test the create_service function.
+    """
+
+    # Add a service to the app
+    result = create_service(app_id=-1, container_name="test", container_image="test")
+    assert result == True
