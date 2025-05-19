@@ -104,7 +104,6 @@ def get_app_id_by_token(token: str) -> int | None:
     return get_editing_user_id_creation_app(get_user_by_token(token))
 
 
-
 def check_name_available(name: str) -> bool:
     """
     Check if the name is available.
@@ -305,3 +304,5 @@ def create_service(app_id: int, container_name: str, container_image: str) -> bo
         session.add(service)
         session.commit()
         return True
+
+
