@@ -1,56 +1,72 @@
-<script>
-	import { House, Box, FileSliders, Settings2, LogOut, User } from '@lucide/svelte';
+<script lang="ts">
+	import { House, Box, FileSliders, Settings2, LogOut, User, PanelLeftOpen } from '@lucide/svelte';
 	import { userState } from '$lib/state/user.svelte.js';
 	import { goto } from '$app/navigation';
 
-	function logout() {
+	function logout(): void {
 		userState.clear();
 		goto('/login');
 	}
-</script>
 
-<main class="navbar">
-	<div class="logo">
+	/*
+	<div class="logo-section">
 		<a href="/">
-			<img src="https://picsum.photos/200" alt="Logo" />
+			<img class="logo" src="https://picsum.photos/400" alt="Logo" />
 		</a>
 	</div>
-	<div class="items">
-		<ul id="upper">
-			<li>
-				<a href="/"><House /> Dashboard</a>
-			</li>
-			<li>
-				<a href="/container"><Box /> Container</a>
-			</li>
-			<li>
-				<a href="/compose"><FileSliders /> Compose</a>
-			</li>
-		</ul>
-		<ul id="lower">
-			<p>
-				<User />
-				{userState.username}
-			</p>
-			<hr />
-			<li>
-				<a href="/"><Settings2 /> Settings</a>
-			</li>
-			<li>
-				<a href="#logout" onclick={logout}><LogOut /> Logout</a>
-			</li>
-		</ul>
+	 */
+</script>
+
+<main class="container-big">
+	<div class="navbar fullscreen">
+		<div class="size">
+			<PanelLeftOpen class="icon" />
+		</div>
+
+		<div class="items">
+			<ul id="upper">
+				<li>
+					<a href="/"><House /> Dashboard</a>
+				</li>
+				<li>
+					<a href="/container"><Box /> Container</a>
+				</li>
+				<li>
+					<a href="/compose"><FileSliders /> Compose</a>
+				</li>
+			</ul>
+			<ul id="lower">
+				<p>
+					<User />
+					{userState.username}
+				</p>
+				<hr />
+				<li>
+					<a href="/"><Settings2 /> Settings</a>
+				</li>
+				<li>
+					<a href="#logout" onclick={logout}><LogOut /> Logout</a>
+				</li>
+			</ul>
+		</div>
 	</div>
 </main>
 
 <style lang="scss">
 	@use '../style/pallet.scss';
 
+	.container-big {
+		height: 100vh;
+		width: 20rem;
+	}
+	.container-small {
+		height: 100vh;
+		width: 5rem;
+	}
+
 	.navbar {
 		height: 100vh;
-		width: 20%;
-
-		padding-right: 1rem;
+		width: inherit;
 
 		display: flex;
 		flex-direction: column;
@@ -60,17 +76,29 @@
 
 		background-color: pallet.$primary;
 
+		overflow: hidden;
+
 		border-radius: 0 20px 20px 0;
 
 		font-size: 1.2rem;
 
 		box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
 
-		.logo {
-			height: 20%;
+		.size {
+			position: absolute;
+			bottom: calc(100% - 3rem);
+			left: calc(100% - 3rem);
 
 			display: flex;
-			justify-content: center;
+
+			color: pallet.$white;
+
+			transition: 0.5s;
+			&:hover {
+				cursor: pointer;
+				color: pallet.$accent;
+				transform: rotate(180deg);
+			}
 		}
 
 		.items {
@@ -93,6 +121,7 @@
 					list-style: none;
 
 					transition: 0.5s;
+
 					a {
 						color: pallet.$white;
 						text-decoration: none;
@@ -112,6 +141,7 @@
 						transition: 0.5s;
 					}
 				}
+
 				p {
 					color: pallet.$white;
 					margin: 1rem;

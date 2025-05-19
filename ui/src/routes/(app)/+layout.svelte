@@ -1,10 +1,12 @@
-<script>
-	import Navbar from '../../components/Navbar.svelte';
+<script lang="ts">
 	import Notification from '$root/components/Notification.svelte';
+	import Navbar from '$root/components/Navbar.svelte';
 </script>
 
 <div class="layout">
-	<Navbar />
+	<div class="sidebar">
+		<Navbar />
+	</div>
 	<div class="content">
 		<slot></slot>
 	</div>
@@ -17,20 +19,26 @@
 	@import '../../default.css';
 
 	.layout {
-		display: flex;
-	}
+      min-height: 100vh;
+			display: flex;
 
-	.content {
-		margin-left: 20%;
-		width: 80%;
-	}
 
-	.notification {
-		width: 20%;
-		height: auto;
+      .sidebar {
+          width: max-content;
+					flex-shrink: 0;
+      }
 
-		position: fixed;
-		top: 0;
-		right: 0;
-	}
+      .content {
+          flex: 1;
+          height: 100%;
+      }
+
+      .notification {
+          width: 20%;
+          height: auto;
+          position: fixed;
+          top: 0;
+          right: 0;
+      }
+  }
 </style>
