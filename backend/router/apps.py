@@ -1,5 +1,6 @@
 from fastapi import  APIRouter, HTTPException
 
+import backend.functions.app.apps
 import backend.functions.app.setup
 from backend.functions.app import apps
 from backend.functions import auth
@@ -80,7 +81,7 @@ async def setup_claim_port(token: str, host_port: int, container_port: int, tcp:
         if app_id is None:
             raise HTTPException(status_code=400, detail="App does not exist")
 
-        if backend.functions.app.setup.add_port(host_port=host_port, container_port=container_port, tcp=tcp, udp=udp, app_id=app_id, is_setup=True):
+        if backend.functions.app.apps.add_app_port(host_port=host_port, container_port=container_port, tcp=tcp, udp=udp, app_id=app_id, is_setup=True):
             return {"claimed": True}
 
     return {"claimed": False}

@@ -1,30 +1,8 @@
-import shutil
-
-import pytest
-
 from backend.db.models import User
-from backend.functions.app.apps import get_app_ports, delete_app_port, create_service
-from backend.functions.app.setup import write_to_creation_db, get_creation_data, git_connection, check_port_available, \
-    add_port
-import pathlib
+from backend.functions.app.apps import get_app_ports, delete_app_port, create_service, add_app_port
+from backend.functions.app.setup import write_to_creation_db, get_creation_data, git_connection, check_port_available
 import dotenv
-
-
-@pytest.fixture
-def cleanup():
-    """
-    Cleanup function to remove the test folder.
-    """
-
-    # Copy the current database to the test folder
-    if pathlib.Path("../database.db").exists():
-        shutil.copyfile("../database.db", "database.db")
-
-
-    yield
-    if pathlib.Path("storage").exists():
-        shutil.rmtree("storage")
-
+from backend.tests.utils import cleanup
 
 def test_connection_clone_wrong_url(cleanup):
     """
@@ -169,13 +147,13 @@ def test_check_port_available():
 
 
 def test_add_port(cleanup):
-    result = add_port(-1, 80, 80, tcp=True, udp=False)
+    result = add_app_port(-1, 80, 80, tcp=True, udp=False)
 
     assert result == True
 
 
     # Double binding ports
-    result = add_port(-1, 80, 80, tcp=True, udp=False)
+    result = add_app_port(-1, 80, 80, tcp=True, udp=False)
     assert result == False
 
 
@@ -185,11 +163,11 @@ def test_get_app_ports(cleanup):
     """
 
     # Add a port to the app
-    port1 = add_port(-1, 80, 80, tcp=True, udp=False)
+    port1 = add_app_port(-1, 80, 80, tcp=True, udp=False)
     assert port1 == True
 
     # Add a second port to the app
-    port2 = add_port(-1, 81, 81, tcp=True, udp=False)
+    port2 = add_app_port(-1, 81, 81, tcp=True, udp=False)
     assert port2 == True
 
     # Get the app ports
@@ -205,7 +183,7 @@ def test_delete_app_port(cleanup):
     """
 
     # Add a port to the app
-    port1 = add_port(-1,80, 80, tcp=True, udp=False)
+    port1 = add_app_port(-1, 80, 80, tcp=True, udp=False)
     assert port1 == True
 
     # Delete the port

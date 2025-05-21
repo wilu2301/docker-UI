@@ -12,4 +12,4 @@ COOKIE_LIFETIME = timedelta(days=1).total_seconds()
 
 # Compose
 
-APP_STORAGE = "storage/"
+APP_STORAGE = "storage"

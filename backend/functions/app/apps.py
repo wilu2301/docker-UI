@@ -2,9 +2,45 @@ from sqlalchemy import Select
 from sqlmodel import Session, select
 
 from backend.db.engine import engine
-from backend.db.models import Ports, ServicesSetup
+from backend.db.models import Ports, Apps, ServicesSetup
+from backend.functions.app.setup import check_port_available
 
 
+def get_app(app_name: str) -> dict | None:
+    """
+    Get the app by its id.
+    :param app_name: Name of the app.
+    :return: App object.
+    """
+
+    with Session(engine) as session:
+        statement: Select = select(Apps).where(Apps.name == app_name)
+        result = session.exec(statement).one_or_none()
+        if result is None:
+            return None
+        return result.model_dump()
+
+
+#section: Services
+def create_service(app_id: int, container_name: str, container_image: str) -> bool:
+    """
+    Create a service for the app.
+    :param app_id: App id.
+    :param container_name: Container name.
+    :param container_image: Container image.
+    :return: True if the service was created successfully, False otherwise.
+    """
+
+    with Session(engine) as session:
+        # Create the service
+        service = ServicesSetup(app_id=app_id, container_name=container_name, container_image=container_image)
+        session.add(service)
+        session.commit()
+        return True
+#endsection: Services
+
+
+# section: Ports
 def get_app_ports(app_id: int) -> list:
     """
     Get the ports of an app.
@@ -40,26 +76,26 @@ def delete_app_port(host_port: int, app_id: int) -> bool:
         return True
 
 
-def create_service(app_id: int, container_name: str, container_image: str) -> bool:
+def add_app_port(app_id: int, container_port: int, host_port: int, tcp: bool = False, udp: bool = False, is_setup=False) -> bool:
     """
-    Create a service for the app.
+    Add a port to the database.
     :param app_id: App id.
-    :param container_name: Container name.
-    :param container_image: Container image.
-    :return: True if the service was created successfully, False otherwise.
+    :param container_port: Container port.
+    :param host_port: Host port.
+    :param tcp: If the port uses TCP.
+    :param udp: If the port uses UDP.
+    :param is_setup: If the app is in setup mode.
+    :return: True if the port was added successfully, False otherwise.
     """
 
     with Session(engine) as session:
-        # Create the service
-        service = ServicesSetup(app_id=app_id, container_name=container_name, container_image=container_image)
-        session.add(service)
+        # Check if the port is available
+        if not check_port_available(host_port):
+            return False
+
+        # Add the port to the database
+        port = Ports(app_id=app_id, container_port=container_port, host_port=host_port, tcp=tcp, udp=udp, is_setup=is_setup)
+        session.add(port)
         session.commit()
         return True
-
-
-def create_app():
-    """
-    Creates the App.
-    :return:
-    """
-    return True
+#endsection: Ports

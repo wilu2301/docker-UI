@@ -231,25 +231,3 @@ def check_port_available(port: int) -> bool:
             return False
 
 
-def add_port(app_id: int, container_port: int, host_port: int, tcp: bool = False, udp: bool = False, is_setup=False) -> bool:
-    """
-    Add a port to the database.
-    :param app_id: App id.
-    :param container_port: Container port.
-    :param host_port: Host port.
-    :param tcp: If the port uses TCP.
-    :param udp: If the port uses UDP.
-    :param is_setup: If the app is in setup mode.
-    :return: True if the port was added successfully, False otherwise.
-    """
-
-    with Session(engine) as session:
-        # Check if the port is available
-        if not check_port_available(host_port):
-            return False
-
-        # Add the port to the database
-        port = Ports(app_id=app_id, container_port=container_port, host_port=host_port, tcp=tcp, udp=udp, is_setup=is_setup)
-        session.add(port)
-        session.commit()
-        return True
