@@ -1,14 +1,14 @@
+import logging
+import pathlib
 from datetime import datetime
 
-import logging
 from git import Repo, GitCommandError
 from sqlalchemy import Select
 from sqlmodel import Session, select
-import pathlib
 
 from backend import config
 from backend.db.engine import engine
-from backend.db.models import Apps, AppSetup, User, Ports, ServicesSetup
+from backend.db.models import User, AppSetup, Apps, Ports
 from backend.functions.auth import get_user_by_token
 from backend.functions.utils import is_folder_name_allowed
 
@@ -73,6 +73,7 @@ def write_to_creation_db(name = None, git = False ,git_url = None,
 
             session.add(app)
         session.commit()
+
 
 def get_creation_data(editing_user: User) -> dict:
     """
@@ -252,57 +253,3 @@ def add_port(app_id: int, container_port: int, host_port: int, tcp: bool = False
         session.add(port)
         session.commit()
         return True
-
-
-def get_app_ports(app_id: int) -> list:
-    """
-    Get the ports of an app.
-    :param app_id: App id.
-    :return: List of ports.
-    """
-
-    with Session(engine) as session:
-        statement: Select = select(Ports).where(Ports.app_id == app_id)
-        result = session.exec(statement).all()
-        print(result)
-        return [port.model_dump() for port in result]
-
-
-def delete_app_port(host_port: int, app_id: int) -> bool:
-    """
-    Delete a port from the database.
-    :param app_id: The port the app is using.
-    :param host_port: Host port to delete.
-    :return: success
-    """
-
-    with Session(engine) as session:
-        # Check if the port exists
-        statement: Select = select(Ports).where(Ports.host_port == host_port, Ports.app_id == app_id)
-        result = session.exec(statement).one_or_none()
-        if result is None:
-            return False
-
-        # Delete the port from the database
-        session.delete(result)
-        session.commit()
-        return True
-
-
-def create_service(app_id: int, container_name: str, container_image: str) -> bool:
-    """
-    Create a service for the app.
-    :param app_id: App id.
-    :param container_name: Container name.
-    :param container_image: Container image.
-    :return: True if the service was created successfully, False otherwise.
-    """
-
-    with Session(engine) as session:
-        # Create the service
-        service = ServicesSetup(app_id=app_id, container_name=container_name, container_image=container_image)
-        session.add(service)
-        session.commit()
-        return True
-
-

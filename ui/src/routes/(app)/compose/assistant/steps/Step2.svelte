@@ -8,9 +8,6 @@
 	import { API_URL } from '$lib/index.js';
 	import { userState } from '$lib/state/user.svelte.js';
 
-
-
-
 	let service = $derived({
 		containerName: {
 			field: {
@@ -127,8 +124,6 @@
 				}
 
 				// Validate on the Server
-
-
 
 				const resultClaim = await apiCall(
 					`${API_URL}apps/setup/claim_port?token=${userState.token}&host_port=${publicPort}&container_port=${containerPort}&tcp=${tcp}&udp=${udp}`,

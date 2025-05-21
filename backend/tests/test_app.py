@@ -1,11 +1,11 @@
-import os
 import shutil
 
 import pytest
 
 from backend.db.models import User
-from backend.functions.apps import git_connection, write_to_creation_db, get_creation_data, check_port_available, \
-    add_port, get_app_ports, delete_app_port, create_service
+from backend.functions.app.apps import get_app_ports, delete_app_port, create_service
+from backend.functions.app.setup import write_to_creation_db, get_creation_data, git_connection, check_port_available, \
+    add_port
 import pathlib
 import dotenv
 

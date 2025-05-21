@@ -19,26 +19,25 @@
 	@import '../../default.css';
 
 	.layout {
-      min-height: 100vh;
-			display: flex;
+		min-height: 100vh;
+		display: flex;
 
+		.sidebar {
+			width: max-content;
+			flex-shrink: 0;
+		}
 
-      .sidebar {
-          width: max-content;
-					flex-shrink: 0;
-      }
+		.content {
+			flex: 1;
+			height: 100%;
+		}
 
-      .content {
-          flex: 1;
-          height: 100%;
-      }
-
-      .notification {
-          width: 20%;
-          height: auto;
-          position: fixed;
-          top: 0;
-          right: 0;
-      }
-  }
+		.notification {
+			width: 20%;
+			height: auto;
+			position: fixed;
+			top: 0;
+			right: 0;
+		}
+	}
 </style>

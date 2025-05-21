@@ -1,11 +1,11 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 
-	import Navbar from "$root/components/Navbar.svelte"
+	import Navbar from '$root/components/Navbar.svelte';
 
 	const { Story } = defineMeta({
 		title: 'Navigation',
-		component: Navbar,
+		component: Navbar
 	});
 </script>
 

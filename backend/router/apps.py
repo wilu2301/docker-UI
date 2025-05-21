@@ -1,7 +1,9 @@
 from fastapi import  APIRouter, HTTPException
-from backend.functions import apps
+
+import backend.functions.app.setup
+from backend.functions.app import apps
 from backend.functions import auth
-from backend.functions.apps import write_to_creation_db, get_creation_data
+from backend.functions.app.setup import write_to_creation_db, get_creation_data
 from backend.functions.auth import get_user_by_token
 
 router = APIRouter(prefix="/apps", tags=["apps"])
@@ -30,8 +32,8 @@ async def test_connection(token: str,name, git_url: str, git_folder= "/main" , g
     if not auth.has_permission(token, permission_scope):
         raise HTTPException(status_code=403, detail="Permission denied")
 
-    result = apps.git_connection(name=name, git_url=git_url, git_folder=git_folder, git_branch=git_branch,
-                                 git_username=git_username, git_token=git_token, editing_user=get_user_by_token(token))
+    result = backend.functions.app.setup.git_connection(name=name, git_url=git_url, git_folder=git_folder, git_branch=git_branch,
+                                                        git_username=git_username, git_token=git_token, editing_user=get_user_by_token(token))
 
     return result
 
@@ -49,7 +51,7 @@ async def name_available(name: str, token: str):
     if not auth.has_permission(token, permission_scope):
         raise HTTPException(status_code=403, detail="Permission denied")
 
-    available = apps.check_name_available(name)
+    available = backend.functions.app.setup.check_name_available(name)
     if available:
         write_to_creation_db(editing_user=get_user_by_token(token), name=name)
 
@@ -72,13 +74,13 @@ async def setup_claim_port(token: str, host_port: int, container_port: int, tcp:
         raise HTTPException(status_code=403, detail="Permission denied")
 
     # check if the port is available
-    if apps.check_port_available(host_port):
+    if backend.functions.app.setup.check_port_available(host_port):
         # claim port
-        app_id = apps.get_app_id_by_token(token)
+        app_id = backend.functions.app.setup.get_app_id_by_token(token)
         if app_id is None:
             raise HTTPException(status_code=400, detail="App does not exist")
 
-        if apps.add_port(host_port=host_port, container_port=container_port, tcp=tcp, udp=udp, app_id=app_id, is_setup=True):
+        if backend.functions.app.setup.add_port(host_port=host_port, container_port=container_port, tcp=tcp, udp=udp, app_id=app_id, is_setup=True):
             return {"claimed": True}
 
     return {"claimed": False}
@@ -96,7 +98,7 @@ async def delete_port(token: str, host_port: int):
     if not auth.has_permission(token, permission_scope):
         raise HTTPException(status_code=403, detail="Permission denied")
 
-    app_id = apps.get_app_id_by_token(token)
+    app_id = backend.functions.app.setup.get_app_id_by_token(token)
     if app_id is None:
         raise HTTPException(status_code=400, detail="App does not exist")
 
@@ -119,7 +121,7 @@ async def setup_service(token: str, container_name: str, container_image: str):
     if not auth.has_permission(token, permission_scope):
         raise HTTPException(status_code=403, detail="Permission denied")
 
-    app_id = apps.get_app_id_by_token(token)
+    app_id = backend.functions.app.setup.get_app_id_by_token(token)
     if app_id is None:
         raise HTTPException(status_code=400, detail="App does not exist")
 
