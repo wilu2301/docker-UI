@@ -149,15 +149,15 @@ def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main"
 
     # Check if a folder of the project already exists
     skip_clone  = False
-    if pathlib.Path(config.APP_STORAGE + name).exists():
+    if pathlib.Path(f"{config.APP_STORAGE}/{name}").exists():
         skip_clone = True
 
 
     try:
         if  skip_clone:
-            repo = Repo(config.APP_STORAGE + name)
+            repo = Repo(f"{config.APP_STORAGE}/{name}")
         else:
-            repo = Repo.clone_from(git_url, config.APP_STORAGE + name)
+            repo = Repo.clone_from(git_url, f"{config.APP_STORAGE}/{name}")
         repo.git.checkout(git_branch)
 
     except GitCommandError as e:
@@ -202,7 +202,7 @@ def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main"
         if not git_folder.startswith("/"):
             git_folder = "/" + git_folder
 
-        if pathlib.Path(config.APP_STORAGE + name + git_folder).exists():
+        if pathlib.Path(f"{config.APP_STORAGE}/{name}{git_folder}").exists():
             return {"status": False, "type": "folder_exists", "valid": ["name", "url", "branch", "auth_clone", "auth_push","folder"]}
     except OSError as e:
         return {"status": False, "type": "other", "message": e.strerror}

@@ -11,7 +11,7 @@ def test_connection_clone_wrong_url(cleanup):
 
     git_url = "https://notAGitUrltest.git"
 
-    result = git_connection("test", git_url)
+    result = git_connection("test_wrong", git_url)
     assert result["status"] == False
     assert result["type"] == "url"
 
@@ -21,7 +21,7 @@ def test_connection_clone_wrong_url_1(cleanup):
     Test the test_connection with wrong URL.
     """
 
-    git_url = "https://github.com/gitpython-developers/GitPythona.git"
+    git_url = "https://github.com/wilu2301/notexistent-UI"
 
     result = git_connection("test", git_url)
     assert result["status"] == False
@@ -33,7 +33,7 @@ def test_connection_wrong_branch(cleanup):
     Test the connection with a wrong branch.
     """
 
-    git_url = "https://github.com/gitpython-developers/QuickStartTutorialFiles.git"
+    git_url = "https://github.com/wilu2301/docker-UI"
     branch = "wrong_branch"
     # Test the test_connection function
 

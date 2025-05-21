@@ -1,4 +1,4 @@
-from backend.scheduler.scheduler import start_app
+from backend.functions.app.scheduler import start_app
 from backend.tests.utils import cleanup, create_test_app
 
 
