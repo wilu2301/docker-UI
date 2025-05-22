@@ -11,7 +11,11 @@ from backend import config
 from backend.db.engine import engine
 from backend.db.models import User, Token
 
+
+logger = logging.getLogger(__name__)
+
 hasher = bcrypt.using(rounds=13)
+
 
 def validate_scope(user_scope: int, required_scope: int) -> bool:
     """
@@ -20,16 +24,13 @@ def validate_scope(user_scope: int, required_scope: int) -> bool:
     :param required_scope:
     :return: Permission
     """
-    logging.debug(f"user_scope: {user_scope}")
-    logging.debug(f"required_scope: {required_scope}")
+    logger.debug(f"user_scope: {user_scope}")
+    logger.debug(f"required_scope: {required_scope}")
 
     if user_scope & required_scope == required_scope:
         return True
     else:
         return False
-
-
-
 
 
 def create_user(username: str, password: str) -> bool:
@@ -39,22 +40,19 @@ def create_user(username: str, password: str) -> bool:
     :param password: the password
     :return: success
     """
-    new_user: User = User(
-        username=username,
-        password= hasher.hash(password)
-    )
+    new_user: User = User(username=username, password=hasher.hash(password))
 
     with Session(engine) as session:
         # check if username is taken
         statement: Select = select(User).where(User.username == username)
         if len(session.exec(statement).all()) <= 0:
             session.add(new_user)
-            logging.info(f"Created new user {username}")
+            logger.info(f"Created new user {username}")
             session.commit()
             session.close()
             return False
         else:
-            logging.warning(f"User {username} already exists")
+            logger.warning(f"User {username} already exists")
             session.close()
             return True
 
@@ -74,14 +72,12 @@ def login(username, password) -> User | None:
         if selected_user is None:
             success = False
         else:
-
             if hasher.verify(password, selected_user.password):
-                logging.info(f"User {username} logged in")
+                logger.info(f"User {username} logged in")
                 success = True
             else:
-                logging.warning(f"User {username} password incorrect")
+                logger.warning(f"User {username} password incorrect")
                 success = False
-
 
         if success:
             return selected_user
@@ -101,16 +97,17 @@ def generate_token(associate_user: User) -> dict[str, str | int]:
     time = datetime.datetime.now()
     rand = random.SystemRandom()
 
-    token_str = hasher.hash(str(time.timestamp()) * random.randint(0,1)
-                        + associate_user.password
-                        + str(rand.random())
-                        )
+    token_str = hasher.hash(
+        str(time.timestamp()) * random.randint(0, 1)
+        + associate_user.password
+        + str(rand.random())
+    )
 
     # Save the token to the db
 
     time_to_live: int = int(time.timestamp() + config.COOKIE_LIFETIME)
 
-    token = Token(token=token_str, user_id=associate_user.id,ttl = time_to_live)
+    token = Token(token=token_str, user_id=associate_user.id, ttl=time_to_live)
 
     with Session(engine) as session:
         session.add(token)
@@ -118,8 +115,8 @@ def generate_token(associate_user: User) -> dict[str, str | int]:
         session.close()
     return {"token": token_str, "ttl": time_to_live}
 
-def clear_token(token:str):
 
+def clear_token(token: str):
     with Session(engine) as session:
         statement: Select = select(Token).where(Token.token == token)
         selected_token = session.exec(statement).one_or_none()
@@ -130,7 +127,6 @@ def clear_token(token:str):
         session.delete(selected_token)
         session.commit()
         session.close()
-
 
 
 def get_token(associated_user: User) -> dict[str, str | int] | Any:
@@ -146,11 +142,8 @@ def get_token(associated_user: User) -> dict[str, str | int] | Any:
         statement: Select = select(Token).where(Token.user_id == associated_user.id)
         result = session.exec(statement).one_or_none()
 
-
-
         session.close()
         if result is not None:
-
             # Check if token is still valid
 
             time = datetime.datetime.now()
@@ -160,8 +153,7 @@ def get_token(associated_user: User) -> dict[str, str | int] | Any:
                 return generate_token(associated_user)
 
             else:
-
-             return {"token": result.token, "ttl": result.ttl}
+                return {"token": result.token, "ttl": result.ttl}
 
         else:
             return generate_token(associated_user)
@@ -186,9 +178,8 @@ def get_user_by_token(token: str) -> User | None:
         if token_data is None:
             success = False
         else:
-            user_id : int | None = token_data.user_id
-            ttl : int | None = token_data.ttl
-
+            user_id: int | None = token_data.user_id
+            ttl: int | None = token_data.ttl
 
         # Check if the token is still valid
 
@@ -199,7 +190,7 @@ def get_user_by_token(token: str) -> User | None:
                 clear_token(token)
                 success = False
 
-    if  success:
+    if success:
         # Get user data
         statement: Select = select(User).where(User.id == user_id)
 
@@ -226,8 +217,6 @@ def has_permission(token, scope: int) -> bool:
     # Get the user
     selected_user = get_user_by_token(token)
 
-
-
     if selected_user is None or selected_user.scope is None:
         return False
 
@@ -235,5 +224,3 @@ def has_permission(token, scope: int) -> bool:
         return False
 
     return True
-
-

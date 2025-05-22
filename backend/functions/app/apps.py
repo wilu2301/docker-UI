@@ -21,7 +21,7 @@ def get_app(app_name: str) -> dict | None:
         return result.model_dump()
 
 
-#section: Services
+# section: Services
 def create_service(app_id: int, container_name: str, container_image: str) -> bool:
     """
     Create a service for the app.
@@ -33,11 +33,17 @@ def create_service(app_id: int, container_name: str, container_image: str) -> bo
 
     with Session(engine) as session:
         # Create the service
-        service = ServicesSetup(app_id=app_id, container_name=container_name, container_image=container_image)
+        service = ServicesSetup(
+            app_id=app_id,
+            container_name=container_name,
+            container_image=container_image,
+        )
         session.add(service)
         session.commit()
         return True
-#endsection: Services
+
+
+# endsection: Services
 
 
 # section: Ports
@@ -65,7 +71,9 @@ def delete_app_port(host_port: int, app_id: int) -> bool:
 
     with Session(engine) as session:
         # Check if the port exists
-        statement: Select = select(Ports).where(Ports.host_port == host_port, Ports.app_id == app_id)
+        statement: Select = select(Ports).where(
+            Ports.host_port == host_port, Ports.app_id == app_id
+        )
         result = session.exec(statement).one_or_none()
         if result is None:
             return False
@@ -76,7 +84,14 @@ def delete_app_port(host_port: int, app_id: int) -> bool:
         return True
 
 
-def add_app_port(app_id: int, container_port: int, host_port: int, tcp: bool = False, udp: bool = False, is_setup=False) -> bool:
+def add_app_port(
+    app_id: int,
+    container_port: int,
+    host_port: int,
+    tcp: bool = False,
+    udp: bool = False,
+    is_setup=False,
+) -> bool:
     """
     Add a port to the database.
     :param app_id: App id.
@@ -94,8 +109,17 @@ def add_app_port(app_id: int, container_port: int, host_port: int, tcp: bool = F
             return False
 
         # Add the port to the database
-        port = Ports(app_id=app_id, container_port=container_port, host_port=host_port, tcp=tcp, udp=udp, is_setup=is_setup)
+        port = Ports(
+            app_id=app_id,
+            container_port=container_port,
+            host_port=host_port,
+            tcp=tcp,
+            udp=udp,
+            is_setup=is_setup,
+        )
         session.add(port)
         session.commit()
         return True
-#endsection: Ports
+
+
+# endsection: Ports

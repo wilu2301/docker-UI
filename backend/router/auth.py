@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter,Response
+from fastapi import APIRouter, Response
 from starlette.responses import JSONResponse
 
 import backend.functions.auth
@@ -9,6 +9,7 @@ from backend.db.models import User
 from backend.functions.auth import get_user_by_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
 
 @router.get("/")
 async def index():
@@ -27,11 +28,13 @@ async def login(username: str, password: str):
     token = data["token"]
     ttl = data["ttl"]
 
-    response = JSONResponse({
-        "login": user.username,
-        "token": token,
-        "invalid_at": ttl,
-    })
+    response = JSONResponse(
+        {
+            "login": user.username,
+            "token": token,
+            "invalid_at": ttl,
+        }
+    )
     response.status_code = HTTPStatus.OK
     return response
 
@@ -43,7 +46,7 @@ async def create_user(username: str, password: str):
         return Response(status_code=400)
     return Response(status_code=200)
 
-@router.get("/has_permission")
-async def has_permission(token: str,scope: int):
-    return {"permission": backend.functions.auth.has_permission(token, scope)}
 
+@router.get("/has_permission")
+async def has_permission(token: str, scope: int):
+    return {"permission": backend.functions.auth.has_permission(token, scope)}

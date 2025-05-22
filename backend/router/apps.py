@@ -1,4 +1,4 @@
-from fastapi import  APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException
 
 import backend.functions.app.apps
 import backend.functions.app.setup
@@ -8,6 +8,7 @@ from backend.functions.app.setup import write_to_creation_db, get_creation_data
 from backend.functions.auth import get_user_by_token
 
 router = APIRouter(prefix="/apps", tags=["apps"])
+
 
 @router.get("/creation")
 async def get_creation(token):
@@ -25,7 +26,15 @@ async def get_creation(token):
 
 
 @router.post("/setup_git")
-async def test_connection(token: str,name, git_url: str, git_folder= "/main" , git_branch="main", git_username=None, git_token=None):
+async def test_connection(
+    token: str,
+    name,
+    git_url: str,
+    git_folder="/main",
+    git_branch="main",
+    git_username=None,
+    git_token=None,
+):
     """
     Test connection to the git repository.
     """
@@ -33,8 +42,15 @@ async def test_connection(token: str,name, git_url: str, git_folder= "/main" , g
     if not auth.has_permission(token, permission_scope):
         raise HTTPException(status_code=403, detail="Permission denied")
 
-    result = backend.functions.app.setup.git_connection(name=name, git_url=git_url, git_folder=git_folder, git_branch=git_branch,
-                                                        git_username=git_username, git_token=git_token, editing_user=get_user_by_token(token))
+    result = backend.functions.app.setup.git_connection(
+        name=name,
+        git_url=git_url,
+        git_folder=git_folder,
+        git_branch=git_branch,
+        git_username=git_username,
+        git_token=git_token,
+        editing_user=get_user_by_token(token),
+    )
 
     return result
 
@@ -56,10 +72,13 @@ async def name_available(name: str, token: str):
     if available:
         write_to_creation_db(editing_user=get_user_by_token(token), name=name)
 
-    return {"available":available}
+    return {"available": available}
+
 
 @router.post("/setup/claim_port")
-async def setup_claim_port(token: str, host_port: int, container_port: int, tcp: bool = True, udp: bool = False):
+async def setup_claim_port(
+    token: str, host_port: int, container_port: int, tcp: bool = True, udp: bool = False
+):
     """
     Claim a port for the app in setup.
     :param udp: if the port is udp
@@ -81,10 +100,18 @@ async def setup_claim_port(token: str, host_port: int, container_port: int, tcp:
         if app_id is None:
             raise HTTPException(status_code=400, detail="App does not exist")
 
-        if backend.functions.app.apps.add_app_port(host_port=host_port, container_port=container_port, tcp=tcp, udp=udp, app_id=app_id, is_setup=True):
+        if backend.functions.app.apps.add_app_port(
+            host_port=host_port,
+            container_port=container_port,
+            tcp=tcp,
+            udp=udp,
+            app_id=app_id,
+            is_setup=True,
+        ):
             return {"claimed": True}
 
     return {"claimed": False}
+
 
 @router.delete("/delete_port")
 async def delete_port(token: str, host_port: int):
@@ -108,6 +135,7 @@ async def delete_port(token: str, host_port: int):
 
     return {"deleted": False}
 
+
 @router.get("/setup_service")
 async def setup_service(token: str, container_name: str, container_image: str):
     """
@@ -126,7 +154,9 @@ async def setup_service(token: str, container_name: str, container_image: str):
     if app_id is None:
         raise HTTPException(status_code=400, detail="App does not exist")
 
-    if apps.create_service(app_id=app_id, container_name=container_name, container_image=container_image):
+    if apps.create_service(
+        app_id=app_id, container_name=container_name, container_image=container_image
+    ):
         return {"setup": True}
 
     return {"setup": False}

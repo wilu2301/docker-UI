@@ -1,8 +1,19 @@
 from backend.db.models import User
-from backend.functions.app.apps import get_app_ports, delete_app_port, create_service, add_app_port
-from backend.functions.app.setup import write_to_creation_db, get_creation_data, git_connection, check_port_available
+from backend.functions.app.apps import (
+    get_app_ports,
+    delete_app_port,
+    create_service,
+    add_app_port,
+)
+from backend.functions.app.setup import (
+    write_to_creation_db,
+    get_creation_data,
+    git_connection,
+    check_port_available,
+)
 import dotenv
 from backend.tests.utils import cleanup
+
 
 def test_connection_clone_wrong_url(cleanup):
     """
@@ -41,7 +52,13 @@ def test_connection_wrong_branch(cleanup):
     git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
     git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
 
-    result = git_connection("test", git_url, git_branch=branch, git_username=git_username, git_token=git_token)
+    result = git_connection(
+        "test",
+        git_url,
+        git_branch=branch,
+        git_username=git_username,
+        git_token=git_token,
+    )
     assert result["status"] == False
     assert result["type"] == "branch"
 
@@ -69,9 +86,9 @@ def test_connection_auth(cleanup):
     git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
     git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
 
-
-
-    result = git_connection("test", git_url, git_username=git_username, git_token=git_token)
+    result = git_connection(
+        "test", git_url, git_username=git_username, git_token=git_token
+    )
     assert result["status"] == True
 
 
@@ -86,8 +103,13 @@ def test_connection_valid_folder(cleanup):
     git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
     git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
 
-    result = git_connection("test", git_url, git_folder="/not-existent-folder", git_username=git_username,
-                            git_token=git_token)
+    result = git_connection(
+        "test",
+        git_url,
+        git_folder="/not-existent-folder",
+        git_username=git_username,
+        git_token=git_token,
+    )
     assert result["status"] == True
 
 
@@ -102,8 +124,13 @@ def test_connection_wrong_folder(cleanup):
     git_username = dotenv.get_key("../.env", "GIT_TEST_USERNAME")
     git_token = dotenv.get_key("../.env", "GIT_TEST_TOKEN")
 
-    result = git_connection("test", git_url, git_folder="/<Not allowed>", git_username=git_username,
-                            git_token=git_token)
+    result = git_connection(
+        "test",
+        git_url,
+        git_folder="/<Not allowed>",
+        git_username=git_username,
+        git_token=git_token,
+    )
     assert result["status"] == False
 
 
@@ -113,7 +140,7 @@ def test_write_to_creation_db():
     """
 
     user = User(id=-100, username="test")
-    write_to_creation_db(editing_user=user,name="test")
+    write_to_creation_db(editing_user=user, name="test")
 
 
 def test_read_from_creation_db():
@@ -151,7 +178,6 @@ def test_add_port(cleanup):
 
     assert result == True
 
-
     # Double binding ports
     result = add_app_port(-1, 80, 80, tcp=True, udp=False)
     assert result == False
@@ -173,8 +199,24 @@ def test_get_app_ports(cleanup):
     # Get the app ports
     result = get_app_ports(-1)
 
-    assert result == [{'container_port': 80, 'udp': False, 'host_port': 80, 'tcp': True, 'app_id': -1, 'is_setup': False},
-                      {'container_port': 81, 'udp': False, 'host_port': 81, 'tcp': True, 'app_id': -1, 'is_setup': False}]
+    assert result == [
+        {
+            "container_port": 80,
+            "udp": False,
+            "host_port": 80,
+            "tcp": True,
+            "app_id": -1,
+            "is_setup": False,
+        },
+        {
+            "container_port": 81,
+            "udp": False,
+            "host_port": 81,
+            "tcp": True,
+            "app_id": -1,
+            "is_setup": False,
+        },
+    ]
 
 
 def test_delete_app_port(cleanup):
@@ -193,6 +235,7 @@ def test_delete_app_port(cleanup):
     # Check if the port was deleted
     result = get_app_ports(-1)
     assert result == []
+
 
 def test_create_service(cleanup):
     """

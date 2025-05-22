@@ -7,7 +7,7 @@ def is_folder_name_allowed(name: str) -> bool:
     if name is None or name == "":
         return False
 
-    invalid_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
+    invalid_chars = ["<", ">", ":", '"', "/", "\\", "|", "?", "*"]
     if any(char in name for char in invalid_chars):
         return False
 

@@ -12,6 +12,8 @@ from backend.db.models import User, AppSetup, Apps, Ports
 from backend.functions.auth import get_user_by_token
 from backend.functions.utils import is_folder_name_allowed
 
+logger = logging.getLogger(__name__)
+
 
 def get_editing_user_id_creation_app(user: User) -> int:
     """
@@ -27,8 +29,7 @@ def get_editing_user_id_creation_app(user: User) -> int:
         statement: Select = select(AppSetup).where(AppSetup.editing_user_id == user_id)
         result = session.exec(statement).one_or_none()
         if result is None:
-
-            logging.warning("Creating new app in creation database")
+            logger.warning("Creating new app in creation database")
             app = AppSetup(editing_user_id=user.id, creation_time=datetime.now())
             session.add(app)
             session.commit()
@@ -37,8 +38,16 @@ def get_editing_user_id_creation_app(user: User) -> int:
             return result.editing_user_id
 
 
-def write_to_creation_db(name = None, git = False ,git_url = None,
-                         git_branch = None, git_username = None, git_token = None, git_folder = None, editing_user = None):
+def write_to_creation_db(
+    name=None,
+    git=False,
+    git_url=None,
+    git_branch=None,
+    git_username=None,
+    git_token=None,
+    git_folder=None,
+    editing_user=None,
+):
     """
     Write the app creation data to the database.
     :param editing_user:
@@ -60,7 +69,9 @@ def write_to_creation_db(name = None, git = False ,git_url = None,
 
     with Session(engine) as session:
         # Edit the app in the creation database
-        statement: Select = select(AppSetup).where(AppSetup.editing_user_id == editing_user_id)
+        statement: Select = select(AppSetup).where(
+            AppSetup.editing_user_id == editing_user_id
+        )
         app = session.exec(statement).first()
         if app:
             app.name = name if name else app.name
@@ -86,12 +97,13 @@ def get_creation_data(editing_user: User) -> dict:
         return {}
 
     with Session(engine) as session:
-        statement: Select = select(AppSetup).where(AppSetup.editing_user_id == editing_user.id)
+        statement: Select = select(AppSetup).where(
+            AppSetup.editing_user_id == editing_user.id
+        )
         result = session.exec(statement).one_or_none()
         if result is None:
             return {}
         else:
-
             return result.dict()
 
 
@@ -115,7 +127,6 @@ def check_name_available(name: str) -> bool:
     if not is_folder_name_allowed(name):
         return False
 
-
     with Session(engine) as session:
         statement: Select = select(Apps).where(Apps.name == name)
         if len(session.exec(statement).all()) <= 0:
@@ -124,7 +135,15 @@ def check_name_available(name: str) -> bool:
             return False
 
 
-def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main", git_username=None, git_token=None, editing_user=None) -> dict:
+def git_connection(
+    name: str,
+    git_url: str,
+    git_folder="/main",
+    git_branch="main",
+    git_username=None,
+    git_token=None,
+    editing_user=None,
+) -> dict:
     """
     Test connection to the git repository and adds it to the AppsSetup table.
     :param editing_user: The user that is creating the app.
@@ -137,24 +156,31 @@ def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main"
     :return: A dictionary with the status and message.
     """
 
-    if not check_name_available(name): return {"status": False, "type": "name"}
+    if not check_name_available(name):
+        return {"status": False, "type": "name"}
 
-    write_to_creation_db(editing_user=editing_user, git=True, name=name, git_url=git_url, git_branch=git_branch,
-                         git_username=git_username, git_token=git_token, git_folder=git_folder)
-
+    write_to_creation_db(
+        editing_user=editing_user,
+        git=True,
+        name=name,
+        git_url=git_url,
+        git_branch=git_branch,
+        git_username=git_username,
+        git_token=git_token,
+        git_folder=git_folder,
+    )
 
     if git_username and git_token:
         protocol, rest = git_url.split("://")
         git_url = f"{protocol}://{git_username}:{git_token}@{rest}"
 
     # Check if a folder of the project already exists
-    skip_clone  = False
+    skip_clone = False
     if pathlib.Path(f"{config.APP_STORAGE}/{name}").exists():
         skip_clone = True
 
-
     try:
-        if  skip_clone:
+        if skip_clone:
             repo = Repo(f"{config.APP_STORAGE}/{name}")
         else:
             repo = Repo.clone_from(git_url, f"{config.APP_STORAGE}/{name}")
@@ -174,41 +200,67 @@ def git_connection(name: str,git_url: str, git_folder="/main", git_branch="main"
             # Branch not found
             return {"status": False, "type": "branch", "valid": ["name", "url"]}
             # Authentication failed
-        if "Authentication failed" in e.stderr or "could not read Username" in e.stderr or "Permission" in e.stderr:
-            return {"status": False, "type": "auth_clone", "valid": ["name", "url","branch"]}
+        if (
+            "Authentication failed" in e.stderr
+            or "could not read Username" in e.stderr
+            or "Permission" in e.stderr
+        ):
+            return {
+                "status": False,
+                "type": "auth_clone",
+                "valid": ["name", "url", "branch"],
+            }
         else:
             # Other error
             return {"status": False, "type": "other", "message": e.stderr}
-
 
     # Cloning was successful
     # Check if the user has write access to the repository
     try:
         repo.git.push("origin", git_branch)
     except GitCommandError as e:
-        if "Authentication failed" in e.stderr or "could not read Username" in e.stderr or "Permission" in e.stderr:
+        if (
+            "Authentication failed" in e.stderr
+            or "could not read Username" in e.stderr
+            or "Permission" in e.stderr
+        ):
             # User does not have write access
             print(e)
-            return {"status": False, "type": "auth_push","valid": ["name", "url","branch","auth_clone"]}
+            return {
+                "status": False,
+                "type": "auth_push",
+                "valid": ["name", "url", "branch", "auth_clone"],
+            }
         else:
             # Other error
             return {"status": False, "type": "other", "message": e.stderr}
 
     # Check if folder name is allowed
-    if not is_folder_name_allowed(git_folder.replace("/","")):
-        return {"status": False, "type": "folder", "valid": ["name", "url", "branch", "auth_clone", "auth_push"]}
+    if not is_folder_name_allowed(git_folder.replace("/", "")):
+        return {
+            "status": False,
+            "type": "folder",
+            "valid": ["name", "url", "branch", "auth_clone", "auth_push"],
+        }
     try:
         # Check if folder in git repository exists
         if not git_folder.startswith("/"):
             git_folder = "/" + git_folder
 
         if pathlib.Path(f"{config.APP_STORAGE}/{name}{git_folder}").exists():
-            return {"status": False, "type": "folder_exists", "valid": ["name", "url", "branch", "auth_clone", "auth_push","folder"]}
+            return {
+                "status": False,
+                "type": "folder_exists",
+                "valid": ["name", "url", "branch", "auth_clone", "auth_push", "folder"],
+            }
     except OSError as e:
         return {"status": False, "type": "other", "message": e.strerror}
 
-
-    return {"status": True, "message": None, "valid": ["name", "url", "branch", "auth_clone", "auth_push","folder"]}
+    return {
+        "status": True,
+        "message": None,
+        "valid": ["name", "url", "branch", "auth_clone", "auth_push", "folder"],
+    }
 
 
 def check_port_available(port: int) -> bool:
@@ -229,5 +281,3 @@ def check_port_available(port: int) -> bool:
             return True
         else:
             return False
-
-

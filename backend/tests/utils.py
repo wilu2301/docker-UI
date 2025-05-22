@@ -14,17 +14,17 @@ def cleanup():
     if pathlib.Path("../database.db").exists():
         shutil.copyfile("../database.db", "database.db")
 
-
     yield
     if pathlib.Path("storage").exists():
         shutil.rmtree("storage")
+
 
 @pytest.fixture
 def create_test_app():
     pathlib.Path("storage/test_app").mkdir(parents=True, exist_ok=True)
     pathlib.Path("storage/test_app/docker-compose.yml").touch()
     pathlib.Path("storage/test_app/docker-compose.yml").write_text(
-    """version: '3'
+        """version: '3'
 services:
     app:
         image: nginx
@@ -33,5 +33,5 @@ services:
         volumes:
         - ./data:/data
         """
-        )
+    )
     yield

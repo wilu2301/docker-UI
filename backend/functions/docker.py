@@ -18,7 +18,7 @@ def get_all_containers() -> list[str]:
     return containers_id
 
 
-def get_container(name: str="", container_id: str= "") -> dict | None:
+def get_container(name: str = "", container_id: str = "") -> dict | None:
     """
     Gets a container by its name or id.
     :param name: Container name.
