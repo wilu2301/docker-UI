@@ -87,3 +87,38 @@ def stop_app(app_name) -> bool:
         return False
 
 
+def get_app_state(app_name) -> AppState:
+    """
+    Get the state of the app from docker.
+    :param app_name:
+    :return:
+    """
+
+    # Check if the app is in the db
+    if get_app(app_name) is None:
+        logger.warning(f"App '{app_name}' not found in db.")
+        return AppState.UNKNOWN
+
+    # Check if the app is running
+    if docker.stack.ps(app_name) is None:
+        return AppState.STOPPED
+
+    # TODO: Check if the app is running
+    return AppState.RUNNING
+
+
+def get_apps() -> list[Stack]:
+    """
+    Get all apps from docker.
+    :return: list of apps
+    """
+
+    # Get all apps from docker
+    try:
+        stacks = docker.stack.list()
+        return stacks
+    except Exception as e:
+        logger.error(f"Error getting apps: {e}")
+        return []
+
+
