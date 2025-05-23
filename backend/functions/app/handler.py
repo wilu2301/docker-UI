@@ -9,7 +9,7 @@ from backend import config
 from backend.functions.app.apps import get_app
 import pathlib
 
-from python_on_whales import docker
+from python_on_whales import docker, Stack
 
 logger = logging.getLogger(__name__)
 
@@ -66,4 +66,24 @@ def stop_app(app_name) -> bool:
     :param app_name:
     :return: success
     """
-    pass
+
+    # Check if the app is in the db
+
+    if get_app(app_name) is None:
+        logger.warning(f"App '{app_name}' not found in db.")
+        return False
+
+    # Check if the app is running
+
+    if docker.stack.ps(app_name) is None:
+        return False
+
+    # Stop the stack
+    try:
+        docker.stack.remove(app_name)
+        return True
+    except Exception as e:
+        logger.error(f"Error stopping app '{app_name}': {e}")
+        return False
+
+
