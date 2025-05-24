@@ -6,7 +6,6 @@ import logging
 from enum import Enum
 
 from backend import config
-from backend.functions.app.apps import get_app
 import pathlib
 
 from python_on_whales import docker, Stack
@@ -67,12 +66,6 @@ def stop_app(app_name) -> bool:
     :return: success
     """
 
-    # Check if the app is in the db
-
-    if get_app(app_name) is None:
-        logger.warning(f"App '{app_name}' not found in db.")
-        return False
-
     # Check if the app is running
 
     if docker.stack.ps(app_name) is None:
@@ -93,11 +86,6 @@ def get_app_state(app_name) -> AppState:
     :param app_name:
     :return:
     """
-
-    # Check if the app is in the db
-    if get_app(app_name) is None:
-        logger.warning(f"App '{app_name}' not found in db.")
-        return AppState.UNKNOWN
 
     # Check if the app is running
     if docker.stack.ps(app_name) is None:
@@ -120,5 +108,3 @@ def get_apps() -> list[Stack]:
     except Exception as e:
         logger.error(f"Error getting apps: {e}")
         return []
-
-

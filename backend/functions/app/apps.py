@@ -3,22 +3,9 @@ from sqlmodel import Session, select
 
 from backend.db.engine import engine
 from backend.db.models import Ports, Apps, ServicesSetup
+from backend.functions.app import handler
+from backend.functions.app.models import App
 from backend.functions.app.setup import check_port_available
-
-
-def get_app(app_name: str) -> dict | None:
-    """
-    Get the app by its id.
-    :param app_name: Name of the app.
-    :return: App object.
-    """
-
-    with Session(engine) as session:
-        statement: Select = select(Apps).where(Apps.name == app_name)
-        result = session.exec(statement).one_or_none()
-        if result is None:
-            return None
-        return result.model_dump()
 
 
 # section: Services
@@ -123,3 +110,34 @@ def add_app_port(
 
 
 # endsection: Ports
+
+
+def get_apps() -> list[App]:
+    """
+    Get all apps from the database.
+    :return: List of apps.
+    """
+
+    apps: list[App] = []
+
+    for app in handler.get_apps():
+        if app is None:
+            continue
+        apps.append(App(name=app.name))
+
+    return apps
+
+
+def get_app(app_name: str) -> dict | None:
+    """
+    Get the app by its id.
+    :param app_name: Name of the app.
+    :return: App object.
+    """
+
+    with Session(engine) as session:
+        statement: Select = select(Apps).where(Apps.name == app_name)
+        result = session.exec(statement).one_or_none()
+        if result is None:
+            return None
+        return result.model_dump()
