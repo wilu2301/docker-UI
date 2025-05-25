@@ -8,7 +8,7 @@ from enum import Enum
 from backend import config
 import pathlib
 
-from python_on_whales import docker, Stack
+from python_on_whales import docker, Stack, DockerException
 
 logger = logging.getLogger(__name__)
 
@@ -28,11 +28,6 @@ def start_app(app_name) -> bool:
     :param app_name:
     :return: success
     """
-
-    # Checks if app exists in db
-    if get_app(app_name) is None:
-        logger.warning(f"App '{app_name}' not found in db.")
-        return False
 
     # Check if the app exists in storage
     if not pathlib.Path(f"{STORAGE}/{app_name}").exists():
@@ -67,8 +62,10 @@ def stop_app(app_name) -> bool:
     """
 
     # Check if the app is running
-
-    if docker.stack.ps(app_name) is None:
+    try:
+        if len(docker.stack.ps(app_name)) == 0:
+            return False
+    except DockerException:
         return False
 
     # Stop the stack
