@@ -1,7 +1,13 @@
+<script>
+	import App from '$root/routes/(app)/compose/App.svelte';
+</script>
+
 <main>
 	<a href="/compose/assistant">
-		<button>Assistant</button>
+		Assistant
 	</a>
+
+	<App />
 </main>
 
 <style>

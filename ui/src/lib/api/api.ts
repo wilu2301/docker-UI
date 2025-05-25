@@ -12,6 +12,6 @@ fetcher.configure({
 export const ping = fetcher.path('/ping').method('get').create();
 
 // <section> Container API
-export const getApps = fetcher.path("/apps/all").method("get").create();
+export const getApps = fetcher.path("/apps/apps").method("get").create();
 
 // </section>
