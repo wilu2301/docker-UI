@@ -1,10 +1,9 @@
 import { Fetcher } from 'openapi-typescript-fetch';
-
 import type { paths } from './schema';
 
 const fetcher = Fetcher.for<paths>();
 
-// global configuration
+// Configure base URL on the fetcher
 fetcher.configure({
 	baseUrl: 'http://localhost:8000'
 });
@@ -12,6 +11,7 @@ fetcher.configure({
 export const ping = fetcher.path('/ping').method('get').create();
 
 // <section> Container API
-export const getApps = fetcher.path("/apps/apps").method("get").create();
+export const getApps = fetcher.path('/apps/apps').method('get').create();
 
+export const getApp = fetcher.path('/apps/apps/{app_name}').method('get').create();
 // </section>

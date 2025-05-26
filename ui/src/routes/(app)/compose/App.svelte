@@ -3,7 +3,8 @@
 	import type { AppState } from './types';
 	import { AppStatus } from './types';
 	import { Tooltip } from '@svelte-plugins/tooltips';
-
+	import { getApp } from '$lib/api/api';
+	import { userState } from '\$root/lib/state/user.svelte';
 	let app: AppState = $state({
 		status: AppStatus.Stopped,
 		name: 'App Name',
@@ -12,6 +13,23 @@
 		containerCount: 0,
 		portsCount: 0,
 		volumesCount: 0
+	});
+
+	async function fetchAppData(appName: string) {
+		try {
+			const response = await getApp({
+				app_name: appName,
+				token: userState.token
+			});
+			// Update your app state with the response data
+			// Assuming the API returns data in the format you need
+			return response.data;
+		} catch (error) {
+			console.error('Error fetching app:', error);
+		}
+	}
+	$effect(async () => {
+		app = await fetchAppData('test_app');
 	});
 </script>
 
@@ -66,23 +84,22 @@
 		background-color: pallet.$secondary;
 
 		.head {
-      display: flex;
-      align-items: center;
+			display: flex;
+			align-items: center;
 
-      border-top-left-radius: 0.5rem;
-      border-top-right-radius: 0.5rem;
-      background-color: pallet.$primary;
+			border-top-left-radius: 0.5rem;
+			border-top-right-radius: 0.5rem;
+			background-color: pallet.$primary;
 
-      :global(.tooltip) {
-        margin-top: 40px !important;
-      }
+			:global(.tooltip) {
+				margin-top: 40px !important;
+			}
 
-
-      h2 {
-        color: pallet.$white;
-        margin-right: 2rem;
-      }
-    }
+			h2 {
+				color: pallet.$white;
+				margin-right: 2rem;
+			}
+		}
 		.body {
 			display: flex;
 			flex-direction: column;

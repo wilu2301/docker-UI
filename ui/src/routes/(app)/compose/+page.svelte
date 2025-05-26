@@ -3,9 +3,7 @@
 </script>
 
 <main>
-	<a href="/compose/assistant">
-		Assistant
-	</a>
+	<a href="/compose/assistant"> Assistant </a>
 
 	<App />
 </main>
