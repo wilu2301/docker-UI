@@ -1,6 +1,6 @@
-<mxfile host="drawio-plugin" modified="2025-05-22T17:11:56.207Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="0w0WLcTHUhzadZjWU85Z" version="22.1.22" type="embed" pages="2">
+<mxfile host="drawio-plugin" modified="2025-05-26T15:27:50.770Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="AOBPpAon7eYDHJvoa8bh" version="22.1.22" type="embed" pages="2">
   <diagram id="fz-6R8tx3eM5kRc7ZHRC" name="General">
-    <mxGraphModel dx="719" dy="412" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="496" dy="295" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8,16 +8,22 @@
           <mxGeometry x="70" y="100" width="270" height="220" as="geometry" />
         </mxCell>
         <mxCell id="12" value="" style="group" parent="1" vertex="1" connectable="0">
-          <mxGeometry x="170" y="600" width="280" height="140" as="geometry" />
+          <mxGeometry x="170" y="600" width="330" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="4" value="&lt;b&gt;App&lt;/b&gt; = Docker Compose File&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="12" vertex="1">
+        <mxCell id="4" value="&lt;b&gt;App&lt;/b&gt; = Docker Stack&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="12" vertex="1">
           <mxGeometry width="280" height="140" as="geometry" />
         </mxCell>
-        <mxCell id="5" value="Docker Container" style="rounded=0;whiteSpace=wrap;html=1;" parent="12" vertex="1">
+        <mxCell id="5" value="Service" style="rounded=0;whiteSpace=wrap;html=1;" parent="12" vertex="1">
           <mxGeometry x="155" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="6" value="Docker Container" style="rounded=0;whiteSpace=wrap;html=1;" parent="12" vertex="1">
+        <mxCell id="6" value="Service" style="rounded=0;whiteSpace=wrap;html=1;" parent="12" vertex="1">
           <mxGeometry x="155" y="80" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30" value="C" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="12">
+          <mxGeometry x="245" y="95" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="C" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="12">
+          <mxGeometry x="245" y="15" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="13" value="&lt;h1&gt;Structure&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="80" y="350" width="190" height="40" as="geometry" />
@@ -65,7 +71,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="W_Dx8a7bmo2TOVcDa2ck" name="Dataflow">
-    <mxGraphModel dx="1569" dy="1512" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1877" dy="1706" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />

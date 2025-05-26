@@ -7,6 +7,10 @@ services:
       - "8080:80"
     volumes:
       - nginx:/etc/nginx
+  busybox:
+    container_name: busybox-test
+    image: busybox:latest
+    command: sleep 3600
 
 volumes:
     nginx:

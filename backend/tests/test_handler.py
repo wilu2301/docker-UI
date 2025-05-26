@@ -1,12 +1,14 @@
+import time
+
 import pytest
 from backend.functions.app.handler import (
     start_app,
     stop_app,
     get_app_state,
-    AppState,
     get_apps,
 )
 from backend.tests.utils import cleanup, create_test_app
+from backend.functions.app import models as md
 
 
 @pytest.fixture()
@@ -46,20 +48,24 @@ def test_stop_app(running_test_app, cleanup):
     assert stop_app("non_existing_app") == False
 
     # Test with an existing app
-    # assert stop_app("test_app") == True
+    assert stop_app("test_app") == True
 
 
-@pytest.mark.skip
-def test_get_app(create_test_app, cleanup):
+def test_get_app(running_test_app, cleanup):
     """
     Test the get_app function.
     :return: None
     """
+    time.sleep(1)  # Wait for the app to start
+
     # Test with a non-existing app
-    assert get_app_state("non_existing_app") == AppState.UNKNOWN
+    assert get_app_state("non_existing_app") == md.AppStatus.UNKNOWN
 
     # Test with an existing app
-    assert get_app_state("test_app") == AppState.STOPPED
+    result = get_app_state("test_app")
+    print(result)
+    assert result == md.AppStatus.RUNNING
+    # assert get_app_state("test_app") == md.AppStatus.STOPPED
 
 
 def test_get_apps(running_test_app, cleanup):

@@ -3,23 +3,16 @@
 """
 
 import logging
-from enum import Enum
 
 from backend import config
+from backend.functions.app import models as md
 import pathlib
 
-from python_on_whales import docker, Stack, DockerException
+from python_on_whales import docker, Stack, DockerException, Task
 
 logger = logging.getLogger(__name__)
 
 STORAGE = config.APP_STORAGE
-
-
-class AppState(Enum):
-    STOPPED = "stopped"
-    RUNNING = "running"
-    ERROR = "error"
-    UNKNOWN = "unknown"
 
 
 def start_app(app_name) -> bool:
@@ -77,19 +70,38 @@ def stop_app(app_name) -> bool:
         return False
 
 
-def get_app_state(app_name) -> AppState:
+def get_app_state(app_name) -> md.AppStatus:
     """
     Get the state of the app from docker.
     :param app_name:
     :return:
     """
+    try:
+        # Check if the app is running
+        if docker.stack.ps(app_name) is None:
+            return md.AppStatus.UNKNOWN
 
-    # Check if the app is running
-    if docker.stack.ps(app_name) is None:
-        return AppState.STOPPED
+        # Get the services
+        services: list[Task] = docker.stack.ps(app_name)
 
-    # TODO: Check if the app is running
-    return AppState.RUNNING
+        if not services:
+            return md.AppStatus.UNKNOWN
+
+        num_stopped = 0
+        for service in services:
+            if service.status.state == "stopped":
+                num_stopped += 1
+
+        if num_stopped == 0:
+            return md.AppStatus.RUNNING
+        elif num_stopped == len(services):
+            return md.AppStatus.STOPPED
+        else:
+            return md.AppStatus.DEGRADED
+
+    except DockerException as e:
+        logger.error(f"Error getting app state for '{app_name}': {e}")
+        return md.AppStatus.UNKNOWN
 
 
 def get_apps() -> list[Stack]:
