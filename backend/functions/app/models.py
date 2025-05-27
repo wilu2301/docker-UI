@@ -14,11 +14,15 @@ class AppStatus(enum.StrEnum):
     UNKNOWN = "unknown"
 
 
-class AppOverview(BaseModel):
-    name: str
-    status: AppStatus
+class AppUsage(BaseModel):
     cpu_usage: int = 0
     memory_usage: float = 0.0
     containers_running: int = 0
     ports_exposed: list[int] = []
     volumes_count: int = 0
+
+
+class AppOverview(BaseModel):
+    name: str
+    status: AppStatus
+    usage: AppUsage | None = None

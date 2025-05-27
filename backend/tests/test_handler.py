@@ -6,6 +6,7 @@ from backend.functions.app.handler import (
     stop_app,
     get_app_state,
     get_apps,
+    get_app_usage,
 )
 from backend.tests.utils import cleanup, create_test_app
 from backend.functions.app import models as md
@@ -56,7 +57,7 @@ def test_get_app(running_test_app, cleanup):
     Test the get_app function.
     :return: None
     """
-    time.sleep(1)  # Wait for the app to start
+    # time.sleep(1)  # Wait for the app to start
 
     # Test with a non-existing app
     assert get_app_state("non_existing_app") == md.AppStatus.UNKNOWN
@@ -78,3 +79,15 @@ def test_get_apps(running_test_app, cleanup):
     result = get_apps()
     assert len(result) == 1
     assert result[0].name == "test_app"
+
+
+def test_get_app_usage(cleanup):
+    """
+    Test the get_app_usage function.
+    :return: None
+    """
+    time.sleep(2)  # Wait for the app to start
+
+    # Test with an existing app
+    usage = get_app_usage("test_app")
+    print(usage)

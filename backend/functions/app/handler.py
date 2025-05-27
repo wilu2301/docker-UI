@@ -4,11 +4,20 @@
 
 import logging
 
+
 from backend import config
 from backend.functions.app import models as md
 import pathlib
 
-from python_on_whales import docker, Stack, DockerException, Task
+from python_on_whales import (
+    docker,
+    Stack,
+    DockerException,
+    Task,
+    Container,
+    Service,
+    ContainerStats,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -117,3 +126,52 @@ def get_apps() -> list[Stack]:
     except Exception as e:
         logger.error(f"Error getting apps: {e}")
         return []
+
+
+def get_app_usage(app_name) -> md.AppUsage:
+    """
+    Get the usage of the app.
+    :return: AppUsage object
+    """
+
+    try:
+        # Get the app services
+        tasks: list[Task] = docker.stack.ps(app_name)
+
+        if not tasks:
+            return md.AppUsage()
+
+        """
+        To my future self: Use task.spect for container ports and volumes.
+        """
+
+        service_ids = list(set(task.service_id for task in tasks))
+
+        containers: list[Container] = docker.container.list(
+            filters={
+                "name": app_name,
+            }
+        )
+
+        stats: list[ContainerStats] = docker.stats(containers)
+
+        cpu_usage = sum(stat.cpu_percentage for stat in stats)
+        memory_usage = sum(stat.memory_percentage for stat in stats)
+        containers_running = len(containers)
+
+        # TODO: Implement logic to get ports and volumes
+
+        ports_exposed = []
+        volumes_count = 0
+
+        return md.AppUsage(
+            cpu_usage=int(cpu_usage),
+            memory_usage=memory_usage,
+            containers_running=containers_running,
+            ports_exposed=ports_exposed,
+            volumes_count=volumes_count,
+        )
+
+    except DockerException as e:
+        logger.error(f"Error getting app usage for '{app_name}': {e}")
+        return md.AppUsage()

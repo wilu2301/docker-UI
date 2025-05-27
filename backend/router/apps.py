@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.functions.app import apps
-from backend.functions.app.models import App,AppOverview
+from backend.functions.app.models import App, AppOverview
 from backend.functions.auth import has_permission
 
 router = APIRouter(prefix="/apps", tags=["apps"])
@@ -21,6 +21,7 @@ def get_apps(token: str) -> list[App]:
         )
 
     return apps.get_apps()
+
 
 @router.get("/apps/{app_name}")
 def get_app(app_name: str, token: str) -> AppOverview:
