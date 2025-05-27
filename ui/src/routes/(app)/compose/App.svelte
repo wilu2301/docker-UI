@@ -6,7 +6,7 @@
 	import { getApp } from '$lib/api/api';
 	import { userState } from '\$root/lib/state/user.svelte';
 	let app: AppState = $state({
-		status: AppStatus.Stopped,
+		status: AppStatus.Unknown,
 		name: 'App Name',
 		cpuUsage: 0,
 		memoryUsage: 0,
@@ -15,21 +15,19 @@
 		volumesCount: 0
 	});
 
-	async function fetchAppData(appName: string) {
+	async function fetchAppData(appName: string): Promise<AppState>{
 		try {
 			const response = await getApp({
 				app_name: appName,
 				token: userState.token
 			});
-			// Update your app state with the response data
-			// Assuming the API returns data in the format you need
 			return response.data;
 		} catch (error) {
 			console.error('Error fetching app:', error);
 		}
 	}
-	$effect(async () => {
-		app = await fetchAppData('test_app');
+	$effect(async () =>{
+		//app = await fetchAppData('test_app');
 	});
 </script>
 
@@ -37,11 +35,15 @@
 	<div class="head">
 		{#if app.status === AppStatus.Running}
 			<Tooltip content="Running">
-				<Dot class="status running" size={64} style="color: var(--success)" />
+				<Dot class="status" size={64} style="color: var(--success)" />
 			</Tooltip>
-		{:else}
-			<Tooltip content="Running">
-				<Dot class="status running" size={64} style="color: var(--error)" />
+		{:else if app.status === AppStatus.Degraded}
+			<Tooltip content="Degraded">
+				<Dot class="status" size={64} style="color: var(--warning)" />
+			</Tooltip>
+			{:else }
+			<Tooltip content="Unknown">
+				<Dot class="status" size={64} style="color: var(--white)" />
 			</Tooltip>
 		{/if}
 		<h2>{app.name}</h2>

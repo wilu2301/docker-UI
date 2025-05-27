@@ -1,6 +1,9 @@
 export enum AppStatus {
 	Running = 'running',
-	Stopped = 'stopped'
+	Stopped = 'stopped',
+	Degraded = 'degraded',
+	Unknown = 'unknown',
+
 }
 
 export type AppState = {
