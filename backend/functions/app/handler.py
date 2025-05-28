@@ -196,7 +196,8 @@ def get_app_usage(app_name) -> md.AppUsage:
             service: Service = docker.service.inspect(service_id)
             ports_exposed.extend(get_service_ports(service))
 
-        volumes_count = 0
+        # Get the volumes count
+        volumes_count = len(docker.volume.list(filters={"name": app_name}))
 
         return md.AppUsage(
             cpu_usage=int(cpu_usage),
