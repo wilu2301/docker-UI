@@ -187,7 +187,7 @@ def get_app_usage(app_name) -> md.AppUsage:
         # Calculate usage statistics
         cpu_usage = sum(stat.cpu_percentage for stat in stats)
         memory_usage = sum(stat.memory_percentage for stat in stats)
-        containers_running = len(containers)
+        containers_running = len(containers) + 1
 
         # Get the ports exposed
         ports_exposed: list[md.Port] = []

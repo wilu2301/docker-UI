@@ -42,3 +42,4 @@ def get_app(app_name: str, token: str) -> AppOverview:
         raise HTTPException(status_code=404, detail="App not found.")
 
     return app
+

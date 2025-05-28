@@ -82,7 +82,7 @@ def test_get_apps(running_test_app, cleanup):
     assert result[0].name == "test_app"
 
 
-def test_get_service_ports(cleanup):
+def test_get_service_ports(running_test_app, cleanup):
     """
     Test the get_service_ports function.
     :return: None
@@ -113,4 +113,9 @@ def test_get_app_usage(cleanup):
 
     # Test with an existing app
     usage = get_app_usage("test_app")
-    print(usage)
+    assert isinstance(usage, md.AppUsage)
+    assert usage.cpu_usage >= 0
+    assert usage.memory_usage >= 0.0
+    assert usage.containers_running == 2
+    assert len(usage.ports_exposed) == 1
+    assert usage.volumes_count == 1
