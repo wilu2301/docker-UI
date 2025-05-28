@@ -4,6 +4,7 @@
 
 import logging
 
+from python_on_whales.components.service.models import EndpointPortConfig
 
 from backend import config
 from backend.functions.app import models as md
@@ -128,6 +129,34 @@ def get_apps() -> list[Stack]:
         return []
 
 
+def get_service_ports(service: Service) -> list[md.Port]:
+    """
+    Gets the ports exposed by the app.
+    :param service: The service to get the ports from.
+    :return:
+    """
+
+    ports_exposed: list[md.Port] = []
+    ports: list[EndpointPortConfig] = service.endpoint.spec.ports
+    if ports is None:
+        logger.warning(f"No ports exposed for service '{service.id}'")
+        return ports_exposed
+
+    for port in ports:
+        if port is not None:
+            ports_exposed.append(
+                md.Port(
+                    container_port=port.target_port,
+                    public_port=port.published_port,
+                    tcp=port.protocol == "tcp",
+                    udp=port.protocol == "udp",
+                    ingress=port.publish_mode == "ingress",
+                )
+            )
+
+    return ports_exposed
+
+
 def get_app_usage(app_name) -> md.AppUsage:
     """
     Get the usage of the app.
@@ -145,23 +174,28 @@ def get_app_usage(app_name) -> md.AppUsage:
         To my future self: Use task.spect for container ports and volumes.
         """
 
-        service_ids = list(set(task.service_id for task in tasks))
+        service_ids: set[str] = set(task.service_id for task in tasks)
 
-        containers: list[Container] = docker.container.list(
+        containers: set[Container] = docker.container.list(
             filters={
                 "name": app_name,
             }
         )
 
-        stats: list[ContainerStats] = docker.stats(containers)
+        stats: set[ContainerStats] = docker.stats(containers)
 
+        # Calculate usage statistics
         cpu_usage = sum(stat.cpu_percentage for stat in stats)
         memory_usage = sum(stat.memory_percentage for stat in stats)
         containers_running = len(containers)
 
-        # TODO: Implement logic to get ports and volumes
+        # Get the ports exposed
+        ports_exposed: list[md.Port] = []
 
-        ports_exposed = []
+        for service_id in service_ids:
+            service: Service = docker.service.inspect(service_id)
+            ports_exposed.extend(get_service_ports(service))
+
         volumes_count = 0
 
         return md.AppUsage(

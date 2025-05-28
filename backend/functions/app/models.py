@@ -14,11 +14,19 @@ class AppStatus(enum.StrEnum):
     UNKNOWN = "unknown"
 
 
+class Port(BaseModel):
+    public_port: int
+    container_port: int | None = None
+    tcp: bool = True
+    udp: bool = False
+    ingress: bool = False
+
+
 class AppUsage(BaseModel):
     cpu_usage: int = 0
     memory_usage: float = 0.0
     containers_running: int = 0
-    ports_exposed: list[int] = []
+    ports_exposed: list[Port] = []
     volumes_count: int = 0
 
 

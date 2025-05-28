@@ -1,12 +1,15 @@
 import time
 
 import pytest
+from python_on_whales import docker, Service, DockerException
+
 from backend.functions.app.handler import (
     start_app,
     stop_app,
     get_app_state,
     get_apps,
     get_app_usage,
+    get_service_ports,
 )
 from backend.tests.utils import cleanup, create_test_app
 from backend.functions.app import models as md
@@ -57,16 +60,14 @@ def test_get_app(running_test_app, cleanup):
     Test the get_app function.
     :return: None
     """
-    # time.sleep(1)  # Wait for the app to start
+    time.sleep(1)  # Wait for the app to start
 
     # Test with a non-existing app
     assert get_app_state("non_existing_app") == md.AppStatus.UNKNOWN
 
     # Test with an existing app
     result = get_app_state("test_app")
-    print(result)
     assert result == md.AppStatus.RUNNING
-    # assert get_app_state("test_app") == md.AppStatus.STOPPED
 
 
 def test_get_apps(running_test_app, cleanup):
@@ -81,12 +82,34 @@ def test_get_apps(running_test_app, cleanup):
     assert result[0].name == "test_app"
 
 
+def test_get_service_ports(cleanup):
+    """
+    Test the get_service_ports function.
+    :return: None
+    """
+
+    time.sleep(1)  # Wait for the app to start
+
+    result: list[md.Port] = []
+    expected: list[md.Port] = [
+        md.Port(public_port=8080, container_port=80, tcp=True, udp=False, ingress=True)
+    ]
+
+    service_ids: set[str] = set(task.service_id for task in docker.stack.ps("test_app"))
+
+    for service_id in service_ids:
+        service: Service = docker.service.inspect(service_id)
+        result.extend(get_service_ports(service))
+
+    assert result == expected
+
+
 def test_get_app_usage(cleanup):
     """
     Test the get_app_usage function.
     :return: None
     """
-    time.sleep(2)  # Wait for the app to start
+    # time.sleep(2)  # Wait for the app to start
 
     # Test with an existing app
     usage = get_app_usage("test_app")
