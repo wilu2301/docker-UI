@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { Dot, Cpu, MemoryStick, Box, EthernetPort, Cylinder } from '@lucide/svelte';
 	import { Tooltip } from '@svelte-plugins/tooltips';
-	import {fade} from "svelte/transition"
+	import { fade } from 'svelte/transition';
 	import { getApp } from '$lib/api/api';
 	import { userState } from '\$root/lib/state/user.svelte';
-	import type {components} from '$lib/api/schema';
+	import { CacheService } from '$lib/utils/cache';
+	import type { components } from '$lib/api/schema';
 
 	type AppOverview = components['schemas']['AppOverview'];
 
-	const { appName } = $props()
+	const { appName } = $props();
 
-	let isLoading = $state(true)
+	let isLoading = $state(true);
 
 	let app: AppOverview = $state({
 		name: 'Loading',
@@ -24,67 +25,81 @@
 		}
 	});
 
-	async function fetchAppData(appName: string): Promise<AppOverview> {
+	async function fetchAppData(appName: string) {
 		try {
+			const cacheKey = `apps_app_${appName}`;
+			const cachedData = CacheService.get<AppOverview>(cacheKey);
+
+			if (cachedData) {
+				app = cachedData;
+				isLoading = false;
+
+				console.log("Using cached data")
+				return;
+			}
+
 			const response = await getApp({
 				app_name: appName,
 				token: userState.token
 			});
 			app = response.data;
 			isLoading = false;
+
+			CacheService.set(cacheKey, response.data)
 		} catch (error) {
 			console.error('Error fetching app:', error);
 		}
 	}
+
 	$effect(async () => {
 		await fetchAppData(appName);
 	});
 </script>
-{#if !isLoading}
-<main class="app" transition:fade>
 
-	<div class="head">
-		{#if app.status === 'running'}
-			<Tooltip content="Running">
-				<Dot class="status" size={64} style="color: var(--success)" />
-			</Tooltip>
-		{:else if app.status === 'degraded'}
-			<Tooltip content="Degraded">
-				<Dot class="status" size={64} style="color: var(--warning)" />
-			</Tooltip>
-		{:else}
-			<Tooltip content="Unknown">
-				<Dot class="status" size={64} style="color: var(--white)" />
-			</Tooltip>
-		{/if}
-		<h2>{app.name}</h2>
-	</div>
-	<div class="body">
-		<ul>
-			<li>
-				<Cpu class="icon" />
-				<span>{app.usage.cpu_usage}%</span>
-			</li>
-			<li>
-				<MemoryStick class="icon" />
-				<span>{app.usage.memory_usage} MiB</span>
-			</li>
-			<li>
-				<Box class="icon" />
-				<span>{app.usage.containers_running}</span>
-			</li>
-			<li>
-				<EthernetPort class="icon" />
-				<span>{app.usage.ports_exposed.length}</span>
-			</li>
-			<li>
-				<Cylinder class="icon" />
-				<span>{app.usage.volumes_count}</span>
-			</li>
-		</ul>
-	</div>
-</main>
-	{/if}
+{#if !isLoading}
+	<main class="app" transition:fade>
+		<div class="head">
+			{#if app.status === 'running'}
+				<Tooltip content="Running">
+					<Dot class="status" size={64} style="color: var(--success)" />
+				</Tooltip>
+			{:else if app.status === 'degraded'}
+				<Tooltip content="Degraded">
+					<Dot class="status" size={64} style="color: var(--warning)" />
+				</Tooltip>
+			{:else}
+				<Tooltip content="Unknown">
+					<Dot class="status" size={64} style="color: var(--white)" />
+				</Tooltip>
+			{/if}
+			<h2>{app.name}</h2>
+		</div>
+		<div class="body">
+			<ul>
+				<li>
+					<Cpu class="icon" />
+					<span>{app.usage.cpu_usage}%</span>
+				</li>
+				<li>
+					<MemoryStick class="icon" />
+					<span>{app.usage.memory_usage} MiB</span>
+				</li>
+				<li>
+					<Box class="icon" />
+					<span>{app.usage.containers_running}</span>
+				</li>
+				<li>
+					<EthernetPort class="icon" />
+					<span>{app.usage.ports_exposed.length}</span>
+				</li>
+				<li>
+					<Cylinder class="icon" />
+					<span>{app.usage.volumes_count}</span>
+				</li>
+			</ul>
+		</div>
+	</main>
+{/if}
 
 <style lang="scss">
 	@use '$root/style/pallet';
