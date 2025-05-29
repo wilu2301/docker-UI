@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { Dot, Cpu, MemoryStick, Box, EthernetPort, Cylinder } from '@lucide/svelte';
 	import { Tooltip } from '@svelte-plugins/tooltips';
+	import {fade} from "svelte/transition"
 	import { getApp } from '$lib/api/api';
 	import { userState } from '\$root/lib/state/user.svelte';
-	import type { components } from '$lib/api/schema';
+	import type {components} from '$lib/api/schema';
 
 	type AppOverview = components['schemas']['AppOverview'];
-	type AppStatus = components['schemas']['AppStatus'];
-	type AppUsage = components['schemas']['AppUsage'];
-	type Port = components['schemas']['Port'];
 
+	const { appName } = $props()
+
+	let isLoading = $state(true)
 
 	let app: AppOverview = $state({
 		name: 'Loading',
@@ -29,23 +30,25 @@
 				app_name: appName,
 				token: userState.token
 			});
-			return response.data;
+			app = response.data;
+			isLoading = false;
 		} catch (error) {
 			console.error('Error fetching app:', error);
 		}
 	}
 	$effect(async () => {
-		app = await fetchAppData('test_app');
+		await fetchAppData(appName);
 	});
 </script>
+{#if !isLoading}
+<main class="app" transition:fade>
 
-<main class="app">
 	<div class="head">
-		{#if app.status === "running"}
+		{#if app.status === 'running'}
 			<Tooltip content="Running">
 				<Dot class="status" size={64} style="color: var(--success)" />
 			</Tooltip>
-		{:else if app.status === "degraded"}
+		{:else if app.status === 'degraded'}
 			<Tooltip content="Degraded">
 				<Dot class="status" size={64} style="color: var(--warning)" />
 			</Tooltip>
@@ -81,6 +84,7 @@
 		</ul>
 	</div>
 </main>
+	{/if}
 
 <style lang="scss">
 	@use '$root/style/pallet';

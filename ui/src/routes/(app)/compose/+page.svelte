@@ -5,7 +5,9 @@
 <main>
 	<a href="/compose/assistant"> Assistant </a>
 
-	<App />
+	<App appName="test_app"/>
+	<App appName="test_app"/>
+	<App appName="test_app"/>
 </main>
 
 <style>
