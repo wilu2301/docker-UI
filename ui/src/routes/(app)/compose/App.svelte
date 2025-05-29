@@ -1,21 +1,29 @@
 <script lang="ts">
 	import { Dot, Cpu, MemoryStick, Box, EthernetPort, Cylinder } from '@lucide/svelte';
-	import type { AppState } from './types';
-	import { AppStatus } from './types';
 	import { Tooltip } from '@svelte-plugins/tooltips';
 	import { getApp } from '$lib/api/api';
 	import { userState } from '\$root/lib/state/user.svelte';
-	let app: AppState = $state({
-		status: AppStatus.Unknown,
-		name: 'App Name',
-		cpuUsage: 0,
-		memoryUsage: 0,
-		containerCount: 0,
-		portsCount: 0,
-		volumesCount: 0
+	import type { components } from '$lib/api/schema';
+
+	type AppOverview = components['schemas']['AppOverview'];
+	type AppStatus = components['schemas']['AppStatus'];
+	type AppUsage = components['schemas']['AppUsage'];
+	type Port = components['schemas']['Port'];
+
+
+	let app: AppOverview = $state({
+		name: 'Loading',
+		status: 'running',
+		usage: {
+			cpu_usage: 0,
+			memory_usage: 0,
+			containers_running: 0,
+			volumes_count: 0,
+			ports_exposed: []
+		}
 	});
 
-	async function fetchAppData(appName: string): Promise<AppState>{
+	async function fetchAppData(appName: string): Promise<AppOverview> {
 		try {
 			const response = await getApp({
 				app_name: appName,
@@ -26,22 +34,22 @@
 			console.error('Error fetching app:', error);
 		}
 	}
-	$effect(async () =>{
-		//app = await fetchAppData('test_app');
+	$effect(async () => {
+		app = await fetchAppData('test_app');
 	});
 </script>
 
 <main class="app">
 	<div class="head">
-		{#if app.status === AppStatus.Running}
+		{#if app.status === "running"}
 			<Tooltip content="Running">
 				<Dot class="status" size={64} style="color: var(--success)" />
 			</Tooltip>
-		{:else if app.status === AppStatus.Degraded}
+		{:else if app.status === "degraded"}
 			<Tooltip content="Degraded">
 				<Dot class="status" size={64} style="color: var(--warning)" />
 			</Tooltip>
-			{:else }
+		{:else}
 			<Tooltip content="Unknown">
 				<Dot class="status" size={64} style="color: var(--white)" />
 			</Tooltip>
@@ -52,23 +60,23 @@
 		<ul>
 			<li>
 				<Cpu class="icon" />
-				<span>{app.cpuUsage}%</span>
+				<span>{app.usage.cpu_usage}%</span>
 			</li>
 			<li>
 				<MemoryStick class="icon" />
-				<span>{app.memoryUsage} MiB</span>
+				<span>{app.usage.memory_usage} MiB</span>
 			</li>
 			<li>
 				<Box class="icon" />
-				<span>{app.containerCount}</span>
+				<span>{app.usage.containers_running}</span>
 			</li>
 			<li>
 				<EthernetPort class="icon" />
-				<span>{app.portsCount}</span>
+				<span>{app.usage.ports_exposed.length}</span>
 			</li>
 			<li>
 				<Cylinder class="icon" />
-				<span>{app.volumesCount}</span>
+				<span>{app.usage.volumes_count}</span>
 			</li>
 		</ul>
 	</div>
