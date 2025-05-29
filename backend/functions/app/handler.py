@@ -157,7 +157,7 @@ def get_service_ports(service: Service) -> list[md.Port]:
     return ports_exposed
 
 
-def get_app_usage(app_name) -> md.AppUsage:
+def get_app_usage(app_name) -> md.AppUsage | None:
     """
     Get the usage of the app.
     :return: AppUsage object
@@ -209,4 +209,4 @@ def get_app_usage(app_name) -> md.AppUsage:
 
     except DockerException as e:
         logger.error(f"Error getting app usage for '{app_name}': {e}")
-        return md.AppUsage()
+        return None

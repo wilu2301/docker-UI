@@ -145,6 +145,9 @@ def get_app(app_name: str) -> md.AppOverview | None:
     state: md.AppStatus = handler.get_app_state(app_name)
     usage: md.AppUsage = handler.get_app_usage(app_name)
 
+    if usage is None:
+        return None
+
     return md.AppOverview(name=app_name, status=state, usage=usage)
 
 
