@@ -27,6 +27,7 @@ def get_apps(token: str) -> list[App]:
 def get_app(app_name: str, token: str) -> AppOverview:
     """
     Get an app by name.
+    :param token: Token for authentication.
     :param app_name: Name of the app.
     :return: App object.
     """

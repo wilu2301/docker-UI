@@ -143,27 +143,8 @@ def get_app(app_name: str) -> md.AppOverview | None:
             return None
 
     state: md.AppStatus = handler.get_app_state(app_name)
-    usage: md.AppUsage | None = handler.get_app_usage(app_name)
+    usage: md.AppUsage = handler.get_app_usage(app_name)
 
     return md.AppOverview(name=app_name, status=state, usage=usage)
 
 
-def get_app_overview(app_name: str) -> md.AppOverview | None:
-    """
-    Get the Overview of the app by its name.
-    :param app_name: Name of the app.
-    :return: App usage object.
-    """
-
-    # Check if the app exists in the database
-    with Session(engine) as session:
-        statement: Select = select(Apps).where(Apps.name == app_name)
-        result = session.exec(statement).one_or_none()
-        if result is None:
-            return None
-
-    overview = handler.get_app_usage(app_name)
-    if not usage:
-        return None
-
-    return usage
