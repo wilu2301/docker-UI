@@ -6,6 +6,7 @@
 	import { userState } from '\$root/lib/state/user.svelte';
 	import { CacheService } from '$lib/utils/cache';
 	import type { components } from '$lib/api/schema';
+	import { onMount } from 'svelte';
 
 	type AppOverview = components['schemas']['AppOverview'];
 
@@ -51,8 +52,11 @@
 		}
 	}
 
-	$effect(async () => {
-		await fetchAppData(appName);
+	onMount(async () => {
+		if (!userState.token) {
+			await new Promise(r => setTimeout(r, 100));
+		}
+		await fetchAppData(appName)
 	});
 </script>
 
