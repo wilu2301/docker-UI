@@ -10,7 +10,7 @@
 
 	type AppOverview = components['schemas']['AppOverview'];
 
-	const { appName } = $props();
+	const { appName, appLoaded = () => {} } = $props();
 
 	let isLoading = $state(true);
 
@@ -34,8 +34,9 @@
 			if (cachedData) {
 				app = cachedData;
 				isLoading = false;
+				appLoaded();
 
-				console.log("Using cached data")
+				console.log('Using cached data');
 				return;
 			}
 
@@ -45,23 +46,27 @@
 			});
 			app = response.data;
 			isLoading = false;
-
-			CacheService.set(cacheKey, response.data)
+			appLoaded();
+			CacheService.set(cacheKey, response.data);
 		} catch (error) {
 			console.error('Error fetching app:', error);
 		}
 	}
 
+	function seeDetails() {
+		// Do sth
+	}
+
 	onMount(async () => {
 		if (!userState.token) {
-			await new Promise(r => setTimeout(r, 100));
+			await new Promise((r) => setTimeout(r, 100));
 		}
-		await fetchAppData(appName)
+		await fetchAppData(appName);
 	});
 </script>
 
 {#if !isLoading}
-	<main class="app" transition:fade>
+	<button class="app" transition:fade onclick={seeDetails}>
 		<div class="head">
 			{#if app.status === 'running'}
 				<Tooltip content="Running">
@@ -102,12 +107,15 @@
 				</li>
 			</ul>
 		</div>
-	</main>
+	</button>
 {/if}
 
 <style lang="scss">
 	@use '$root/style/pallet';
 	.app {
+		padding: 0;
+		border: none;
+
 		width: max-content;
 		display: flex;
 		justify-content: center;
@@ -156,12 +164,15 @@
 					.icon {
 						color: pallet.$text;
 					}
-
-					span {
-						color: pallet.$text;
-					}
 				}
 			}
+		}
+
+		transition: 0.5s ease;
+		&:hover {
+			color: pallet.$white;
+			transform: scale(1.1);
+			background-color: pallet.$selected;
 		}
 	}
 </style>

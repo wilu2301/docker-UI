@@ -168,11 +168,7 @@ def get_app_usage(app_name) -> md.AppUsage | None:
         tasks: list[Task] = docker.stack.ps(app_name)
 
         if not tasks:
-            return md.AppUsage()
-
-        """
-        To my future self: Use task.spect for container ports and volumes.
-        """
+            return None
 
         service_ids: set[str] = set(task.service_id for task in tasks)
 
@@ -187,7 +183,7 @@ def get_app_usage(app_name) -> md.AppUsage | None:
         # Calculate usage statistics
         cpu_usage = sum(stat.cpu_percentage for stat in stats)
         memory_usage = sum(stat.memory_percentage for stat in stats)
-        containers_running = len(containers) + 1
+        containers_running = len(containers)
 
         # Get the ports exposed
         ports_exposed: list[md.Port] = []

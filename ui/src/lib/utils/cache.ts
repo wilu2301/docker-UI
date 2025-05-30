@@ -5,7 +5,7 @@ interface CacheEntry<T> {
 
 export class CacheService {
 	private static cache = new Map<string, CacheEntry<any>>();
-	private static ttl = 1000 * 60;
+	private static ttl = 1000 * 60 * 20;
 	private static STORAGE_KEY = 'cache';
 
 	static init(): void {
@@ -15,7 +15,6 @@ export class CacheService {
 				const parsedCache = JSON.parse(storedCache);
 
 				Object.entries(parsedCache).forEach(([key, entry]) => {
-
 					if (Date.now() - (entry as CacheEntry<any>).timestamp <= this.ttl) {
 						this.cache.set(key, entry as CacheEntry<any>);
 					}
@@ -65,7 +64,6 @@ export class CacheService {
 		this.cache.clear();
 		this.saveToStorage();
 	}
-
 }
 
 CacheService.init();
