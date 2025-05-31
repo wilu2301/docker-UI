@@ -7,6 +7,7 @@
 	import { CacheService } from '$lib/utils/cache';
 	import type { components } from '$lib/api/schema';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	type AppOverview = components['schemas']['AppOverview'];
 
@@ -54,9 +55,8 @@
 	}
 
 	function seeDetails() {
-		// Do sth
+		goto(`/compose/detail/${appName} `);
 	}
-
 	onMount(async () => {
 		if (!userState.token) {
 			await new Promise((r) => setTimeout(r, 100));
