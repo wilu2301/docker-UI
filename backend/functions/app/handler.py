@@ -183,6 +183,12 @@ def get_app_usage(app_name) -> md.AppUsage | None:
         # Calculate usage statistics
         cpu_usage = sum(stat.cpu_percentage for stat in stats)
         memory_usage = sum(stat.memory_percentage for stat in stats)
+        # Round memory usage to 2 decimal places
+        cpu_usage = round(cpu_usage, 2)
+        memory_usage = round(memory_usage, 2)
+
+
+
         containers_running = len(containers)
 
         # Get the ports exposed

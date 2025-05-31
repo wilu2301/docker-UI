@@ -149,5 +149,3 @@ def get_app(app_name: str) -> md.AppOverview | None:
         return None
 
     return md.AppOverview(name=app_name, status=state, usage=usage)
-
-
