@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Bot, CirclePlus } from '@lucide/svelte';
 	import App from '$root/routes/(app)/compose/App.svelte';
-	import { Loader } from '@lucide/svelte';
 	import { getApps } from '$lib/api/api.js';
 	import { userState } from '$lib/state/user.svelte';
 	import { onMount } from 'svelte';
 	import type { components } from '$lib/api/schema';
 	import { Tooltip } from '@svelte-plugins/tooltips';
 	import { goto } from '$app/navigation';
+	import TopInfoBar from '$root/components/TopInfoBar.svelte';
 
 	type App = components['schemas']['App'];
 
@@ -44,16 +44,7 @@
 </script>
 
 <main>
-	<div class="overview">
-		{#if loading}
-			<div class="loader">
-				<Loader />
-			</div>
-			<h2>fetching Apps</h2>
-		{:else}
-			<h1>Apps</h1>
-		{/if}
-	</div>
+	<TopInfoBar title="Apps" {loading} />
 	<div class="apps">
 		{#each apps as app}
 			<App appName={app.name} {appLoaded} />
@@ -83,21 +74,6 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-
-		.overview {
-			height: 4rem;
-			width: 80%;
-
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			gap: 1rem;
-
-			background: pallet.$primary;
-			color: pallet.$white;
-
-			border-radius: 0 0 20px 20px;
-		}
 
 		.apps {
 			padding: 1rem;
@@ -138,22 +114,6 @@
 					transform: scale(1.2);
 				}
 			}
-		}
-	}
-
-	.loader {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		animation: spin 2s infinite ease-in-out;
-	}
-
-	@keyframes spin {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
 		}
 	}
 </style>
