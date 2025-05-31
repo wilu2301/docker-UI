@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
+	import { Bot, CirclePlus } from '@lucide/svelte';
 	import App from '$root/routes/(app)/compose/App.svelte';
 	import { Loader } from '@lucide/svelte';
-	import { CacheService } from '$lib/utils/cache.js';
 	import { getApps } from '$lib/api/api.js';
 	import { userState } from '$lib/state/user.svelte';
 	import { onMount } from 'svelte';
 	import type { components } from '$lib/api/schema';
+	import { Tooltip } from '@svelte-plugins/tooltips';
+	import { goto } from '$app/navigation';
 
 	type App = components['schemas']['App'];
 
@@ -58,6 +59,19 @@
 			<App appName={app.name} {appLoaded} />
 		{/each}
 	</div>
+
+	<div class="floating-action-button">
+		<Tooltip content="Create with assistant" position="left">
+			<button class="disabled">
+				<Bot />
+			</button>
+		</Tooltip>
+		<Tooltip content="Create new app" position="left">
+			<button onclick={() => goto('/')}>
+				<CirclePlus />
+			</button>
+		</Tooltip>
+	</div>
 </main>
 
 <style lang="scss">
@@ -65,7 +79,6 @@
 
 	main {
 		width: 100%;
-
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -93,6 +106,38 @@
 			flex-flow: row wrap;
 			justify-content: center;
 			gap: 1rem;
+		}
+
+		.floating-action-button {
+			position: fixed;
+			bottom: 2rem;
+			right: 2rem;
+
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+
+			.disabled {
+				opacity: 0.5;
+				pointer-events: none;
+			}
+
+			button {
+				background-color: pallet.$primary;
+				color: pallet.$white;
+				border: none;
+				border-radius: 50%;
+				width: 3rem;
+				height: 3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				transition: 0.5s;
+				&:hover {
+					transform: scale(1.2);
+				}
+			}
 		}
 	}
 

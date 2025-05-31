@@ -15,14 +15,17 @@
 	</div>
 </div>
 
-<style>
-	@import '../../default.css';
+<style lang="scss">
+  @use '$root/style/pallet.scss';
+  @import '../../default.css';
 
 	.layout {
 		min-height: 100vh;
 		display: flex;
+      background: pallet.$background;
 
-		.sidebar {
+
+      .sidebar {
 			width: max-content;
 			flex-shrink: 0;
 		}
