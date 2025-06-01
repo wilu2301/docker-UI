@@ -2,7 +2,14 @@
 	import type { PageProps } from './$types';
 	import TopInfoBar from '$root/components/TopInfoBar.svelte';
 	import Section from '$root/routes/(app)/compose/detail/[app]/Section.svelte';
-	import { EthernetPort, Info, ChevronsLeftRightEllipsis, PcCase } from '@lucide/svelte';
+	import {
+		EthernetPort,
+		Info,
+		ChevronsLeftRightEllipsis,
+		PcCase,
+		Cylinder,
+		Box
+	} from '@lucide/svelte';
 	import { Tooltip } from '@svelte-plugins/tooltips';
 	import { settingsState } from '$lib/state/settings.svelte';
 	import { CacheService } from '$lib/utils/cache';
@@ -10,6 +17,8 @@
 	import { userState } from '$lib/state/user.svelte';
 	import type { components } from '$lib/api/schema';
 	import { onMount } from 'svelte';
+	import Container from '$root/components/Container.svelte';
+	import Service from '$root/components/Service.svelte';
 
 	const { data }: PageProps = $props();
 
@@ -115,6 +124,13 @@
 					</tbody>
 				</table>
 			</Section>
+			<Section icon={Cylinder} title="Volumes"></Section>
+			<Section icon={Box} title="Container">
+				<div class="services">
+					<Service name="BusyBox" />
+					<Service name="BusyBox" />
+				</div>
+			</Section>
 		</div>
 	{/if}
 </main>
@@ -162,5 +178,11 @@
 				}
 			}
 		}
+	}
+	.services {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
 	}
 </style>

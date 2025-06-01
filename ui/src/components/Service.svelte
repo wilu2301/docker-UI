@@ -23,7 +23,7 @@
 	<div class="name">
 		<span>{name}</span>
 	</div>
-	<div class="containers">
+	<div class="container">
 		{#each container as id, index (id)}
 			{#if index === 0}
 				<Container class="container" {id} isFirst={true} />
@@ -37,7 +37,7 @@
 </main>
 
 <style lang="scss">
-	@use '$root/style/pallet.scss';
+	@use '$root/style/pallet';
 	.app {
 		width: 90%;
 

@@ -52,7 +52,7 @@
 </main>
 
 <style lang="scss">
-	@use '$root/style/pallet.scss';
+	@use '$root/style/pallet';
 
 	.first {
 		background-color: pallet.$primary;

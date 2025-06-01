@@ -284,11 +284,11 @@ export interface paths {
 			cookie?: never;
 		};
 		/**
-		 * Get App
+		 * Get Service
 		 * @description Get an app by name.
 		 *     :param token: Token for authentication.
 		 *     :param app_name: Name of the app.
-		 *     :return: App object.
+		 *     :return: Service object.
 		 */
 		get: operations['get_app_apps_apps__app_name__get'];
 		put?: never;
@@ -320,7 +320,7 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
 	schemas: {
-		/** App */
+		/** Service */
 		App: {
 			/** Name */
 			name: string;
