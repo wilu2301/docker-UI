@@ -9,7 +9,7 @@
 		<div class="loader">
 			<Loader />
 		</div>
-		<h2>fetching..</h2>
+		<h2>fetching...</h2>
 	{:else}
 		<h1>{title}</h1>
 	{/if}

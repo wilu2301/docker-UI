@@ -57,6 +57,7 @@
 	function seeDetails() {
 		goto(`/compose/detail/${appName} `);
 	}
+
 	onMount(async () => {
 		if (!userState.token) {
 			await new Promise((r) => setTimeout(r, 100));
