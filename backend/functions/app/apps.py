@@ -149,3 +149,13 @@ def get_app(app_name: str) -> md.AppOverview | None:
         return None
 
     return md.AppOverview(name=app_name, status=state, usage=usage)
+
+
+def get_volumes(app_name: str) -> list[md.Volume]:
+    """
+    Get the volumes used by the app.
+    :param app_name: Name of the app.
+    :return: List of volumes used by the app.
+    """
+
+    return handler.get_app_volumes(app_name)

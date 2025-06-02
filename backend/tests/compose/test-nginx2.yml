@@ -12,7 +12,11 @@ services:
     container_name: busybox-test
     image: busybox:latest
     command: sleep 3600
+    volumes:
+      -  busybox2:/data
 
 volumes:
     nginx2:
+        driver: local
+    busybox2:
         driver: local

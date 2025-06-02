@@ -43,3 +43,24 @@ def get_app(app_name: str, token: str) -> AppOverview:
         raise HTTPException(status_code=404, detail="App not found.")
 
     return app
+
+@router.get("/apps/{app_name}/volumes")
+def get_volumes(app_name: str, token: str) -> list:
+    """
+    Get the volumes used by the app.
+    :param token: Token for authentication.
+    :param app_name: Name of the app.
+    :return: List of volumes used by the app.
+    """
+
+    if not has_permission(token=token, scope=1):
+        raise HTTPException(
+            status_code=403,
+            detail="You do not have permission to access this resource.",
+        )
+
+    volumes = apps.get_volumes(app_name)
+    if not volumes:
+        raise HTTPException(status_code=404, detail="No volumes found for this app.")
+
+    return volumes
