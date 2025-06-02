@@ -8,12 +8,14 @@
 		ChevronsLeftRightEllipsis,
 		PcCase,
 		Cylinder,
-		Box
+		Box,
+		HardDrive,
+		Cog
 	} from '@lucide/svelte';
 	import { Tooltip } from '@svelte-plugins/tooltips';
 	import { settingsState } from '$lib/state/settings.svelte';
-	import { CacheService } from '$lib/utils/cache';
-	import { getApp } from '$lib/api/api';
+	import { getApp, getAppVolumes } from '$lib/api/api';
+	import { slide } from 'svelte/transition';
 	import { userState } from '$lib/state/user.svelte';
 	import type { components } from '$lib/api/schema';
 	import { onMount } from 'svelte';
@@ -24,32 +26,30 @@
 	const { data }: PageProps = $props();
 
 	type AppOverview = components['schemas']['AppOverview'];
-	type Port = components['schemas']['Port'];
+	type Volume = components['schemas']['Volume'];
 
 	let isLoading = $state(true);
 	let app: AppOverview = $state();
+	let volumes: Volume[] = $state();
+	$inspect(volumes);
 
-	async function fetchAppData() {
+	async function fetchData() {
 		try {
-			const cacheKey = `apps_app_${data.name}`;
-			const cachedData = CacheService.get<AppOverview>(cacheKey);
-
-			if (cachedData) {
-				app = cachedData;
-				isLoading = false;
-
-				console.log('Using cached data');
-				return;
-			}
-
-			const response = await getApp({
+			// Get general App data
+			const appOverview = await getApp({
 				app_name: data.name,
 				token: userState.token
 			});
-			app = response.data;
-			isLoading = false;
+			app = appOverview.data;
 
-			CacheService.set(cacheKey, response.data);
+			// Get Volumes
+			const appVolumes = await getAppVolumes({
+				app_name: data.name,
+				token: userState.token
+			});
+			volumes = appVolumes.data;
+
+			isLoading = false;
 		} catch (error) {
 			console.error('Error fetching app:', error);
 			if (error.status === 404) {
@@ -64,7 +64,7 @@
 		if (!userState.token) {
 			await new Promise((r) => setTimeout(r, 100));
 		}
-		await fetchAppData();
+		await fetchData();
 	});
 </script>
 
@@ -92,10 +92,33 @@
 	</td>
 {/snippet}
 
+{#snippet Volume(name, mountpoint, created_at, driver)}
+	<tr>
+		<td>
+			<div class="middle">
+				<Box />
+				{name}
+			</div>
+		</td>
+		<td>
+			<div class="middle">
+				<HardDrive />
+				{mountpoint}
+			</div>
+		</td>
+		<td>
+			<div class="middle">
+				<Cog />
+				{driver}
+			</div>
+		</td>
+	</tr>
+{/snippet}
+
 <main>
 	<TopInfoBar title={data.name} loading={isLoading} />
 	{#if !isLoading}
-		<div class="body">
+		<div class="body" transition:slide={{ duration: 1000 }}>
 			<Section icon={Info} title="General">
 				<table>
 					<tbody>
@@ -130,7 +153,15 @@
 					</tbody>
 				</table>
 			</Section>
-			<Section icon={Cylinder} title="Volumes"></Section>
+			<Section icon={Cylinder} title="Volumes">
+				<table>
+					<tbody>
+						{#each volumes as volume}
+							{@render Volume(volume.name, volume.mountpoint, volume.created_at, volume.driver)}
+						{/each}
+					</tbody>
+				</table>
+			</Section>
 			<Section icon={Box} title="Container">
 				<div class="services">
 					<Service name="BusyBox" />
@@ -161,6 +192,12 @@
 
 			table {
 				width: 60%;
+
+				.middle {
+					display: flex;
+					align-items: center;
+					gap: 1rem;
+				}
 
 				.key {
 					font-weight: bold;

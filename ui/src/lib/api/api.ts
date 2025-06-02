@@ -14,4 +14,7 @@ export const ping = fetcher.path('/ping').method('get').create();
 export const getApps = fetcher.path('/apps/').method('get').create();
 
 export const getApp = fetcher.path('/apps/{app_name}').method('get').create();
+
+export const getAppVolumes = fetcher.path('/apps/{app_name}/volumes').method('get').create();
+
 // </section>

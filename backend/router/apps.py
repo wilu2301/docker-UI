@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.functions.app import apps
-from backend.functions.app.models import App, AppOverview
+from backend.functions.app.models import App, AppOverview, Volume
 from backend.functions.auth import has_permission
 
 router = APIRouter(prefix="/apps", tags=["apps"])
@@ -46,7 +46,7 @@ def get_app(app_name: str, token: str) -> AppOverview:
 
 
 @router.get("/{app_name}/volumes")
-def get_volumes(app_name: str, token: str) -> list:
+def get_volumes(app_name: str, token: str) -> list[Volume]:
     """
     Get the volumes used by the app.
     :param token: Token for authentication.

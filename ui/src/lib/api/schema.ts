@@ -421,6 +421,20 @@ export interface components {
 			/** Error Type */
 			type: string;
 		};
+		/** Volume */
+		Volume: {
+			/** Name */
+			name: string;
+			/** Mountpoint */
+			mountpoint: string;
+			/**
+			 * Created At
+			 * Format: date-time
+			 */
+			created_at: string;
+			/** Driver */
+			driver: string;
+		};
 	};
 	responses: never;
 	parameters: never;
@@ -892,7 +906,7 @@ export interface operations {
 					[name: string]: unknown;
 				};
 				content: {
-					'application/json': unknown[];
+					'application/json': components['schemas']['Volume'][];
 				};
 			};
 			/** @description Validation Error */
