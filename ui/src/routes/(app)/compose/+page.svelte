@@ -31,6 +31,10 @@
 				token: userState.token
 			});
 			apps = response.data;
+
+			if (Array(response.data).length === 1) {
+				loading = false;
+			}
 		} catch (error) {
 			console.error('Error fetching app:', error);
 			notificationState.addMessage(`Error fetching apps: "${error}"`, NotificationType.ERROR);
