@@ -171,15 +171,19 @@ def get_app_volumes(app_name: str) -> list[md.Volume]:
         if not volumes:
             return []
 
-        return [md.Volume(name=volume.name,
-                          mountpoint=str(volume.mountpoint.resolve()),
-                          created_at=volume.created_at,
-                          driver=volume.driver) for volume in volumes]
+        return [
+            md.Volume(
+                name=volume.name,
+                mountpoint=str(volume.mountpoint.resolve()),
+                created_at=volume.created_at,
+                driver=volume.driver,
+            )
+            for volume in volumes
+        ]
 
     except DockerException as e:
         logger.error(f"Error getting app volumes for '{app_name}': {e}")
         return []
-
 
 
 def get_app_usage(app_name) -> md.AppUsage | None:
@@ -211,8 +215,6 @@ def get_app_usage(app_name) -> md.AppUsage | None:
         # Round memory usage to 2 decimal places
         cpu_usage = round(cpu_usage, 2)
         memory_usage = round(memory_usage, 2)
-
-
 
         containers_running = len(containers)
 

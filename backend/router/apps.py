@@ -7,7 +7,7 @@ from backend.functions.auth import has_permission
 router = APIRouter(prefix="/apps", tags=["apps"])
 
 
-@router.get("/apps")
+@router.get("/")
 def get_apps(token: str) -> list[App]:
     """
     Get all apps from docker.
@@ -23,7 +23,7 @@ def get_apps(token: str) -> list[App]:
     return apps.get_apps()
 
 
-@router.get("/apps/{app_name}")
+@router.get("/{app_name}")
 def get_app(app_name: str, token: str) -> AppOverview:
     """
     Get an app by name.
@@ -44,7 +44,8 @@ def get_app(app_name: str, token: str) -> AppOverview:
 
     return app
 
-@router.get("/apps/{app_name}/volumes")
+
+@router.get("/{app_name}/volumes")
 def get_volumes(app_name: str, token: str) -> list:
     """
     Get the volumes used by the app.

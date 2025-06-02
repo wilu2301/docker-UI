@@ -255,7 +255,7 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/apps/apps': {
+	'/apps/': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -267,7 +267,7 @@ export interface paths {
 		 * @description Get all apps from docker.
 		 *     :return: list of apps
 		 */
-		get: operations['get_apps_apps_apps_get'];
+		get: operations['get_apps_apps__get'];
 		put?: never;
 		post?: never;
 		delete?: never;
@@ -276,7 +276,7 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/apps/apps/{app_name}': {
+	'/apps/{app_name}': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -284,13 +284,36 @@ export interface paths {
 			cookie?: never;
 		};
 		/**
-		 * Get Service
+		 * Get App
 		 * @description Get an app by name.
 		 *     :param token: Token for authentication.
 		 *     :param app_name: Name of the app.
-		 *     :return: Service object.
+		 *     :return: App object.
 		 */
-		get: operations['get_app_apps_apps__app_name__get'];
+		get: operations['get_app_apps__app_name__get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/apps/{app_name}/volumes': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Get Volumes
+		 * @description Get the volumes used by the app.
+		 *     :param token: Token for authentication.
+		 *     :param app_name: Name of the app.
+		 *     :return: List of volumes used by the app.
+		 */
+		get: operations['get_volumes_apps__app_name__volumes_get'];
 		put?: never;
 		post?: never;
 		delete?: never;
@@ -320,7 +343,7 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
 	schemas: {
-		/** Service */
+		/** App */
 		App: {
 			/** Name */
 			name: string;
@@ -786,7 +809,7 @@ export interface operations {
 			};
 		};
 	};
-	get_apps_apps_apps_get: {
+	get_apps_apps__get: {
 		parameters: {
 			query: {
 				token: string;
@@ -817,7 +840,7 @@ export interface operations {
 			};
 		};
 	};
-	get_app_apps_apps__app_name__get: {
+	get_app_apps__app_name__get: {
 		parameters: {
 			query: {
 				token: string;
@@ -837,6 +860,39 @@ export interface operations {
 				};
 				content: {
 					'application/json': components['schemas']['AppOverview'];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	get_volumes_apps__app_name__volumes_get: {
+		parameters: {
+			query: {
+				token: string;
+			};
+			header?: never;
+			path: {
+				app_name: string;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': unknown[];
 				};
 			};
 			/** @description Validation Error */

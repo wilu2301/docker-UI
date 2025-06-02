@@ -14,12 +14,12 @@ class AppStatus(enum.StrEnum):
     DEGRADED = "degraded"
     UNKNOWN = "unknown"
 
+
 class Volume(BaseModel):
     name: str
     mountpoint: str
     created_at: datetime
     driver: str
-
 
 
 class Port(BaseModel):

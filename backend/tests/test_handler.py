@@ -10,7 +10,7 @@ from backend.functions.app.handler import (
     get_apps,
     get_app_usage,
     get_service_ports,
-get_app_volumes
+    get_app_volumes,
 )
 from backend.functions.app.models import Volume
 from backend.tests.utils import cleanup, create_test_app

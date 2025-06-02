@@ -13,7 +13,7 @@ const config = {
 			$root: './src'
 		}
 	},
-	preprocess: [vitePreprocess({ script: true })],
+	preprocess: [vitePreprocess({ script: true })]
 };
 
 export default config;
