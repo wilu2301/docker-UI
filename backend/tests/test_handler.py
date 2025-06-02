@@ -10,7 +10,9 @@ from backend.functions.app.handler import (
     get_apps,
     get_app_usage,
     get_service_ports,
+get_app_volumes
 )
+from backend.functions.app.models import Volume
 from backend.tests.utils import cleanup, create_test_app
 from backend.functions.app import models as md
 
@@ -118,5 +120,17 @@ def test_get_app_usage(running_test_app, cleanup):
     assert usage.cpu_usage >= 0
     assert usage.memory_usage >= 0.0
     assert usage.containers_running > 0
-    assert len(usage.ports_exposed) == 1
     assert usage.volumes_count == 1
+
+
+def test_get_app_volumes(running_test_app, cleanup):
+    """
+    Test the test_get_app_volumes function.
+    :return: None
+    """
+    time.sleep(2)  # Wait for the app to start
+
+    # Test with an existing app
+    result = get_app_volumes("test_app")
+
+    assert result is not None

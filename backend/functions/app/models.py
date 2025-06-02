@@ -1,4 +1,5 @@
 import enum
+from datetime import datetime
 
 from pydantic import BaseModel
 
@@ -12,6 +13,13 @@ class AppStatus(enum.StrEnum):
     STOPPED = "stopped"
     DEGRADED = "degraded"
     UNKNOWN = "unknown"
+
+class Volume(BaseModel):
+    name: str
+    mountpoint: str
+    created_at: datetime
+    driver: str
+
 
 
 class Port(BaseModel):

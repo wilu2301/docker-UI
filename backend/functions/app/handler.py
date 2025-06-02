@@ -157,6 +157,31 @@ def get_service_ports(service: Service) -> list[md.Port]:
     return ports_exposed
 
 
+def get_app_volumes(app_name: str) -> list[md.Volume]:
+    """
+    Get the volumes used by the app.
+    :param app_name: Name of the app.
+    :return: List of volumes used by the app.
+    """
+
+    try:
+        # Get the volumes used by the app
+        volumes = docker.volume.list(filters={"name": app_name})
+
+        if not volumes:
+            return []
+
+        return [md.Volume(name=volume.name,
+                          mountpoint=str(volume.mountpoint.resolve()),
+                          created_at=volume.created_at,
+                          driver=volume.driver) for volume in volumes]
+
+    except DockerException as e:
+        logger.error(f"Error getting app volumes for '{app_name}': {e}")
+        return []
+
+
+
 def get_app_usage(app_name) -> md.AppUsage | None:
     """
     Get the usage of the app.
