@@ -8,6 +8,7 @@
 	import { Tooltip } from '@svelte-plugins/tooltips';
 	import { goto } from '$app/navigation';
 	import TopInfoBar from '$root/components/TopInfoBar.svelte';
+	import { notificationState, NotificationType } from '$root/lib/state/notification.svelte';
 
 	type App = components['schemas']['App'];
 
@@ -32,6 +33,7 @@
 			apps = response.data;
 		} catch (error) {
 			console.error('Error fetching app:', error);
+			notificationState.addMessage(`Error fetching apps: "${error}"`, NotificationType.ERROR);
 		}
 	}
 

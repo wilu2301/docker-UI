@@ -17,8 +17,9 @@
 	import { userState } from '$lib/state/user.svelte';
 	import type { components } from '$lib/api/schema';
 	import { onMount } from 'svelte';
-	import Container from '$root/components/Container.svelte';
 	import Service from '$root/components/Service.svelte';
+	import { notificationState, NotificationType } from '$root/lib/state/notification.svelte';
+	import { goto } from '\$app/navigation';
 
 	const { data }: PageProps = $props();
 
@@ -51,6 +52,11 @@
 			CacheService.set(cacheKey, response.data);
 		} catch (error) {
 			console.error('Error fetching app:', error);
+			if (error.status === 404) {
+				// App does not exist
+				notificationState.addMessage(`App "${data.name}" does not exist`, NotificationType.ERROR);
+				await goto('/compose');
+			}
 		}
 	}
 
