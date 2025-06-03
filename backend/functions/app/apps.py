@@ -159,3 +159,13 @@ def get_volumes(app_name: str) -> list[md.Volume]:
     """
 
     return handler.get_app_volumes(app_name)
+
+
+def get_app_containers(app_name: str) -> list[md.ContainerOverview]:
+    """
+    Get the containers of the app.
+    :param app_name: Name of the app.
+    :return: List of containers used by the app.
+    """
+
+    return handler.get_app_containers_overview(app_name)

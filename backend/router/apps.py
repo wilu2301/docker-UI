@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.functions.app import apps
-from backend.functions.app.models import App, AppOverview, Volume
+from backend.functions.app.models import App, AppOverview, Volume, ContainerOverview
 from backend.functions.auth import has_permission
 
 router = APIRouter(prefix="/apps", tags=["apps"])
@@ -65,3 +65,25 @@ def get_volumes(app_name: str, token: str) -> list[Volume]:
         raise HTTPException(status_code=404, detail="No volumes found for this app.")
 
     return volumes
+
+
+@router.get("/{app_name}/containers")
+def get_app_containers(app_name: str, token: str) -> list[ContainerOverview]:
+    """
+    Get the containers of the app.
+    :param token: Token for authentication.
+    :param app_name: Name of the app.
+    :return: List of containers used by the app.
+    """
+
+    if not has_permission(token=token, scope=1):
+        raise HTTPException(
+            status_code=403,
+            detail="You do not have permission to access this resource.",
+        )
+
+    containers = apps.get_app_containers(app_name)
+    if not containers:
+        raise HTTPException(status_code=404, detail="No containers found for this app.")
+
+    return containers

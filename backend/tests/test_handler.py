@@ -11,6 +11,8 @@ from backend.functions.app.handler import (
     get_app_usage,
     get_service_ports,
     get_app_volumes,
+    get_app_containers_overview,
+    get_node_name_by_id,
 )
 from backend.functions.app.models import Volume
 from backend.tests.utils import cleanup, create_test_app
@@ -134,3 +136,35 @@ def test_get_app_volumes(running_test_app, cleanup):
     result = get_app_volumes("test_app")
 
     assert result is not None
+
+
+def test_get_node_name_by_id():
+    """
+    Test the get_node_by_id function.
+    :return: None
+    """
+
+    result = get_node_name_by_id("9pardvsftq4dpknb2fxxbxgfr")
+
+    assert result == "archlinux"
+
+
+def test_get_app_containers_overview(cleanup):
+    """
+    Test the get_app_containers_overview function.
+    :return: None
+    """
+    time.sleep(2)  # Wait for the app to start
+
+    # Test with an existing app
+    result = get_app_containers_overview("test_app")
+
+    assert isinstance(result, list)
+    assert len(result) == 2
+
+    # Test with a non-existing app
+    result = get_app_containers_overview("a")
+
+    assert isinstance(result, list)
+    assert len(result) == 0
+

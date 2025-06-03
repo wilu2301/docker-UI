@@ -31,7 +31,7 @@
 	let isLoading = $state(true);
 	let app: AppOverview = $state();
 	let volumes: Volume[] = $state();
-	$inspect(volumes);
+
 
 	async function fetchData() {
 		try {

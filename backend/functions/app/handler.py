@@ -239,3 +239,60 @@ def get_app_usage(app_name) -> md.AppUsage | None:
     except DockerException as e:
         logger.error(f"Error getting app usage for '{app_name}': {e}")
         return None
+
+
+def get_node_name_by_id(node_id: str) -> str:
+    """
+    Get the node name by its ID.
+    :param node_id: The ID of the node.
+    :return: The name of the node.
+    """
+    try:
+        node = docker.node.inspect(node_id)
+        return node.description.hostname
+    except DockerException as e:
+        logger.error(f"Error getting node by ID '{node_id}': {e}")
+        return "Unknown Node"
+
+
+def get_app_containers_overview(app_name: str) -> list[md.ContainerOverview]:
+    """
+    Get the containers overview for the app.
+    :param app_name: Name of the app.
+    :return: List of containers for the app.
+    """
+
+    try:
+        # Get the containers for the app
+        all_containers = docker.container.list(filters={"name": app_name})
+
+        containers = []
+        # Check if containers are part of the app
+        for container in all_containers:
+            if app_name in container.name.split(".")[0]:
+                logger.debug(f"Container {container.name} belongs to app {app_name}")
+                containers.append(container)
+            else:
+                logger.warning(f"Container '{container.name}' does not belong to app '{app_name}'")
+
+
+        if not containers:
+            logger.warning(f"No containers found for app '{app_name}'")
+            return []
+
+
+        return [
+            md.ContainerOverview(
+                name=container.name,
+                image=container.config.image,
+                status=container.state.status,
+                node=get_node_name_by_id(
+                    container.config.labels.get("com.docker.swarm.node.id", "Unknown Node")
+                ),
+            )
+            for container in containers
+        ]
+
+    except DockerException as e:
+        logger.error(f"Error getting app containers overview for '{app_name}': {e}")
+        return []

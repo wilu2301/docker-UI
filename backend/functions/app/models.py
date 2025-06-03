@@ -15,6 +15,15 @@ class AppStatus(enum.StrEnum):
     UNKNOWN = "unknown"
 
 
+class ContainerStatus(enum.StrEnum):
+    CREATED = "created"
+    RUNNING = "running"
+    RESTARTING = "restarting"
+    EXITED = "exited"
+    PAUSED = "paused"
+    DEAD = "dead"
+
+
 class Volume(BaseModel):
     name: str
     mountpoint: str
@@ -42,3 +51,10 @@ class AppOverview(BaseModel):
     name: str
     status: AppStatus
     usage: AppUsage | None = None
+
+
+class ContainerOverview(BaseModel):
+    name: str
+    image: str
+    status: ContainerStatus
+    node: str
