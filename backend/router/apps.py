@@ -67,10 +67,11 @@ def get_volumes(app_name: str, token: str) -> list[Volume]:
     return volumes
 
 
-@router.get("/{app_name}/containers")
-def get_app_containers(app_name: str, token: str) -> list[ContainerOverview]:
+@router.get("/{app_name}/{service_name}/containers")
+def get_service_containers(app_name: str, service_name: str, token: str) -> list[ContainerOverview]:
     """
     Get the containers of the app.
+    :param service_name: Name of the service.
     :param token: Token for authentication.
     :param app_name: Name of the app.
     :return: List of containers used by the app.
@@ -82,7 +83,7 @@ def get_app_containers(app_name: str, token: str) -> list[ContainerOverview]:
             detail="You do not have permission to access this resource.",
         )
 
-    containers = apps.get_app_containers(app_name)
+    containers = apps.get_service_containers(service_name, app_name)
     if not containers:
         raise HTTPException(status_code=404, detail="No containers found for this app.")
 
