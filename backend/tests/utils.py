@@ -22,16 +22,4 @@ def cleanup():
 @pytest.fixture
 def create_test_app():
     pathlib.Path("storage/test_app").mkdir(parents=True, exist_ok=True)
-    pathlib.Path("storage/test_app/docker-compose.yml").touch()
-    pathlib.Path("storage/test_app/docker-compose.yml").write_text(
-        """version: '3'
-services:
-    app:
-        image: nginx
-        ports:
-        - "80:80"
-        volumes:
-        - ./data:/data
-        """
-    )
-    yield
+    shutil.copyfile("compose/test-nginx.yml", "storage/test_app/docker-compose.yml")

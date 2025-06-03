@@ -12,7 +12,7 @@ from backend.functions.app.handler import (
     get_service_ports,
     get_app_volumes,
     get_service_containers_overview,
-    get_node_name_by_id,
+    get_node_name_by_id, get_app_service_names,
 )
 from backend.functions.app.models import Volume
 from backend.tests.utils import cleanup, create_test_app
@@ -25,6 +25,7 @@ def running_test_app(create_test_app, cleanup):
     Fixture to create a running test app.
     :return: None
     """
+
 
     # Start the app
     start_app("test_app")
@@ -117,7 +118,7 @@ def test_get_app_usage(running_test_app, cleanup):
     time.sleep(3)  # Wait for the app to start
 
     # Test with an existing app
-    usage = get_app_usage("test_app")
+    usage: md.AppUsage = get_app_usage("test_app")
     assert usage.cpu_usage >= 0
     assert usage.memory_usage >= float(0.0)
     assert usage.containers_running > 0
@@ -143,12 +144,25 @@ def test_get_node_name_by_id():
     :return: None
     """
 
-    result = get_node_name_by_id("9pardvsftq4dpknb2fxxbxgfr")
+    result = get_node_name_by_id("y07skz469cljq54bm225sohdl")
 
     assert result == "archlinux"
 
 
-def test_get_service_containers_overview(cleanup):
+def test_get_app_service_names(running_test_app,cleanup):
+    """
+    Test the get_app_service_names function.
+    :return: None
+    """
+    time.sleep(2)  # Wait for the app to start
+
+    # Test with an existing app
+    result = get_app_service_names("test_app")
+
+    assert result == ["test_app_busybox", "test_app_nginx"]
+
+
+def test_get_service_containers_overview(running_test_app, cleanup):
     """
     Test the get_app_containers_overview function.
     :return: None
@@ -156,9 +170,8 @@ def test_get_service_containers_overview(cleanup):
     time.sleep(2)  # Wait for the app to start
 
     # Test with an existing service
-    result = get_service_containers_overview("test_app_busybox")
+    result = get_service_containers_overview("test_app_nginx")
 
-    print(result)
 
     assert isinstance(result, list)
     assert len(result) == 1
