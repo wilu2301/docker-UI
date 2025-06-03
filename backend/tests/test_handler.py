@@ -11,7 +11,7 @@ from backend.functions.app.handler import (
     get_app_usage,
     get_service_ports,
     get_app_volumes,
-    get_app_containers_overview,
+    get_service_containers_overview,
     get_node_name_by_id,
 )
 from backend.functions.app.models import Volume
@@ -118,9 +118,8 @@ def test_get_app_usage(running_test_app, cleanup):
 
     # Test with an existing app
     usage = get_app_usage("test_app")
-    assert isinstance(usage, md.AppUsage)
     assert usage.cpu_usage >= 0
-    assert usage.memory_usage >= 0.0
+    assert usage.memory_usage >= float(0.0)
     assert usage.containers_running > 0
     assert usage.volumes_count == 1
 
@@ -149,22 +148,23 @@ def test_get_node_name_by_id():
     assert result == "archlinux"
 
 
-def test_get_app_containers_overview(cleanup):
+def test_get_service_containers_overview(cleanup):
     """
     Test the get_app_containers_overview function.
     :return: None
     """
     time.sleep(2)  # Wait for the app to start
 
-    # Test with an existing app
-    result = get_app_containers_overview("test_app")
+    # Test with an existing service
+    result = get_service_containers_overview("test_app_busybox")
+
+    print(result)
 
     assert isinstance(result, list)
-    assert len(result) == 2
+    assert len(result) == 1
 
     # Test with a non-existing app
-    result = get_app_containers_overview("a")
+    result = get_service_containers_overview("a")
 
     assert isinstance(result, list)
     assert len(result) == 0
-

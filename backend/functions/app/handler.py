@@ -255,44 +255,46 @@ def get_node_name_by_id(node_id: str) -> str:
         return "Unknown Node"
 
 
-def get_app_containers_overview(app_name: str) -> list[md.ContainerOverview]:
+def get_service_containers_overview(service_name: str) -> list[md.ContainerOverview]:
     """
     Get the containers overview for the app.
-    :param app_name: Name of the app.
+    :param service_name: Name of the sevice.
     :return: List of containers for the app.
     """
 
     try:
-        # Get the containers for the app
-        all_containers = docker.container.list(filters={"name": app_name})
+        # Get service containers
 
-        containers = []
-        # Check if containers are part of the app
-        for container in all_containers:
-            if app_name in container.name.split(".")[0]:
-                logger.debug(f"Container {container.name} belongs to app {app_name}")
-                containers.append(container)
-            else:
-                logger.warning(f"Container '{container.name}' does not belong to app '{app_name}'")
+        tasks = docker.service.ps(service_name)
 
-
-        if not containers:
-            logger.warning(f"No containers found for app '{app_name}'")
+        if not tasks:
+            logger.warning(f"No service found with name '{service_name}'")
             return []
 
+        containers: list[Container] = []
+        for task in tasks:
+            containers.extend(docker.container.list(filters={"name": task.id}))
+
+        if not containers:
+            logger.warning(f"No containers found for app '{service_name}'")
+            return []
 
         return [
             md.ContainerOverview(
                 name=container.name,
                 image=container.config.image,
-                status=container.state.status,
+                status=md.ContainerStatus(
+                    container.state.status if container.state else "dead"
+                ),
                 node=get_node_name_by_id(
-                    container.config.labels.get("com.docker.swarm.node.id", "Unknown Node")
+                    container.config.labels.get(
+                        "com.docker.swarm.node.id", "Unknown Node"
+                    )
                 ),
             )
             for container in containers
         ]
 
     except DockerException as e:
-        logger.error(f"Error getting app containers overview for '{app_name}': {e}")
+        logger.error(f"Error getting app containers overview for '{service_name}': {e}")
         return []

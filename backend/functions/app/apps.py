@@ -168,4 +168,4 @@ def get_app_containers(app_name: str) -> list[md.ContainerOverview]:
     :return: List of containers used by the app.
     """
 
-    return handler.get_app_containers_overview(app_name)
+    return handler.get_service_containers_overview(app_name)
