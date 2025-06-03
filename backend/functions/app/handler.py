@@ -255,6 +255,27 @@ def get_node_name_by_id(node_id: str) -> str:
         return "Unknown Node"
 
 
+def get_app_service_names(app_name: str) -> list[str]:
+    """
+    Get the names of the services in the app.
+    :param app_name: Name of the app.
+    :return: List of service names.
+    """
+    try:
+        # Get the services for the app
+        tasks = docker.service.list(filters={"name": app_name})
+
+        if not tasks:
+            logger.warning(f"No services found for app '{app_name}'")
+            return []
+
+        return [task.spec.name for task in tasks]
+
+    except DockerException as e:
+        logger.error(f"Error getting app service names for '{app_name}': {e}")
+        return []
+
+
 def get_service_containers_overview(service_name: str) -> list[md.ContainerOverview]:
     """
     Get the containers overview for the app.
