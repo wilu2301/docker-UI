@@ -1,0 +1,12 @@
+sqlmodel~=0.0.24
+pytest~=8.3.5
+python-dotenv~=1.1.0
+docker~=7.1.0
+python-on-whales~=0.77.0
+fastapi[standard]~=0.115.12
+starlette~=0.46.2
+SQLAlchemy~=2.0.40
+GitPython~=3.1.44
+pydantic~=2.11.4
+passlib~=1.7.4
+bcrypt~=4.0.1

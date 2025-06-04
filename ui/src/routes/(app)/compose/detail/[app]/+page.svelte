@@ -32,7 +32,6 @@
 	let app: AppOverview = $state();
 	let volumes: Volume[] = $state();
 
-
 	async function fetchData() {
 		try {
 			// Get general App data

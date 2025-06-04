@@ -3,8 +3,8 @@
 	import { goto } from '$app/navigation';
 
 	const credentials = $state({
-		username: '',
-		password: ''
+		username: 'admin',
+		password: 'admin'
 	});
 
 	let { data } = $props();
@@ -50,7 +50,10 @@
 			<h2 class="left">!</h2>
 			<p>{error.msg}</p>
 		</div>
+	{:else}
+		<div class="toast">»Public preview«</div>
 	{/if}
+
 	<div class="login">
 		<h1>Welcome Back!</h1>
 		<input type="text" id="username" placeholder="Username" bind:value={credentials.username} />
