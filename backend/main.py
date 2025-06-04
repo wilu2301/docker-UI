@@ -27,10 +27,8 @@ def on_startup():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["http://localhost:5173"],
+
 )
 
 
@@ -40,10 +38,10 @@ async def index():
 
 
 
-app.include_router(auth.router)
-app.include_router(container.router)
-app.include_router(apps_setup.router)
-app.include_router(apps.router)
+app.include_router(auth.router,prefix="/api")
+app.include_router(container.router, prefix="/api")
+app.include_router(apps_setup.router, prefix="/api")
+app.include_router(apps.router, prefix="/api")
 
 # Add the resources for the frontend
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
