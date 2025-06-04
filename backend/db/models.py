@@ -6,7 +6,7 @@ class User(SQLModel, table=True):
     username: str = Field(nullable=False, unique=True)
     password: str = Field(nullable=False)
     scope: int = Field(
-        nullable=False
+        nullable=True
     )  # A binary number representing the users permission level.
 
 

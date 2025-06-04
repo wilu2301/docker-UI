@@ -6,17 +6,19 @@ WORKDIR /ui
 RUN npm install
 RUN npm run build
 
+
 FROM python:3.13-slim
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git && \
+    rm -rf /var/lib/apt/lists/*
+
 
 ENV DB_CONNECTION_STRING="sqlite:///database.db"
 ENV PATH="$PATH:/usr/local/bin/docker"
 
 RUN mkdir -p /root/.pip-cache
 
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends git && \
-    rm -rf /var/lib/apt/lists/*
 
 COPY --from=vite-builder /ui/build /backend/static
 
@@ -26,6 +28,8 @@ WORKDIR /backend
 RUN pip install --cache-dir=/root/.pip-cache -r requirements.txt
 
 COPY backend /backend
+RUN rm -rf /backend/tests
+
 
 COPY --from=vite-builder /ui/build /app/static
 

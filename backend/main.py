@@ -1,10 +1,11 @@
 import logging
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from backend.functions import setup
 from backend.router import auth, container
@@ -24,11 +25,11 @@ def on_startup():
     setup.startup_check()
 
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
-
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -37,10 +38,17 @@ async def index():
     return FileResponse(os.path.join("static", "index.html"))
 
 
+# Redirect unmatched routes to index.html for SPA
+@app.exception_handler(StarletteHTTPException)
+async def spa_handler(request: Request, exc: StarletteHTTPException):
+    if exc.status_code == 404:
+        return FileResponse(os.path.join("static", "index.html"))
+    raise exc
 
-app.include_router(auth.router,prefix="/api")
-app.include_router(container.router, prefix="/api")
-app.include_router(apps_setup.router, prefix="/api")
+
+app.include_router(auth.router, prefix="/api")
+#app.include_router(container.router, prefix="/api")
+#app.include_router(apps_setup.router, prefix="/api")
 app.include_router(apps.router, prefix="/api")
 
 # Add the resources for the frontend

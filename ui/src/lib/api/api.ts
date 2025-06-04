@@ -1,11 +1,12 @@
 import { Fetcher } from 'openapi-typescript-fetch';
+import { API_URL_NEW } from '$lib';
 import type { paths } from './schema';
 
 const fetcher = Fetcher.for<paths>();
 
 // Configure base URL on the fetcher
 fetcher.configure({
-	baseUrl: 'http://localhost:8000'
+	baseUrl: API_URL_NEW
 });
 
 export const ping = fetcher.path('/ping').method('get').create();
