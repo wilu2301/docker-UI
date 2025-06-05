@@ -1,37 +1,36 @@
-<script>
+<script lang="ts">
 	import { Dot, ScrollText, ChevronRight, Info, RotateCcw } from '@lucide/svelte';
 	import { Tooltip } from '@svelte-plugins/tooltips';
+	import type { components } from '$lib/api/schema.js';
 
-	const { isFirst, isLast, container_id } = $props();
+	type ContainerOverview = components['schemas']['ContainerOverview'];
 
-	const ContainerState = {
-		RUNNING: 'running',
-		STOPPED: 'stopped',
-		STARTING: 'starting'
-	};
-
-	let container_state = $state(ContainerState.RUNNING);
+	const { isFirst, isLast, container } = $props<{
+		isFirst: boolean;
+		isLast: boolean;
+		container: ContainerOverview;
+	}>();
 </script>
 
 <main>
 	<div class:first={isFirst} class:last={isLast} class:middle={!isFirst && !isLast}>
 		<div class="container">
 			<div class="container-state">
-				{#if container_state === ContainerState.RUNNING}
+				{#if container.status === 'running'}
 					<Tooltip content="Running">
 						<Dot class="status" size="100" color="green" />
 					</Tooltip>
-				{:else if container_state === ContainerState.STARTING}
-					<Tooltip content="Starting">
+				{:else if container.status === 'created'}
+					<Tooltip content="status">
 						<Dot class="status" size="100" color="yellow" />
 					</Tooltip>
-				{:else if container_state === ContainerState.STOPPED}
+				{:else if container.status === 'dead' || container.status === 'exited'}
 					<Tooltip content="Stopped">
 						<Dot class="status" size="100" color="red" />
 					</Tooltip>
 				{/if}
 			</div>
-			<span class="name">Container</span>
+			<span class="name">{container.name}</span>
 			<div class="actions">
 				<Tooltip content="Logs">
 					<ScrollText class="action" size="32" color="var(--white)" />
@@ -46,7 +45,7 @@
 					<RotateCcw class="action" size="32" color="var(--white)" />
 				</Tooltip>
 			</div>
-			<span class="node">Node</span>
+			<span class="node">{container.node}</span>
 		</div>
 	</div>
 </main>

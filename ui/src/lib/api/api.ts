@@ -9,13 +9,18 @@ fetcher.configure({
 	baseUrl: API_URL_NEW
 });
 
-export const ping = fetcher.path('/ping').method('get').create();
-
 // <section> Container API
-export const getApps = fetcher.path('/apps/').method('get').create();
+export const getApps = fetcher.path('/api/apps/').method('get').create();
 
-export const getApp = fetcher.path('/apps/{app_name}').method('get').create();
+export const getApp = fetcher.path('/api/apps/{app_name}').method('get').create();
 
-export const getAppVolumes = fetcher.path('/apps/{app_name}/volumes').method('get').create();
+export const getAppVolumes = fetcher.path('/api/apps/{app_name}/volumes').method('get').create();
+
+export const getServices = fetcher.path('/api/apps/{app_name}/services').method('get').create();
+
+export const getServiceContainers = fetcher
+	.path('/api/apps/{app_name}/{service_name}/containers')
+	.method('get')
+	.create();
 
 // </section>

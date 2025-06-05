@@ -14,7 +14,7 @@
 	} from '@lucide/svelte';
 	import { Tooltip } from '@svelte-plugins/tooltips';
 	import { settingsState } from '$lib/state/settings.svelte';
-	import { getApp, getAppVolumes } from '$lib/api/api';
+	import { getApp, getAppVolumes, getServices } from '$lib/api/api';
 	import { slide } from 'svelte/transition';
 	import { userState } from '$lib/state/user.svelte';
 	import type { components } from '$lib/api/schema';
@@ -22,6 +22,7 @@
 	import Service from '$root/components/Service.svelte';
 	import { notificationState, NotificationType } from '$root/lib/state/notification.svelte';
 	import { goto } from '\$app/navigation';
+	import App from '$root/routes/(app)/compose/App.svelte';
 
 	const { data }: PageProps = $props();
 
@@ -31,6 +32,7 @@
 	let isLoading = $state(true);
 	let app: AppOverview = $state();
 	let volumes: Volume[] = $state();
+	let services: string[] = $state();
 
 	async function fetchData() {
 		try {
@@ -47,6 +49,15 @@
 				token: userState.token
 			});
 			volumes = appVolumes.data;
+
+			// Get Services
+
+			const appServices = await getServices({
+				app_name: data.name,
+				token: userState.token
+			});
+
+			services = appServices.data;
 
 			isLoading = false;
 		} catch (error) {
@@ -163,8 +174,9 @@
 			</Section>
 			<Section icon={Box} title="Container">
 				<div class="services">
-					<Service name="BusyBox" />
-					<Service name="BusyBox" />
+					{#each services as service}
+						<Service appName={data.name} name={service} />
+					{/each}
 				</div>
 			</Section>
 		</div>

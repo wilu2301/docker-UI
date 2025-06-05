@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-	'/auth/': {
+	'/': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -12,7 +12,7 @@ export interface paths {
 			cookie?: never;
 		};
 		/** Index */
-		get: operations['index_auth__get'];
+		get: operations['index__get'];
 		put?: never;
 		post?: never;
 		delete?: never;
@@ -21,7 +21,7 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/auth/login': {
+	'/api/auth/login': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -31,31 +31,14 @@ export interface paths {
 		get?: never;
 		put?: never;
 		/** Login */
-		post: operations['login_auth_login_post'];
+		post: operations['login_api_auth_login_post'];
 		delete?: never;
 		options?: never;
 		head?: never;
 		patch?: never;
 		trace?: never;
 	};
-	'/auth/create_user': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		get?: never;
-		put?: never;
-		/** Create User */
-		post: operations['create_user_auth_create_user_post'];
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	'/auth/has_permission': {
+	'/api/auth/has_permission': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -63,7 +46,7 @@ export interface paths {
 			cookie?: never;
 		};
 		/** Has Permission */
-		get: operations['has_permission_auth_has_permission_get'];
+		get: operations['has_permission_api_auth_has_permission_get'];
 		put?: never;
 		post?: never;
 		delete?: never;
@@ -72,190 +55,7 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/containers/all': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		/**
-		 * Get All Containers
-		 * @description Gets all containers on the current client.
-		 *     :param token: The token to authenticate the user.
-		 *     :return:
-		 */
-		get: operations['get_all_containers_containers_all_get'];
-		put?: never;
-		post?: never;
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	'/containers/get': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		/**
-		 * Get Container
-		 * @description Gets a container by its id.
-		 *     :param container_id: Container name or id.
-		 *     :param token: The token to authenticate the user.
-		 *     :return:
-		 */
-		get: operations['get_container_containers_get_get'];
-		put?: never;
-		post?: never;
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	'/apps/create/creation': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		/**
-		 * Get Creation
-		 * @description Gets the saved creation data from the database.
-		 *     :param token: The token of the user.
-		 *     :return: The app configuration.
-		 */
-		get: operations['get_creation_apps_create_creation_get'];
-		put?: never;
-		post?: never;
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	'/apps/create/setup_git': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		get?: never;
-		put?: never;
-		/**
-		 * Test Connection
-		 * @description Test connection to the git repository.
-		 */
-		post: operations['test_connection_apps_create_setup_git_post'];
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	'/apps/create/name_available': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		get?: never;
-		put?: never;
-		/**
-		 * Name Available
-		 * @description Check if the name is available.
-		 *     :param token:
-		 *     :param name: Name to check.
-		 *     :return: True if the name is available, False otherwise.
-		 */
-		post: operations['name_available_apps_create_name_available_post'];
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	'/apps/create/setup/claim_port': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		get?: never;
-		put?: never;
-		/**
-		 * Setup Claim Port
-		 * @description Claim a port for the app in setup.
-		 *     :param udp: if the port is udp
-		 *     :param tcp: if the port is tcp
-		 *     :param container_port: the port in the container
-		 *     :param host_port: the port on the host
-		 *     :param token: The token of the user
-		 *     :return: True if the port is available and claimed, False otherwise
-		 */
-		post: operations['setup_claim_port_apps_create_setup_claim_port_post'];
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	'/apps/create/delete_port': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		get?: never;
-		put?: never;
-		post?: never;
-		/**
-		 * Delete Port
-		 * @description Delete a port from the app.
-		 *     :param token: The token of the user
-		 *     :param host_port: The port to delete
-		 *     :return: True if the port is deleted, False otherwise
-		 */
-		delete: operations['delete_port_apps_create_delete_port_delete'];
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	'/apps/create/setup_service': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		/**
-		 * Setup Service
-		 * @description Setup a service for the app.
-		 *     :param token: The token of the user
-		 *     :param container_name: The name of the container
-		 *     :param container_image: The image of the container
-		 *     :return: True if the service is setup, False otherwise
-		 */
-		get: operations['setup_service_apps_create_setup_service_get'];
-		put?: never;
-		post?: never;
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	'/apps/': {
+	'/api/apps/': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -267,7 +67,7 @@ export interface paths {
 		 * @description Get all apps from docker.
 		 *     :return: list of apps
 		 */
-		get: operations['get_apps_apps__get'];
+		get: operations['get_apps_api_apps__get'];
 		put?: never;
 		post?: never;
 		delete?: never;
@@ -276,7 +76,7 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/apps/{app_name}': {
+	'/api/apps/{app_name}': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -290,7 +90,7 @@ export interface paths {
 		 *     :param app_name: Name of the app.
 		 *     :return: App object.
 		 */
-		get: operations['get_app_apps__app_name__get'];
+		get: operations['get_app_api_apps__app_name__get'];
 		put?: never;
 		post?: never;
 		delete?: never;
@@ -299,7 +99,7 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/apps/{app_name}/volumes': {
+	'/api/apps/{app_name}/volumes': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -313,7 +113,7 @@ export interface paths {
 		 *     :param app_name: Name of the app.
 		 *     :return: List of volumes used by the app.
 		 */
-		get: operations['get_volumes_apps__app_name__volumes_get'];
+		get: operations['get_volumes_api_apps__app_name__volumes_get'];
 		put?: never;
 		post?: never;
 		delete?: never;
@@ -322,15 +122,45 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/ping': {
+	'/api/apps/{app_name}/services': {
 		parameters: {
 			query?: never;
 			header?: never;
 			path?: never;
 			cookie?: never;
 		};
-		/** Ping */
-		get: operations['ping_ping_get'];
+		/**
+		 * Get Services
+		 * @description Get the services of the app.
+		 *     :param app_name: Name of the app.
+		 *     :param token: Token for authentication.
+		 *     :return: List of services used by the app.
+		 */
+		get: operations['get_services_api_apps__app_name__services_get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/apps/{app_name}/{service_name}/containers': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Get Service Containers
+		 * @description Get the containers of the app.
+		 *     :param service_name: Name of the service.
+		 *     :param token: Token for authentication.
+		 *     :param app_name: Name of the app.
+		 *     :return: List of containers used by the app.
+		 */
+		get: operations['get_service_containers_api_apps__app_name___service_name__containers_get'];
 		put?: never;
 		post?: never;
 		delete?: never;
@@ -385,6 +215,21 @@ export interface components {
 			 */
 			volumes_count: number;
 		};
+		/** ContainerOverview */
+		ContainerOverview: {
+			/** Name */
+			name: string;
+			/** Image */
+			image: string;
+			status: components['schemas']['ContainerStatus'];
+			/** Node */
+			node: string;
+		};
+		/**
+		 * ContainerStatus
+		 * @enum {string}
+		 */
+		ContainerStatus: 'created' | 'running' | 'restarting' | 'exited' | 'paused' | 'dead';
 		/** HTTPValidationError */
 		HTTPValidationError: {
 			/** Detail */
@@ -444,7 +289,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-	index_auth__get: {
+	index__get: {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -464,7 +309,7 @@ export interface operations {
 			};
 		};
 	};
-	login_auth_login_post: {
+	login_api_auth_login_post: {
 		parameters: {
 			query: {
 				username: string;
@@ -496,39 +341,7 @@ export interface operations {
 			};
 		};
 	};
-	create_user_auth_create_user_post: {
-		parameters: {
-			query: {
-				username: string;
-				password: string;
-			};
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	has_permission_auth_has_permission_get: {
+	has_permission_api_auth_has_permission_get: {
 		parameters: {
 			query: {
 				token: string;
@@ -560,270 +373,7 @@ export interface operations {
 			};
 		};
 	};
-	get_all_containers_containers_all_get: {
-		parameters: {
-			query: {
-				token: string;
-			};
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	get_container_containers_get_get: {
-		parameters: {
-			query: {
-				container_id: string;
-				token: string;
-			};
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	get_creation_apps_create_creation_get: {
-		parameters: {
-			query: {
-				token: unknown;
-			};
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	test_connection_apps_create_setup_git_post: {
-		parameters: {
-			query: {
-				token: string;
-				name: unknown;
-				git_url: string;
-				git_folder?: unknown;
-				git_branch?: unknown;
-				git_username?: unknown;
-				git_token?: unknown;
-			};
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	name_available_apps_create_name_available_post: {
-		parameters: {
-			query: {
-				name: string;
-				token: string;
-			};
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	setup_claim_port_apps_create_setup_claim_port_post: {
-		parameters: {
-			query: {
-				token: string;
-				host_port: number;
-				container_port: number;
-				tcp?: boolean;
-				udp?: boolean;
-			};
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	delete_port_apps_create_delete_port_delete: {
-		parameters: {
-			query: {
-				token: string;
-				host_port: number;
-			};
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	setup_service_apps_create_setup_service_get: {
-		parameters: {
-			query: {
-				token: string;
-				container_name: string;
-				container_image: string;
-			};
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	get_apps_apps__get: {
+	get_apps_api_apps__get: {
 		parameters: {
 			query: {
 				token: string;
@@ -854,7 +404,7 @@ export interface operations {
 			};
 		};
 	};
-	get_app_apps__app_name__get: {
+	get_app_api_apps__app_name__get: {
 		parameters: {
 			query: {
 				token: string;
@@ -887,7 +437,7 @@ export interface operations {
 			};
 		};
 	};
-	get_volumes_apps__app_name__volumes_get: {
+	get_volumes_api_apps__app_name__volumes_get: {
 		parameters: {
 			query: {
 				token: string;
@@ -920,11 +470,15 @@ export interface operations {
 			};
 		};
 	};
-	ping_ping_get: {
+	get_services_api_apps__app_name__services_get: {
 		parameters: {
-			query?: never;
+			query: {
+				token: string;
+			};
 			header?: never;
-			path?: never;
+			path: {
+				app_name: string;
+			};
 			cookie?: never;
 		};
 		requestBody?: never;
@@ -935,7 +489,50 @@ export interface operations {
 					[name: string]: unknown;
 				};
 				content: {
-					'application/json': unknown;
+					'application/json': string[];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	get_service_containers_api_apps__app_name___service_name__containers_get: {
+		parameters: {
+			query: {
+				token: string;
+			};
+			header?: never;
+			path: {
+				app_name: string;
+				service_name: string;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['ContainerOverview'][];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
 				};
 			};
 		};

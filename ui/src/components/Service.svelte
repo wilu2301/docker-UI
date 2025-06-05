@@ -1,36 +1,52 @@
 <script>
 	import Container from './Container.svelte';
+	import { getServiceContainers } from '$lib/api/api.js';
+	import { notificationState, NotificationType } from '$lib/state/notification.svelte.js';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { userState } from '$lib/state/user.svelte.js';
 
-	const { name, id } = $props();
+	const { appName, name } = $props();
 
-	const container = $state([
-		{
-			id: 1
-		},
-		{
-			id: 2
-		},
-		{
-			id: 3
-		},
-		{
-			id: 4
+	let container = $state();
+	$inspect(container);
+
+	async function fetchData() {
+		try {
+			const containerData = await getServiceContainers({
+				app_name: appName,
+				service_name: name.split('_')[name.split('_').length - 1],
+				token: userState.token
+			});
+
+			container = containerData.data;
+		} catch (error) {
+			console.error('Error fetching containerData:', error);
 		}
-	]);
+	}
+
+	onMount(async () => {
+		if (!userState.token) {
+			await new Promise((r) => setTimeout(r, 100));
+		}
+		await fetchData();
+	});
 </script>
 
 <main class="app">
 	<div class="name">
-		<span>{name}</span>
+		<span>{name.split('_')[name.split('_').length - 1]}</span>
 	</div>
 	<div class="container">
-		{#each container as id, index (id)}
-			{#if index === 0}
-				<Container class="container" {id} isFirst={true} />
+		{#each container as c, index (c)}
+			{#if container.length === 1}
+				<Container class="container" container={c} isLast={true} />
+			{:else if index === 0}
+				<Container class="container" container={c} isFirst={true} />
 			{:else if index === container.length - 1}
-				<Container class="container" {id} isLast={true} />
+				<Container class="container" container={c} isLast={true} />
 			{:else}
-				<Container class="container" {id} />
+				<Container class="container" container={c} />
 			{/if}
 		{/each}
 	</div>
