@@ -12,7 +12,8 @@ from backend.functions.app.handler import (
     get_service_ports,
     get_app_volumes,
     get_service_containers_overview,
-    get_node_name_by_id, get_app_service_names,
+    get_node_name_by_id,
+    get_app_service_names,
 )
 from backend.functions.app.models import Volume
 from backend.tests.utils import cleanup, create_test_app
@@ -25,7 +26,6 @@ def running_test_app(create_test_app, cleanup):
     Fixture to create a running test app.
     :return: None
     """
-
 
     # Start the app
     start_app("test_app")
@@ -149,7 +149,7 @@ def test_get_node_name_by_id():
     assert result == "archlinux"
 
 
-def test_get_app_service_names(running_test_app,cleanup):
+def test_get_app_service_names(running_test_app, cleanup):
     """
     Test the get_app_service_names function.
     :return: None
@@ -171,7 +171,6 @@ def test_get_service_containers_overview(running_test_app, cleanup):
 
     # Test with an existing service
     result = get_service_containers_overview("test_app_nginx")
-
 
     assert isinstance(result, list)
     assert len(result) == 1

@@ -33,6 +33,7 @@ async def login(username: str, password: str):
     response.status_code = HTTPStatus.OK
     return response
 
+
 """
 @router.post("/create_user")
 async def create_user(username: str, password: str):
@@ -41,6 +42,7 @@ async def create_user(username: str, password: str):
         return Response(status_code=400)
     return Response(status_code=200)
 """
+
 
 @router.get("/has_permission")
 async def has_permission(token: str, scope: int):

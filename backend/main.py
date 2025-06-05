@@ -47,8 +47,8 @@ async def spa_handler(request: Request, exc: StarletteHTTPException):
 
 
 app.include_router(auth.router, prefix="/api")
-#app.include_router(container.router, prefix="/api")
-#app.include_router(apps_setup.router, prefix="/api")
+# app.include_router(container.router, prefix="/api")
+# app.include_router(apps_setup.router, prefix="/api")
 app.include_router(apps.router, prefix="/api")
 
 # Add the resources for the frontend

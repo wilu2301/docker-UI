@@ -32,7 +32,7 @@
 			});
 			apps = response.data;
 
-			if (Array(response.data).length === 1) {
+			if (response.data.length === 0) {
 				loading = false;
 			}
 		} catch (error) {

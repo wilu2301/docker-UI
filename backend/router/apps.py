@@ -68,7 +68,9 @@ def get_volumes(app_name: str, token: str) -> list[Volume]:
 
 
 @router.get("/{app_name}/{service_name}/containers")
-def get_service_containers(app_name: str, service_name: str, token: str) -> list[ContainerOverview]:
+def get_service_containers(
+    app_name: str, service_name: str, token: str
+) -> list[ContainerOverview]:
     """
     Get the containers of the app.
     :param service_name: Name of the service.
