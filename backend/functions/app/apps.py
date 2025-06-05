@@ -166,8 +166,19 @@ def get_service_containers(
 ) -> list[md.ContainerOverview]:
     """
     Get the containers of the app.
+    :param service_name: Name of the service.
     :param app_name: Name of the app.
     :return: List of containers used by the app.
     """
 
     return handler.get_service_containers_overview(f"{app_name}_{service_name}")
+
+
+def get_services(app_name: str) -> list[str]:
+    """
+    Get the services of the app.
+    :param app_name: Name of the app.
+    :return: List of services used by the app.
+    """
+
+    return handler.get_app_service_names(app_name)

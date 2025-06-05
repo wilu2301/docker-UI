@@ -67,6 +67,29 @@ def get_volumes(app_name: str, token: str) -> list[Volume]:
     return volumes
 
 
+@router.get("/{app_name}/services")
+def get_services(app_name: str, token: str) -> list[str]:
+    """
+    Get the services of the app.
+    :param app_name: Name of the app.
+    :param token: Token for authentication.
+    :return: List of services used by the app.
+    """
+
+    if not has_permission(token=token, scope=1):
+        raise HTTPException(
+            status_code=403,
+            detail="You do not have permission to access this resource.",
+        )
+
+    services = apps.get_services(app_name)
+    if not services:
+        raise HTTPException(status_code=404, detail="No services found for this app.")
+
+    return services
+
+
+
 @router.get("/{app_name}/{service_name}/containers")
 def get_service_containers(
     app_name: str, service_name: str, token: str
