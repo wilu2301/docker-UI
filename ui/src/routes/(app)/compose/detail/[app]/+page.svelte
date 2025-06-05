@@ -10,7 +10,8 @@
 		Cylinder,
 		Box,
 		HardDrive,
-		Cog
+		Cog,
+		Code
 	} from '@lucide/svelte';
 	import { Tooltip } from '@svelte-plugins/tooltips';
 	import { settingsState } from '$lib/state/settings.svelte';
@@ -23,6 +24,7 @@
 	import { notificationState, NotificationType } from '$root/lib/state/notification.svelte';
 	import { goto } from '\$app/navigation';
 	import App from '$root/routes/(app)/compose/App.svelte';
+	import CodeField from '$root/routes/(app)/compose/detail/[app]/CodeField.svelte';
 
 	const { data }: PageProps = $props();
 
@@ -178,6 +180,10 @@
 						<Service appName={data.name} name={service} />
 					{/each}
 				</div>
+			</Section>
+
+			<Section icon={Code} title="Configuration">
+				<CodeField />
 			</Section>
 		</div>
 	{/if}
