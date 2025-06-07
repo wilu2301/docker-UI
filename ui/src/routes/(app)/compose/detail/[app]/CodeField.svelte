@@ -2,14 +2,54 @@
 	import Monaco from 'svelte-monaco';
 	import { File, GitCommitHorizontal } from '@lucide/svelte';
 
-	let git: boolean = $state(false);
+	let git: boolean = $state(true);
 </script>
 
 <div class="collum">
 	<div class="top">
+		<div class="files">
 		<div class="item">
 			<File /><span>test_app.yaml</span>
 		</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+			<div class="item">
+				<File /><span>test_app.yaml</span>
+			</div>
+		</div>
+
+
 		{#if git}
 			<div class="item">
 				<GitCommitHorizontal /> <span>Example commit</span>
@@ -41,10 +81,25 @@
 		gap: 1rem;
 
 		.top {
+			width: 100%;
 			display: flex;
 			flex-direction: row;
 			align-items: center;
 			justify-content: space-between;
+
+			.files{
+				width: 1200px;
+				display: flex;
+				flex-direction: row;
+				gap: 1rem;
+				overflow-x: scroll;
+			}
+			::-webkit-scrollbar {
+				background-color: pallet.$secondary;
+				height: 4px;
+				border-radius: 16px;
+
+			}
 
 			.item {
 				display: flex;
