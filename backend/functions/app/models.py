@@ -58,3 +58,10 @@ class ContainerOverview(BaseModel):
     image: str
     status: ContainerStatus
     node: str
+
+
+class AppConfig(BaseModel):
+    git: bool = False
+
+
+

@@ -182,3 +182,13 @@ def get_services(app_name: str) -> list[str]:
     """
 
     return handler.get_app_service_names(app_name)
+
+
+def get_config(app_name: str) -> md.AppConfig | None:
+    """
+    Get the config files of the app.
+    :param app_name: Name of the app.
+    :return: Config of the app.
+    """
+
+    raise NotImplementedError

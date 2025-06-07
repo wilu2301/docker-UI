@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Monaco from 'svelte-monaco';
-	import { File, GitCommitHorizontal } from '@lucide/svelte';
+	import { File, GitCommitHorizontal, HardDriveDownload } from '@lucide/svelte';
 
 	let git: boolean = $state(true);
 </script>
@@ -8,7 +8,7 @@
 <div class="collum">
 	<div class="top">
 		<div class="files">
-		<div class="item">
+		<div class="item selected">
 			<File /><span>test_app.yaml</span>
 		</div>
 			<div class="item">
@@ -49,7 +49,10 @@
 			</div>
 		</div>
 
-
+		<div class="item">
+			<HardDriveDownload />
+			<button>Reload</button>
+		</div>
 		{#if git}
 			<div class="item">
 				<GitCommitHorizontal /> <span>Example commit</span>
@@ -88,7 +91,8 @@
 			justify-content: space-between;
 
 			.files{
-				width: 1200px;
+				width: 70%;
+				max-width: 1100px;
 				display: flex;
 				flex-direction: row;
 				gap: 1rem;
@@ -102,11 +106,37 @@
 			}
 
 			.item {
+				padding: 16px;
+
 				display: flex;
 				flex-direction: row;
 				align-items: center;
-			}
+
+				transition: background 0.5s, border-radius 0.5s;
+				&:hover {
+					background: pallet.$white;
+					color: pallet.$text;
+					border-radius: 16px;
+				}
+
+				button{
+					padding: 0.5rem 1rem;
+					background: none;
+					border: none;
+
+					color: pallet.$white;
+
+					&:hover{
+						color: pallet.$text;
+					}
+
+				}
 		}
+			.selected {
+				background: pallet.$accent;
+				border-radius: 16px;
+			}
+			}
 
 		.bottom {
 			width: 100%;
