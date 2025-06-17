@@ -93,20 +93,29 @@
 			.files{
 				width: 70%;
 				max-width: 1100px;
+
+
 				display: flex;
 				flex-direction: row;
 				gap: 1rem;
 				overflow-x: scroll;
 			}
 			::-webkit-scrollbar {
-				background-color: pallet.$secondary;
 				height: 4px;
 				border-radius: 16px;
 
+				background-color: pallet.$secondary;
+			}
+
+			::-webkit-scrollbar-thumb {
+				border-radius: 16px;
+
+				background-color: pallet.$accent;
 			}
 
 			.item {
 				padding: 16px;
+				margin-bottom: 8px;
 
 				display: flex;
 				flex-direction: row;
