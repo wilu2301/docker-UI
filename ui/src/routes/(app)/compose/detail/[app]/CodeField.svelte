@@ -5,48 +5,45 @@
 	let git: boolean = $state(true);
 </script>
 
+
+{#snippet file(name = 'File', selected = false)}
+
+	<div  class={selected ? 'item selected' : 'item'} >
+		<File /><span>{name}</span>
+	</div>
+	{/snippet}
+
 <div class="collum">
 	<div class="top">
 		<div class="files">
-		<div class="item selected">
-			<File /><span>test_app.yaml</span>
-		</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
-			<div class="item">
-				<File /><span>test_app.yaml</span>
-			</div>
+
+			{@render file("File",true)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
+			{@render file("File",false)}
 		</div>
 
 		<div class="item">
@@ -98,7 +95,7 @@
 				display: flex;
 				flex-direction: row;
 				gap: 1rem;
-				overflow-x: scroll;
+				overflow-x: auto;
 			}
 			::-webkit-scrollbar {
 				height: 4px;
