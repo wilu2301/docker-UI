@@ -64,4 +64,7 @@ class AppConfig(BaseModel):
     git: bool = False
 
 
-
+class ConfigFile(BaseModel):
+    name: str
+    language: str
+    content: str

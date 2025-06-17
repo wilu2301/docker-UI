@@ -2,14 +2,14 @@
 	import Monaco from 'svelte-monaco';
 	import { File, GitCommitHorizontal, HardDriveDownload } from '@lucide/svelte';
 
-	let git: boolean = $state(true);
+	let git: boolean = $state(false);
 </script>
 
 
 {#snippet file(name = 'File', selected = false)}
 
 	<div  class={selected ? 'item selected' : 'item'} >
-		<File /><span>{name}</span>
+		<File /><span>{name}</span>	
 	</div>
 	{/snippet}
 

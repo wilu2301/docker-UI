@@ -320,3 +320,33 @@ def get_service_containers_overview(service_name: str) -> list[md.ContainerOverv
     except DockerException as e:
         logger.error(f"Error getting app containers overview for '{service_name}': {e}")
         return []
+
+
+def get_config_files(app_name: str) -> list[md.ConfigFile]:
+    """
+    Get the config files of the app.
+    :param app_name: Name of the app.
+    :return: Config files.
+    """
+
+    # Check if the app exists in storage
+    if not pathlib.Path(f"{STORAGE}/{app_name}").exists():
+        logger.warning(f"App '{app_name}' does not exist in storage.")
+        return []
+
+    # Get all files in the app directory
+
+    files : list[md.ConfigFile] = []
+
+    for file in pathlib.Path(f"{STORAGE}/{app_name}").iterdir():
+        if file.is_file():
+            files.append(
+                md.ConfigFile(
+                    name=file.name,
+                    language=file.suffix[1:],
+                    content=file.read_text(encoding="utf-8")
+                )
+            )
+
+    return files
+

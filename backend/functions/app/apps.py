@@ -144,7 +144,6 @@ def get_app(app_name: str) -> md.AppOverview | None:
 
     state: md.AppStatus = handler.get_app_state(app_name)
     usage: md.AppUsage = handler.get_app_usage(app_name)
-
     if usage is None:
         return None
 
@@ -190,5 +189,11 @@ def get_config(app_name: str) -> md.AppConfig | None:
     :param app_name: Name of the app.
     :return: Config of the app.
     """
+
+    #TODO: Check for git
+
+    # No git
+
+
 
     raise NotImplementedError
