@@ -4,543 +4,664 @@
  */
 
 export interface paths {
-  "/": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Index */
-    get: operations["index__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/login": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** Login */
-    post: operations["login_api_auth_login_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/has_permission": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Has Permission */
-    get: operations["has_permission_api_auth_has_permission_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/apps/": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get Apps
-     * @description Get all apps from docker.
-     *     :return: list of apps
-     */
-    get: operations["get_apps_api_apps__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/apps/{app_name}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get App
-     * @description Get an app by name.
-     *     :param token: Token for authentication.
-     *     :param app_name: Name of the app.
-     *     :return: App object.
-     */
-    get: operations["get_app_api_apps__app_name__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/apps/{app_name}/volumes": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get Volumes
-     * @description Get the volumes used by the app.
-     *     :param token: Token for authentication.
-     *     :param app_name: Name of the app.
-     *     :return: List of volumes used by the app.
-     */
-    get: operations["get_volumes_api_apps__app_name__volumes_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/apps/{app_name}/services": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get Services
-     * @description Get the services of the app.
-     *     :param app_name: Name of the app.
-     *     :param token: Token for authentication.
-     *     :return: List of services used by the app.
-     */
-    get: operations["get_services_api_apps__app_name__services_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/apps/{app_name}/{service_name}/containers": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get Service Containers
-     * @description Get the containers of the app.
-     *     :param service_name: Name of the service.
-     *     :param token: Token for authentication.
-     *     :param app_name: Name of the app.
-     *     :return: List of containers used by the app.
-     */
-    get: operations["get_service_containers_api_apps__app_name___service_name__containers_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
+	'/': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/** Index */
+		get: operations['index__get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/auth/login': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/** Login */
+		post: operations['login_api_auth_login_post'];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/auth/create_user': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/** Create User */
+		post: operations['create_user_api_auth_create_user_post'];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/auth/has_permission': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/** Has Permission */
+		get: operations['has_permission_api_auth_has_permission_get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/apps/': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Get Apps
+		 * @description Get all apps from docker.
+		 *     :return: list of apps
+		 */
+		get: operations['get_apps_api_apps__get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/apps/{app_name}': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Get App
+		 * @description Get an app by name.
+		 *     :param token: Token for authentication.
+		 *     :param app_name: Name of the app.
+		 *     :return: App object.
+		 */
+		get: operations['get_app_api_apps__app_name__get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/apps/{app_name}/volumes': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Get Volumes
+		 * @description Get the volumes used by the app.
+		 *     :param token: Token for authentication.
+		 *     :param app_name: Name of the app.
+		 *     :return: List of volumes used by the app.
+		 */
+		get: operations['get_volumes_api_apps__app_name__volumes_get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/apps/{app_name}/services': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Get Services
+		 * @description Get the services of the app.
+		 *     :param app_name: Name of the app.
+		 *     :param token: Token for authentication.
+		 *     :return: List of services used by the app.
+		 */
+		get: operations['get_services_api_apps__app_name__services_get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/apps/{app_name}/{service_name}/containers': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Get Service Containers
+		 * @description Get the containers of the app.
+		 *     :param service_name: Name of the service.
+		 *     :param token: Token for authentication.
+		 *     :param app_name: Name of the app.
+		 *     :return: List of containers used by the app.
+		 */
+		get: operations['get_service_containers_api_apps__app_name___service_name__containers_get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/api/apps/{app_name}/config': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Get App Config
+		 * @description Get the config files of the app.
+		 *     :param app_name: Name of the app.
+		 *     :param token: Token for authentication.
+		 *     :return: AppConfig object containing the app's configuration.
+		 */
+		get: operations['get_app_config_api_apps__app_name__config_get'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    /** App */
-    App: {
-      /** Name */
-      name: string;
-    };
-    /** AppOverview */
-    AppOverview: {
-      /** Name */
-      name: string;
-      status: components["schemas"]["AppStatus"];
-      usage?: components["schemas"]["AppUsage"] | null;
-    };
-    /**
-     * AppStatus
-     * @enum {string}
-     */
-    AppStatus: "running" | "stopped" | "degraded" | "unknown";
-    /** AppUsage */
-    AppUsage: {
-      /**
-       * Cpu Usage
-       * @default 0
-       */
-      cpu_usage: number;
-      /**
-       * Memory Usage
-       * @default 0
-       */
-      memory_usage: number;
-      /**
-       * Containers Running
-       * @default 0
-       */
-      containers_running: number;
-      /** Ports Exposed */
-      ports_exposed: components["schemas"]["Port"][];
-      /**
-       * Volumes Count
-       * @default 0
-       */
-      volumes_count: number;
-    };
-    /** ContainerOverview */
-    ContainerOverview: {
-      /** Name */
-      name: string;
-      /** Image */
-      image: string;
-      status: components["schemas"]["ContainerStatus"];
-      /** Node */
-      node: string;
-    };
-    /**
-     * ContainerStatus
-     * @enum {string}
-     */
-    ContainerStatus:
-      | "created"
-      | "running"
-      | "restarting"
-      | "exited"
-      | "paused"
-      | "dead";
-    /** HTTPValidationError */
-    HTTPValidationError: {
-      /** Detail */
-      detail?: components["schemas"]["ValidationError"][];
-    };
-    /** Port */
-    Port: {
-      /** Public Port */
-      public_port: number;
-      /** Container Port */
-      container_port?: number | null;
-      /**
-       * Tcp
-       * @default true
-       */
-      tcp: boolean;
-      /**
-       * Udp
-       * @default false
-       */
-      udp: boolean;
-      /**
-       * Ingress
-       * @default false
-       */
-      ingress: boolean;
-    };
-    /** ValidationError */
-    ValidationError: {
-      /** Location */
-      loc: (string | number)[];
-      /** Message */
-      msg: string;
-      /** Error Type */
-      type: string;
-    };
-    /** Volume */
-    Volume: {
-      /** Name */
-      name: string;
-      /** Mountpoint */
-      mountpoint: string;
-      /**
-       * Created At
-       * Format: date-time
-       */
-      created_at: string;
-      /** Driver */
-      driver: string;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+	schemas: {
+		/** App */
+		App: {
+			/** Name */
+			name: string;
+		};
+		/** AppConfig */
+		AppConfig: {
+			/**
+			 * Git
+			 * @default false
+			 */
+			git: boolean;
+			/**
+			 * Config Files
+			 * @default []
+			 */
+			config_files: components['schemas']['ConfigFile'][];
+		};
+		/** AppOverview */
+		AppOverview: {
+			/** Name */
+			name: string;
+			status: components['schemas']['AppStatus'];
+			usage?: components['schemas']['AppUsage'] | null;
+		};
+		/**
+		 * AppStatus
+		 * @enum {string}
+		 */
+		AppStatus: 'running' | 'stopped' | 'degraded' | 'unknown';
+		/** AppUsage */
+		AppUsage: {
+			/**
+			 * Cpu Usage
+			 * @default 0
+			 */
+			cpu_usage: number;
+			/**
+			 * Memory Usage
+			 * @default 0
+			 */
+			memory_usage: number;
+			/**
+			 * Containers Running
+			 * @default 0
+			 */
+			containers_running: number;
+			/** Ports Exposed */
+			ports_exposed: components['schemas']['Port'][];
+			/**
+			 * Volumes Count
+			 * @default 0
+			 */
+			volumes_count: number;
+		};
+		/** ConfigFile */
+		ConfigFile: {
+			/** Name */
+			name: string;
+			/** Language */
+			language: string;
+			/** Content */
+			content: string;
+		};
+		/** ContainerOverview */
+		ContainerOverview: {
+			/** Name */
+			name: string;
+			/** Image */
+			image: string;
+			status: components['schemas']['ContainerStatus'];
+			/** Node */
+			node: string;
+		};
+		/**
+		 * ContainerStatus
+		 * @enum {string}
+		 */
+		ContainerStatus: 'created' | 'running' | 'restarting' | 'exited' | 'paused' | 'dead';
+		/** HTTPValidationError */
+		HTTPValidationError: {
+			/** Detail */
+			detail?: components['schemas']['ValidationError'][];
+		};
+		/** Port */
+		Port: {
+			/** Public Port */
+			public_port: number;
+			/** Container Port */
+			container_port?: number | null;
+			/**
+			 * Tcp
+			 * @default true
+			 */
+			tcp: boolean;
+			/**
+			 * Udp
+			 * @default false
+			 */
+			udp: boolean;
+			/**
+			 * Ingress
+			 * @default false
+			 */
+			ingress: boolean;
+		};
+		/** ValidationError */
+		ValidationError: {
+			/** Location */
+			loc: (string | number)[];
+			/** Message */
+			msg: string;
+			/** Error Type */
+			type: string;
+		};
+		/** Volume */
+		Volume: {
+			/** Name */
+			name: string;
+			/** Mountpoint */
+			mountpoint: string;
+			/**
+			 * Created At
+			 * Format: date-time
+			 */
+			created_at: string;
+			/** Driver */
+			driver: string;
+		};
+	};
+	responses: never;
+	parameters: never;
+	requestBodies: never;
+	headers: never;
+	pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  index__get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-    };
-  };
-  login_api_auth_login_post: {
-    parameters: {
-      query: {
-        username: string;
-        password: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  has_permission_api_auth_has_permission_get: {
-    parameters: {
-      query: {
-        token: string;
-        scope: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  get_apps_api_apps__get: {
-    parameters: {
-      query: {
-        token: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["App"][];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  get_app_api_apps__app_name__get: {
-    parameters: {
-      query: {
-        token: string;
-      };
-      header?: never;
-      path: {
-        app_name: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AppOverview"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  get_volumes_api_apps__app_name__volumes_get: {
-    parameters: {
-      query: {
-        token: string;
-      };
-      header?: never;
-      path: {
-        app_name: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Volume"][];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  get_services_api_apps__app_name__services_get: {
-    parameters: {
-      query: {
-        token: string;
-      };
-      header?: never;
-      path: {
-        app_name: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": string[];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  get_service_containers_api_apps__app_name___service_name__containers_get: {
-    parameters: {
-      query: {
-        token: string;
-      };
-      header?: never;
-      path: {
-        app_name: string;
-        service_name: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ContainerOverview"][];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
+	index__get: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': unknown;
+				};
+			};
+		};
+	};
+	login_api_auth_login_post: {
+		parameters: {
+			query: {
+				username: string;
+				password: string;
+			};
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': unknown;
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	create_user_api_auth_create_user_post: {
+		parameters: {
+			query: {
+				username: string;
+				password: string;
+			};
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': unknown;
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	has_permission_api_auth_has_permission_get: {
+		parameters: {
+			query: {
+				token: string;
+				scope: number;
+			};
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': unknown;
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	get_apps_api_apps__get: {
+		parameters: {
+			query: {
+				token: string;
+			};
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['App'][];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	get_app_api_apps__app_name__get: {
+		parameters: {
+			query: {
+				token: string;
+			};
+			header?: never;
+			path: {
+				app_name: string;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['AppOverview'];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	get_volumes_api_apps__app_name__volumes_get: {
+		parameters: {
+			query: {
+				token: string;
+			};
+			header?: never;
+			path: {
+				app_name: string;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['Volume'][];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	get_services_api_apps__app_name__services_get: {
+		parameters: {
+			query: {
+				token: string;
+			};
+			header?: never;
+			path: {
+				app_name: string;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': string[];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	get_service_containers_api_apps__app_name___service_name__containers_get: {
+		parameters: {
+			query: {
+				token: string;
+			};
+			header?: never;
+			path: {
+				app_name: string;
+				service_name: string;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['ContainerOverview'][];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
+	get_app_config_api_apps__app_name__config_get: {
+		parameters: {
+			query: {
+				token: string;
+			};
+			header?: never;
+			path: {
+				app_name: string;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['AppConfig'];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
+		};
+	};
 }

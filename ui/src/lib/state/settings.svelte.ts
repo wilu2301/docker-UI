@@ -1,9 +1,9 @@
 class SettingsState {
-  public host: string;
+	public host: string;
 
-  constructor() {
-    this.host = "http://localhost";
-  }
+	constructor() {
+		this.host = 'http://localhost';
+	}
 }
 
 export const settingsState = new SettingsState();

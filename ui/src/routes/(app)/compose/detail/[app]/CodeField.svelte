@@ -1,31 +1,91 @@
 <script lang="ts">
 	import Monaco from 'svelte-monaco';
 	import { File, GitCommitHorizontal, HardDriveDownload } from '@lucide/svelte';
+	import { getAppConfig } from '$lib/api/api';
+	import { onMount } from 'svelte';
+	import { notificationState, NotificationType } from '$root/lib/state/notification.svelte';
+	import { userState } from '$lib/state/user.svelte';
+	import type { components } from '$lib/api/schema';
 
-	let git: boolean = $state(false);
-	
+	type ConfigFileApi = components['schemas']['ConfigFile'];
+	type ConfigFile = ConfigFileApi & { active?: boolean };
 
+	let configFiles: ConfigFile[] = $state();
+
+	let git: boolean = $state(true);
+	let fieldLang: string = $state('.yaml');
+	let fieldContent: string = $state();
+
+	let indexFileActive: number = $state(0);
+
+	let { appName } = $props();
+
+	async function fetchData() {
+		try {
+			// Get general App data
+			const appConfig = await getAppConfig({
+				app_name: appName,
+				token: userState.token
+			});
+
+			git = appConfig.data.git;
+			configFiles = appConfig.data.config_files;
+
+			loadFile(indexFileActive);
+		} catch (error) {
+			console.error('Error fetching app config:', error);
+			if (error.status === 404) {
+				// App config does not exist
+				notificationState.addMessage(
+					`Config of "${appName}" does not exist`,
+					NotificationType.WARNING
+				);
+			}
+		}
+	}
+
+	function loadFile(index: number) {
+		if (index >= configFiles.length) return;
+
+		let file = configFiles[index];
+
+		// Remove active from last file
+		configFiles[indexFileActive].active = false;
+
+		indexFileActive = index;
+
+		file.active = true;
+		fieldLang = file.language;
+		fieldContent = file.content;
+	}
+
+	onMount(async () => {
+		if (!userState.token) {
+			await new Promise((r) => setTimeout(r, 100));
+		}
+		await fetchData();
+	});
 </script>
 
-
-{#snippet file(name = 'File', selected = false)}
-
-	<div  class={selected ? 'item selected' : 'item'} >
-		<File /><span>{name}</span>	
-	</div>
-	{/snippet}
+{#snippet file(name = 'File', selected = false, index = 0)}
+	<button class={selected ? 'item selected' : 'item'} onclick={() => loadFile(index)}>
+		<File /><span>{name}</span>
+	</button>
+{/snippet}
 
 <div class="collum">
 	<div class="top">
 		<div class="files">
-
-			{@render file("File",true)}
+			{#each configFiles as f, i}
+				{@render file(f.name, f.active, i)}
+			{/each}
 		</div>
 
-		<div class="item">
+		<button onclick={fetchData} class="item">
 			<HardDriveDownload />
-			<button>Reload</button>
-		</div>
+			Reload
+		</button>
+
 		{#if git}
 			<div class="item">
 				<GitCommitHorizontal /> <span>Example commit</span>
@@ -34,7 +94,11 @@
 	</div>
 
 	<div class="editor-container">
-		<Monaco theme="cobalt" value="" options={{ language: 'yaml', automaticLayout: true }} />
+		<Monaco
+			theme="cobalt"
+			bind:value={fieldContent}
+			options={{ language: fieldLang, automaticLayout: true }}
+		/>
 	</div>
 	<div class="bottom">
 		{#if git}
@@ -63,10 +127,9 @@
 			align-items: center;
 			justify-content: space-between;
 
-			.files{
+			.files {
 				width: 70%;
 				max-width: 1100px;
-
 
 				display: flex;
 				flex-direction: row;
@@ -94,31 +157,36 @@
 				flex-direction: row;
 				align-items: center;
 
-				transition: background 0.5s, border-radius 0.5s;
+				border: none;
+				background: none;
+				color: white;
+
+				transition:
+					background 0.5s,
+					border-radius 0.5s;
 				&:hover {
 					background: pallet.$white;
 					color: pallet.$text;
 					border-radius: 16px;
 				}
 
-				button{
+				button {
 					padding: 0.5rem 1rem;
 					background: none;
 					border: none;
 
 					color: pallet.$white;
 
-					&:hover{
+					&:hover {
 						color: pallet.$text;
 					}
-
 				}
-		}
+			}
 			.selected {
 				background: pallet.$accent;
 				border-radius: 16px;
 			}
-			}
+		}
 
 		.bottom {
 			width: 100%;

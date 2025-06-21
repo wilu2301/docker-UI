@@ -23,7 +23,6 @@
 	import Service from '$root/components/Service.svelte';
 	import { notificationState, NotificationType } from '$root/lib/state/notification.svelte';
 	import { goto } from '\$app/navigation';
-	import App from '$root/routes/(app)/compose/App.svelte';
 	import CodeField from '$root/routes/(app)/compose/detail/[app]/CodeField.svelte';
 
 	const { data }: PageProps = $props();
@@ -183,7 +182,7 @@
 			</Section>
 
 			<Section icon={Code} title="Configuration">
-				<CodeField />
+				<CodeField appName={data.name} />
 			</Section>
 		</div>
 	{/if}

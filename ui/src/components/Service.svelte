@@ -1,15 +1,12 @@
 <script>
 	import Container from './Container.svelte';
 	import { getServiceContainers } from '$lib/api/api.js';
-	import { notificationState, NotificationType } from '$lib/state/notification.svelte.js';
-	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { userState } from '$lib/state/user.svelte.js';
 
 	const { appName, name } = $props();
 
 	let container = $state();
-	$inspect(container);
 
 	async function fetchData() {
 		try {
