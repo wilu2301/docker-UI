@@ -190,8 +190,19 @@ def get_config(app_name: str) -> md.AppConfig | None:
     :return: Config of the app.
     """
 
+    # Check if the app exists
+
+    with Session(engine) as session:
+        statement: Select = select(Apps).where(Apps.name == app_name)
+        result = session.exec(statement).one_or_none()
+        if result is None:
+            return None
+
     # TODO: Check for git
 
     # No git
 
-    raise NotImplementedError
+    return md.AppConfig(
+        git=False,
+        config_files=handler.get_config_files(app_name),
+    )

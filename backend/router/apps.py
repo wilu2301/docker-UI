@@ -1,7 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.functions.app import apps
-from backend.functions.app.models import App, AppOverview, Volume, ContainerOverview
+from backend.functions.app.models import (
+    App,
+    AppOverview,
+    Volume,
+    ContainerOverview,
+    AppConfig,
+)
 from backend.functions.auth import has_permission
 
 router = APIRouter(prefix="/apps", tags=["apps"])
@@ -112,3 +118,25 @@ def get_service_containers(
         raise HTTPException(status_code=404, detail="No containers found for this app.")
 
     return containers
+
+
+@router.get("/{app_name}/config")
+def get_app_config(app_name: str, token: str) -> AppConfig:
+    """
+    Get the config files of the app.
+    :param app_name: Name of the app.
+    :param token: Token for authentication.
+    :return: AppConfig object containing the app's configuration.
+    """
+
+    if not has_permission(token=token, scope=1):
+        raise HTTPException(
+            status_code=403,
+            detail="You do not have permission to access this resource.",
+        )
+
+    config = apps.get_config(app_name)
+    if not config:
+        raise HTTPException(status_code=404, detail="No config found for this app.")
+
+    return config

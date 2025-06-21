@@ -62,6 +62,7 @@ class ContainerOverview(BaseModel):
 
 class AppConfig(BaseModel):
     git: bool = False
+    config_files: list["ConfigFile"] = []
 
 
 class ConfigFile(BaseModel):
