@@ -18,32 +18,6 @@
 		<div class="files">
 
 			{@render file("File",true)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
-			{@render file("File",false)}
 		</div>
 
 		<div class="item">

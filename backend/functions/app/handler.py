@@ -336,7 +336,7 @@ def get_config_files(app_name: str) -> list[md.ConfigFile]:
 
     # Get all files in the app directory
 
-    files : list[md.ConfigFile] = []
+    files: list[md.ConfigFile] = []
 
     for file in pathlib.Path(f"{STORAGE}/{app_name}").iterdir():
         if file.is_file():
@@ -344,9 +344,8 @@ def get_config_files(app_name: str) -> list[md.ConfigFile]:
                 md.ConfigFile(
                     name=file.name,
                     language=file.suffix[1:],
-                    content=file.read_text(encoding="utf-8")
+                    content=file.read_text(encoding="utf-8"),
                 )
             )
 
     return files
-

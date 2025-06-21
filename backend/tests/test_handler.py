@@ -14,6 +14,7 @@ from backend.functions.app.handler import (
     get_service_containers_overview,
     get_node_name_by_id,
     get_app_service_names,
+    get_config_files,
 )
 from backend.functions.app.models import Volume
 from backend.tests.utils import cleanup, create_test_app
@@ -180,3 +181,27 @@ def test_get_service_containers_overview(running_test_app, cleanup):
 
     assert isinstance(result, list)
     assert len(result) == 0
+
+
+def test_get_config_files(running_test_app, cleanup):
+    """
+    Test the get_config_files function.
+    :return: None
+    """
+
+    expected = [
+        md.ConfigFile(
+            name="docker-compose.yml",
+            language="yml",
+            content='version: "3"\nservices:\n  nginx:\n    container_name: nginx-test\n    image: nginx:latest\n    ports:\n      - "8080:80/tcp"\n    volumes:\n      - nginx:/etc/nginx\n  busybox:\n    container_name: busybox-test\n    image: busybox:latest\n    command: sleep 3600\n\nvolumes:\n    nginx:\n        driver: local',
+        )
+    ]
+
+    result = get_config_files("test_app")
+
+    assert result == expected
+
+    # Test with a non-existing app
+
+    result = get_config_files("non_existing_app")
+    assert result == []

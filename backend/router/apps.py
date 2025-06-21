@@ -89,7 +89,6 @@ def get_services(app_name: str, token: str) -> list[str]:
     return services
 
 
-
 @router.get("/{app_name}/{service_name}/containers")
 def get_service_containers(
     app_name: str, service_name: str, token: str

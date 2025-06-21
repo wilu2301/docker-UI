@@ -190,10 +190,8 @@ def get_config(app_name: str) -> md.AppConfig | None:
     :return: Config of the app.
     """
 
-    #TODO: Check for git
+    # TODO: Check for git
 
     # No git
-
-
 
     raise NotImplementedError
