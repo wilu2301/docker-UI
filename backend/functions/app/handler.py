@@ -343,7 +343,7 @@ def get_config_files(app_name: str) -> list[md.ConfigFile]:
             files.append(
                 md.ConfigFile(
                     name=file.name,
-                    language=file.suffix[1:],
+                    language="yaml" if file.suffix[1:] else "txt",
                     content=file.read_text(encoding="utf-8"),
                 )
             )
