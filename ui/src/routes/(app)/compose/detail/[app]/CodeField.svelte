@@ -14,7 +14,7 @@
 
 	let git: boolean = $state(true);
 	let fieldLang: string = $state('.yaml');
-	let fieldContent: string = $state();
+	let fieldContent: string = $state('');
 
 	let indexFileActive: number = $state(0);
 
@@ -65,6 +65,9 @@
 		}
 		await fetchData();
 	});
+
+	$inspect(fieldContent);
+	$inspect(fieldLang);
 </script>
 
 {#snippet file(name = 'File', selected = false, index = 0)}
@@ -92,14 +95,20 @@
 			</div>
 		{/if}
 	</div>
-
-	<div class="editor-container">
-		<Monaco
-			theme="cobalt"
-			bind:value={fieldContent}
-			options={{ language: fieldLang, automaticLayout: true }}
-		/>
-	</div>
+	{#if fieldLang !== null && fieldContent !== null}
+		<div class="editor-container">
+			<Monaco
+				on:ready={() => console.log('ready')}
+				theme="cobalt"
+				bind:value={fieldContent}
+				options={{ language: fieldLang, automaticLayout: true }}
+			/>
+		</div>
+	{:else}
+		<div class="loading">
+			<p>Loading...</p>
+		</div>
+	{/if}
 	<div class="bottom">
 		{#if git}
 			<div class="git">
@@ -186,6 +195,12 @@
 				background: pallet.$accent;
 				border-radius: 16px;
 			}
+		}
+
+		.loading {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 		}
 
 		.bottom {

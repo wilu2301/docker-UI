@@ -1,12 +1,10 @@
 <script>
-	import Service from '../../../components/Service.svelte';
 </script>
 
 <main>
 	<h1>Container</h1>
 	<div class="apps">
-		<Service class="app" name="Test-1" />
-		<Service class="app" name="Test App 1" />
+		<h2>Under Construction</h2>
 	</div>
 </main>
 
