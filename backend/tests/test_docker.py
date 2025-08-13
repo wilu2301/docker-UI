@@ -25,3 +25,14 @@ def test_get_container():
     container_id = "nginx-test"
     result = docker.get_container(container_id=container_id)
     assert result is not None
+
+
+def test_get_container_logs():
+    """
+    Test the get container logs function.
+    """
+    container_id = "portainer"
+    result = docker.get_container_logs(container_id=container_id)
+    print(result)
+    assert result is not None
+    assert isinstance(result, str)  # Ensure logs are returned as a string

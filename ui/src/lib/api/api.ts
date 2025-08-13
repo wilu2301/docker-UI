@@ -24,5 +24,9 @@ export const getServiceContainers = fetcher
 	.create();
 
 export const getAppConfig = fetcher.path('/api/apps/{app_name}/config').method('get').create();
-
 // </section>
+
+export const getContainerLogs = fetcher
+	.path('/api/containers{container_id}/logs')
+	.method('get')
+	.create();

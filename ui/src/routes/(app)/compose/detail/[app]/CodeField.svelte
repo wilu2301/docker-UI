@@ -98,7 +98,6 @@
 	{#if fieldLang !== null && fieldContent !== null}
 		<div class="editor-container">
 			<Monaco
-				on:ready={() => console.log('ready')}
 				theme="cobalt"
 				bind:value={fieldContent}
 				options={{ language: fieldLang, automaticLayout: true }}

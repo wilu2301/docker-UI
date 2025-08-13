@@ -1,4 +1,5 @@
 import docker
+from docker import errors
 
 client = docker.from_env()
 
@@ -47,3 +48,19 @@ def pull_image(image: str) -> bool:
     except Exception as e:
         print(f"Error pulling image: {e}")
         return False
+
+
+def get_container_logs(container_id: str) -> str:
+    """
+    Gets the logs of a container.
+    :param container_id: The id of the container.
+    :return: The logs of the container.
+    """
+
+    try:
+        container = client.containers.get(container_id)
+        return container.logs().decode("utf-8")
+    except docker.errors.NotFound:
+        return "Container not found."
+    except Exception as e:
+        return f"Error getting logs: {e}"

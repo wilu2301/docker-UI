@@ -64,7 +64,7 @@
 			</button>
 		</Tooltip>
 		<Tooltip content="Create new app" position="left">
-			<button onclick={() => goto('/')}>
+			<button onclick={() => goto('/compose/new')}>
 				<CirclePlus />
 			</button>
 		</Tooltip>

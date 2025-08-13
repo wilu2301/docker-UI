@@ -11,12 +11,26 @@
 			<option> Local </option>
 		</select>
 	</div>
-	<div class="code">
-		<Monaco theme="cobalt" options={{ language: 'yaml', automaticLayout: true }} />
+	<div class="stack">
+		<div class="files">
+			<div class="file">
+				<span>app.yaml</span>
+			</div>
+			<div class="file">
+				<span>app.yaml</span>
+			</div>
+		</div>
+		<div class="code">
+			<Monaco theme="cobalt" value="" options={{ language: 'yaml', automaticLayout: true }} />
+			<input type="text" placeholder="App Name" /> <span>.yaml</span>
+			<button>Add File</button>
+			<button>Deploy</button>
+		</div>
 	</div>
 </main>
 
-<style>
+<style lang="scss">
+	@use '$root/style/pallet';
 	main {
 		display: flex;
 		flex-direction: column;
@@ -26,9 +40,25 @@
 		height: 100%;
 		width: 100%;
 
-		.code {
-			width: 80%;
-			height: 32rem;
+		.stack {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			height: 100%;
+
+			.files {
+				display: flex;
+				gap: 4rem;
+			}
+
+			.code {
+				width: 80%;
+				height: 32rem;
+
+				background: pallet.$primary;
+			}
 		}
 	}
 </style>
