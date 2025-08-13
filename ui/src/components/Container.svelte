@@ -2,6 +2,7 @@
 	import { Dot, ScrollText, ChevronRight, Info, RotateCcw } from '@lucide/svelte';
 	import { Tooltip } from '@svelte-plugins/tooltips';
 	import type { components } from '$lib/api/schema.js';
+	import { goto } from '\$app/navigation';
 
 	type ContainerOverview = components['schemas']['ContainerOverview'];
 
@@ -10,6 +11,11 @@
 		isLast: boolean;
 		container: ContainerOverview;
 	}>();
+
+
+	function getLogs(){
+		goto(`/container/logs/${container.name}`)
+	}
 </script>
 
 <main>
@@ -33,7 +39,7 @@
 			<span class="name">{container.name}</span>
 			<div class="actions">
 				<Tooltip content="Logs">
-					<ScrollText class="action" size="32" color="var(--white)" />
+					<ScrollText class="action" size="32" color="var(--white)" onclick={getLogs} />
 				</Tooltip>
 				<Tooltip content="Attach">
 					<ChevronRight class="action" size="32" color="var(--white)" />
