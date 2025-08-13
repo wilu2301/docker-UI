@@ -59,7 +59,10 @@ def get_container_logs(container_id: str) -> str:
 
     try:
         container = client.containers.get(container_id)
-        return container.logs().decode("utf-8")
+        logs = container.logs().decode("utf-8")
+        if not logs:
+            return "No logs available for this container."
+        return logs
     except docker.errors.NotFound:
         return "Container not found."
     except Exception as e:

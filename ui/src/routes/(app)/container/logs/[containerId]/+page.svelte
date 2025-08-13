@@ -48,7 +48,7 @@
 			<Monaco
 				theme="cobalt"
 				bind:value={logs}
-				options={{ language: 'log', automaticLayout: false }}
+				options={{ language: 'log', automaticLayout: false, readOnly: true }}
 			/>
 		{/if}
 	</div>
