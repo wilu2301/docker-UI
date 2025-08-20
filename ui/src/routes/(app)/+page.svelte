@@ -62,7 +62,7 @@
 				<li><a href="/compose">See Running Docker Compose Files / Apps</a></li>
 				<li><a href="compose/detail/test_app">Inspect Apps</a></li>
 				<li><a href="container/logs/test container">See Docker logs</a></li>
-				<li><a href="/api">Swagger UI endpoint</a></li>
+				<li><a href="/docs">Swagger UI endpoint</a></li>
 			</ul>
 		</Section>
 		<Section title="Work in Progress" icon={Axe}>
