@@ -115,7 +115,7 @@
 				<button>Commit</button>
 			</div>
 		{:else}
-			<button>Save</button>
+			<button disabled>Save</button>
 		{/if}
 	</div>
 </div>

@@ -12,9 +12,8 @@
 		container: ContainerOverview;
 	}>();
 
-
-	function getLogs(){
-		goto(`/container/logs/${container.name}`)
+	function getLogs() {
+		goto(`/container/logs/${container.name}`);
 	}
 </script>
 
@@ -41,13 +40,10 @@
 				<Tooltip content="Logs">
 					<ScrollText class="action" size="32" color="var(--white)" onclick={getLogs} />
 				</Tooltip>
-				<Tooltip content="Attach">
+				<Tooltip content="Attach (disabled)">
 					<ChevronRight class="action" size="32" color="var(--white)" />
 				</Tooltip>
-				<Tooltip content="Info">
-					<Info class="action" size="32" color="var(--white)" />
-				</Tooltip>
-				<Tooltip content="Restart">
+				<Tooltip content="Restart (disabled)">
 					<RotateCcw class="action" size="32" color="var(--white)" />
 				</Tooltip>
 			</div>

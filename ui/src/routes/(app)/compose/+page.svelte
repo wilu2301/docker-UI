@@ -59,7 +59,7 @@
 
 	<div class="floating-action-button">
 		<Tooltip content="Create with assistant" position="left">
-			<button class="disabled">
+			<button onclick={() => goto('/compose/assistant')}>
 				<Bot />
 			</button>
 		</Tooltip>

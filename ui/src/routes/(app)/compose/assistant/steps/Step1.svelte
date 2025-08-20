@@ -24,11 +24,11 @@
 				},
 				{
 					goal: 'Name is unique',
-					met: false
+					met: true
 				},
 				{
 					goal: 'Name is not too long',
-					met: false
+					met: true
 				}
 			]
 		}
@@ -244,6 +244,7 @@
 				<div class="line" in:fade>
 					<Field field={fGitToken.field} onchange={changeGitToken} />
 				</div>
+				<h3 style="color: red; font-weight: bolder">Disabled for security reasons!</h3>
 				<div class="line" in:fade>
 					<div class="center">
 						<Validator validator={fGitUrl.validator} />

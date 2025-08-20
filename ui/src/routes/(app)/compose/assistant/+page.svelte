@@ -1,11 +1,11 @@
 <script>
-	import { ChevronLeft, ChevronRight } from '@lucide/svelte';
+	import { Bot, ChevronRight, ChevronLeft } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 
 	import Step1 from '$root/routes/(app)/compose/assistant/steps/Step1.svelte';
 	import Step2 from '$root/routes/(app)/compose/assistant/steps/Step2.svelte';
 
-	let stage = $state(2);
+	let stage = $state(1);
 
 	function nextStage() {
 		stage += 1;
@@ -18,7 +18,7 @@
 
 <main>
 	<div class="top-bar">
-		<ChevronLeft size={48} />
+		<Bot size={48} />
 		<h1>Assistant:</h1>
 		<div class="stage">
 			<h1 class="number">Step {stage}</h1>
